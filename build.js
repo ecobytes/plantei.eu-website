@@ -5,6 +5,7 @@ var Metalsmith = require('metalsmith'),
   templates = require('metalsmith-templates'),
   collections = require('metalsmith-collections'),
   permalinks = require('metalsmith-permalinks'),
+  less = require('metalsmith-less'),
   debug = require('debug');
 
 var log = debug('build');
@@ -31,6 +32,11 @@ metalsmith
     engine: 'handlebars',
     directory: 'templates'
   }))
+  .use(less({
+    pattern: 'assets/css/**.less'
+    }
+  ))
+
   // .use(deleteDrafts())
   .destination('./build')
   .build(function(err) {

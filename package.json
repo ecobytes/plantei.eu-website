@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "livereloadx": "^0.3.7",
-    "onchange": "^1.0.0"
+    "onchange": "^1.0.0",
+    "metalsmith-less": "*"
   }
 }
