@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+  <h1>{{ title }}
+    {{!-- this is a comment out of the html --}}
+    {{#if draft}}
+    #Draft#
+    {{/if}}
+  </h1>
+  <time>{{ date }}</time>
+  {{{ contents }}}
+
+  -- this is just another template!!
+
+  <h1>List of articles (int):</h1>
+
+  {{#each collections.articles}}
+    <a href="/{{this.path}}">{{this.title}}</a>
+  {{/each}}
+
+</body>
+</html>
