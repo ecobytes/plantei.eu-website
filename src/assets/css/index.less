@@ -1,14 +1,22 @@
 // Breaks at: screen-xs 480px; @screen-sm: 768px; @screen-md: 992px; @screen-lg: 1200px;
 @import "src/assets/css/variables.less";
 
-.jumbotron.intro {
+#index{
+	.jumbotron.intro {
 	position: relative;
 	padding: 50px;
 	min-height: 60vh;
-	.mainActions {
+		.mainActions {
+		margin-left: 15px;
 		position: absolute;
 		bottom: 0;
 		right: 0;
+		}
+	}
+	padding-top: 0;
+}
+
+
 @media (max-width: @screen-sm) {
 	#index {
 		.jumbotron.intro .mainActions {
