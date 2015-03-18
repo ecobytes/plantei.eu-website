@@ -33,11 +33,14 @@
 body {
 	padding-bottom: @lm;
 }
+@import "src/assets/css/stickyFooter";
 @import "src/assets/css/forms";
 
 footer {
 	border-top: 1px solid @brand-primary;
-	text-align: center
+	text-align: center;
+	padding-top: @sm;
+	font-size: 0.9em;
 }
 
 @import "src/assets/css/index";
@@ -53,4 +56,7 @@ footer {
 	}
 	.form-control, input {
 		color: white;
+	}
+	footer {
+		border-top-color: white;
 	}
