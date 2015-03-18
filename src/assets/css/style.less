@@ -37,6 +37,18 @@ body {
 	padding-top: @bodyTopPadding;
 	font-weight: @font-weight-base;
 }
+
+a {
+	text-decoration: underline;
+}
+
+a.btn, .navbar-brand {
+	text-decoration: none;
+}
+
+a, a:hover, a:active, a:focus {
+ outline: 0 !important;
+}
 @import "src/assets/css/stickyFooter";
 @import "src/assets/css/forms";
 
