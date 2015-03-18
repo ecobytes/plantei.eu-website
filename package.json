@@ -1,0 +1,31 @@
+{
+  "name": "static-site",
+  "private": true,
+  "dependencies": {
+    "async": "*",
+    "debug": "*",
+    "handlebars": "*",
+    "lodash": "*",
+    "metalsmith": "*",
+    "metalsmith-collections": "*",
+    "metalsmith-headings-identifier": "*",
+    "metalsmith-markdown": "*",
+    "metalsmith-permalinks": "*",
+    "metalsmith-templates": "*",
+    "mocha": "*",
+    "remarkable": "*"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha",
+    "dev": "npm run build & npm run copy & npm run serve",
+    "build": "onchange 'templates/**/*' 'src/**/*' -- node build.js",
+    "copy": "onchange 'build/**/*' -- cp -a build/* assets",
+    "serve": "node_modules/.bin/livereloadx -s -p 9191 ./assets",
+    "clean": "rm -rf node_modules"
+  },
+  "devDependencies": {
+    "livereloadx": "^0.3.7",
+    "onchange": "^1.0.0",
+    "metalsmith-less": "*"
+  }
+}

@@ -1,0 +1,34 @@
+{
+    "env": {
+        "node": true
+    },
+
+    "rules": {
+        "brace-style": [2, "1tbs", {"allowSingleLine": true}],
+        "default-case": 2,
+        "camelcase": 0,
+        "dot-notation": 0,
+        "func-style": [2, "declaration"],
+        "curly": [2, "multi"],
+        "guard-for-in": 2,
+        "no-floating-decimal": 2,
+        "no-nested-ternary": 2,
+        "no-use-before-define": [2, "nofunc"],
+        "space-unary-ops": 0,
+        "radix": 2,
+        "space-unary-ops": [2, { "words": true, "nonwords": false }],
+        "space-after-keywords": [2, "always"],
+        "valid-jsdoc": [2, {
+            "prefer": {
+                "return": "returns"
+             }
+        }],
+        "quotes": [1, "double", "allow-avoiding-escaped-quotes"],
+        "wrap-iife": [2, "inside"],
+        "vars-on-top": 2
+    },
+
+    "globals": {
+      "unescape": true
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Plantei.eu",
+  "version": "0.1",
+  "dependencies": {
+    "bootstrap": "3.*"
+  },
+  "private": true
+}
