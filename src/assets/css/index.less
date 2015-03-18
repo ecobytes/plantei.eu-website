@@ -7,5 +7,21 @@
 		position: absolute;
 		bottom: 0;
 		right: 0;
+@media (max-width: @screen-sm) {
+	#index {
+		.jumbotron.intro .mainActions {
+			position: relative;
+			margin-left: 0;
+			margin-right: 0;
+			margin-top: @lm;
+			text-align: center;
+			.btn, .btn-group {
+				margin-left: 0;
+				margin-right: 0;
+			}
+			.moreinfo {
+				margin-bottom: @mm;
+			}
+		}
 	}
 }
