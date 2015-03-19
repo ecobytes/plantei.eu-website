@@ -20,8 +20,10 @@
     "dev": "npm run build & npm run copy & npm run serve",
     "build": "./node_modules/.bin/onchange 'templates/**/*' 'src/**/*' -- node build.js",
     "copy": "./node_modules/.bin/onchange 'build/**/*' -- cp -a build/* assets",
-    "serve": "node_modules/.bin/livereloadx -s -p 9191 ./assets",
-    "clean": "rm -rf node_modules"
+    "serve": "./node_modules/.bin/livereloadx -s -p 9191 ./assets",
+    "clean": "rm -rf node_modules",
+
+    "postinstall": "./node_modules/.bin/bower install"
   },
   "devDependencies": {
     "livereloadx": "^0.3.7",

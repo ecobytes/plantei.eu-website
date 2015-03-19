@@ -34,9 +34,7 @@ metalsmith
   }))
   .use(less({
     pattern: 'assets/css/**.less'
-    }
-  ))
-
+  }))
   // .use(deleteDrafts())
   .destination('./build')
   .build(function(err) {

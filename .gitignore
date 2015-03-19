@@ -1,4 +1,8 @@
 .DS_Store
 node_modules
 *.swp
+build/vendor
+src/vendor
+build/*
+assets/*
 bower_components
