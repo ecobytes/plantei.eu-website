@@ -5,12 +5,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{title}}</title>
-  <script type="text/javascript" src="build/vendor/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="vendor/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript" src="assets/js/script.js"></script>
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body id="index">
-
+<div class="pageWrap">
   <div class="jumbotron intro background-primary">
     <h1>
       plantei.eu
@@ -18,20 +18,33 @@
     <div class="description">
     Plataforma de gestão e partilha de bibliotecas de sementes
     </div>
-    <div class="mainActions lmb lmr">
+    <div class="row xlmt">
+      <div class="inscriptionDescription mmb col-md-6 col-md-offset-3 text-center"> {{{contents}}} </div>
+    </div>
+    <div class="row mmt mmb">
+      <form class="newsletterSubscription col-md-6 col-md-offset-3 text-center form-horizontal">
+          <div class="col-md-8 col-md-offset-2 mmb">
+            <input type="email" placeholder="your email" class="form-control" name="username" id="emailInput" />
+          </div>
+          <div class="col-md-12 mmt text-center">
+            <input type="submit" class="btn btn-success btn-lg" value="inscrever"/>
+          </div>
+      </form>
+    </div>
+    <!--div class="mainActions lmb lmr">
       <a href="#moreinfo" class="moreinfo btn btn-default btn-lg smb">Mais informação</a>
       <div class="btn-group lml" role="group" aria-label="...">
         <a href="/register.html" class="login btn btn-default btn-lg smb">Registo</a>
         <a href="/login" class="login btn btn-default btn-lg smb">Login</a>
       </div>
-    </div>
+    </div-->
   </div>
-  <div class="container-fluid">
+  <div class="container-fluid xlmb">
     <div class="row">
       <div class="col-md-12 lmt">
         <img id="moreinfo" class="img-responsive" src="http://placehold.it/1500x450">
       </div>
-      <div class="col-md-4 mmt">
+      <div class="col-md-4 mmt"> 
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat sed unde fugit ullam commodi, maiores quis incidunt cumque repellendus delectus repellat dolores recusandae facilis at aliquam porro excepturi voluptas distinctio. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic optio quae aliquam iusto! Aliquam cupiditate, obcaecati. Consequatur fugit quas at harum.
       </div>
       <div class="col-md-4 mmt">
@@ -41,14 +54,7 @@
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat sed unde fugit ullam commodi, maiores quis incidunt cumque repellendus delectus repellat dolores recusandae facilis at aliquam porro excepturi voluptas distinctio. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic optio quae aliquam iusto! Aliquam cupiditate, obcaecati. Consequatur fugit quas at harum.
       </div>
     </div>
-    <div class="row xlmt xlmb">
-      <form class="newsletterSubscription col-md-6 col-md-offset-3 text-center">
-        <div class="inscriptionDescription mmb"> {{{contents}}} </div>
-        <label for="email"></label>
-        <input name="email" type="email" placeholder="endereço de email">
-        <input type="submit" class="btn btn-success" value="inscrever"/>
-      </form>
-    </div>
+  </div>
   </div>
     <footer class="background-primary">
       Whatever we have to put here...
