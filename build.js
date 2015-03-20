@@ -3,6 +3,7 @@
 var Metalsmith = require('metalsmith'),
   markdown = require('metalsmith-markdown'),
   templates = require('metalsmith-templates'),
+  partial = require('metalsmith-partial'),
   collections = require('metalsmith-collections'),
   permalinks = require('metalsmith-permalinks'),
   less = require('metalsmith-less'),
@@ -27,6 +28,10 @@ metalsmith
   }))
   .use(permalinks({
     pattern: ':title'
+  }))
+  .use(partial({
+    directory: './templates/partials', 
+    engine: 'handlebars'
   }))
   .use(templates({
     engine: 'handlebars',
