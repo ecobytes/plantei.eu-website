@@ -17,8 +17,9 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "dev": "npm run build & npm run copy & npm run serve",
-    "build": "./node_modules/.bin/onchange 'templates/**/*' 'src/**/*' -- node build.js",
+    "dev": "node build.js & npm run build-onchange & npm run serve",
+    "build-onchange": "./node_modules/.bin/onchange 'templates/**/*' 'src/**/*' -- npm run build",
+    "build": "node build.js && cp -a build/* assets",
     "copy": "./node_modules/.bin/onchange 'build/**/*' -- cp -a build/* assets",
     "serve": "./node_modules/.bin/livereloadx -s -p 9191 ./assets",
     "clean": "rm -rf node_modules",
