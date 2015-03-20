@@ -1,6 +1,7 @@
 ---
 template: fullPageMessage.html
 title: Plantei.eu
+pageId: confirmedEmail
 bodyhead: plantei.eu
 permalink: false
 ---
@@ -9,4 +10,6 @@ permalink: false
 
 <div class="actionButtons text-center lmt">
 	<a class="btn btn-default btn-lg" href="/">Home</a>
+	<a class="btn btn-default btn-lg" href="/login.html">Login</a>
+
 </div>

@@ -9,7 +9,6 @@
   <script type="text/javascript" src="assets/js/script.js"></script>
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body id="{{pageId}}" class="background-primary">
 <div class="pageWrap">
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
@@ -23,16 +22,16 @@
       </button>
       <a class="navbar-brand" href="/">plantei.eu</a>
     </div>
-
     <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/">Logout</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 <div class="container-fluid">
-	<div class="row lmt">
-		<div class="col-md-6 col-md-offset-3 text-center">
 				{{{ contents }}}
-		</div>
-	</div>
 </div>
 </div>
 <footer> 

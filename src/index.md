@@ -1,6 +1,7 @@
 ---
 template: homepage.html
 title: Plantei.eu
+pageId: index
 bodyhead: plantei.eu
 permalink: false
 ---
