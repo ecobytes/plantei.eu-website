@@ -12,7 +12,6 @@
     "metalsmith-markdown": "*",
     "metalsmith-permalinks": "*",
     "metalsmith-templates": "*",
-    "metalsmith-partial": "*",
     "mocha": "*",
     "remarkable": "*"
   },

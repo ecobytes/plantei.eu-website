@@ -3,7 +3,6 @@
 var Metalsmith = require('metalsmith'),
   markdown = require('metalsmith-markdown'),
   templates = require('metalsmith-templates'),
-  partial = require('metalsmith-partial'),
   collections = require('metalsmith-collections'),
   permalinks = require('metalsmith-permalinks'),
   less = require('metalsmith-less'),
@@ -11,6 +10,22 @@ var Metalsmith = require('metalsmith'),
 
 var log = debug('build');
 var metalsmith = new Metalsmith(__dirname);
+
+
+//Loading partials
+var fs = require('fs');
+var path = require('path');
+var handlebars = require('handlebars');
+
+var partialsDir = './templates/partials/';
+var partialFiles = fs.readdirSync(partialsDir);
+partialFiles.forEach(function(partialFile){
+  var partialName = path.basename(partialFile, '.hbs')
+  handlebars.registerPartial(partialName, fs.readFileSync(partialsDir+partialFile, "utf8"));
+});
+
+
+
 
 metalsmith
 // .use(setTemplate({
@@ -29,10 +44,7 @@ metalsmith
   .use(permalinks({
     pattern: ':title'
   }))
-  .use(partial({
-    directory: './templates/partials', 
-    engine: 'handlebars'
-  }))
+
   .use(templates({
     engine: 'handlebars',
     directory: 'templates'
