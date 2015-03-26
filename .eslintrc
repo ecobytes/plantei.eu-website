@@ -23,7 +23,7 @@
                 "return": "returns"
              }
         }],
-        "quotes": [1, "double", "allow-avoiding-escaped-quotes"],
+        "quotes": [1, "single", "allow-avoiding-escaped-quotes"],
         "wrap-iife": [2, "inside"],
         "vars-on-top": 2
     },

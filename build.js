@@ -20,8 +20,8 @@ var handlebars = require('handlebars');
 var partialsDir = './templates/partials/';
 var partialFiles = fs.readdirSync(partialsDir);
 partialFiles.forEach(function(partialFile){
-  var partialName = path.basename(partialFile, '.hbs')
-  handlebars.registerPartial(partialName, fs.readFileSync(partialsDir+partialFile, "utf8"));
+  var partialName = path.basename(partialFile, '.hbs');
+  handlebars.registerPartial(partialName, fs.readFileSync(partialsDir, partialFile, 'utf8'));
 });
 
 
