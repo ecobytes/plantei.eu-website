@@ -11,6 +11,22 @@ var Metalsmith = require('metalsmith'),
 var log = debug('build');
 var metalsmith = new Metalsmith(__dirname);
 
+
+//Loading partials
+var fs = require('fs');
+var path = require('path');
+var handlebars = require('handlebars');
+
+var partialsDir = './templates/partials/';
+var partialFiles = fs.readdirSync(partialsDir);
+partialFiles.forEach(function(partialFile){
+  var partialName = path.basename(partialFile, '.hbs');
+  handlebars.registerPartial(partialName, fs.readFileSync(partialsDir, partialFile, 'utf8'));
+});
+
+
+
+
 metalsmith
 // .use(setTemplate({
 //   pattern: 'projects#<{(||)}>#*.md',
@@ -28,6 +44,7 @@ metalsmith
   .use(permalinks({
     pattern: ':title'
   }))
+
   .use(templates({
     engine: 'handlebars',
     directory: 'templates'
