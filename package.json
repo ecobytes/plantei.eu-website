@@ -17,18 +17,22 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "dev": "node build.js & npm run build-onchange & npm run serve",
+    "dev": "npm run build & npm run build-onchange & npm run serve",
     "build-onchange": "./node_modules/.bin/onchange 'templates/**/*' 'src/**/*' -- npm run build",
-    "build": "node build.js && cp -a build/* assets",
-    "copy": "./node_modules/.bin/onchange 'build/**/*' -- cp -a build/* assets",
-    "serve": "./node_modules/.bin/livereloadx -s -p 9191 ./assets",
+    "build": "node build.js && mkdir -p preview && cp -a build/* preview",
+    "copy": "./node_modules/.bin/onchange 'build/**/*' -- cp -a build/* preview",
+    "serve": "./node_modules/.bin/livereloadx -s -p 9191 ./preview",
+    "lint": "node utils/html5-lint.js",
     "clean": "rm -rf node_modules",
-
     "postinstall": "./node_modules/.bin/bower install"
   },
   "devDependencies": {
+    "colors": "^1.0.3",
+    "html5-lint": "^0.2.5",
     "livereloadx": "^0.3.7",
+    "metalsmith-less": "*",
+    "minimatch": "^2.0.4",
     "onchange": "^1.0.0",
-    "metalsmith-less": "*"
+    "recursive-readdir": "^1.2.1"
   }
 }

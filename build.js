@@ -1,37 +1,33 @@
 'use strict';
 
-var Metalsmith = require('metalsmith'),
-  markdown = require('metalsmith-markdown'),
-  templates = require('metalsmith-templates'),
-  collections = require('metalsmith-collections'),
-  permalinks = require('metalsmith-permalinks'),
-  less = require('metalsmith-less'),
-  debug = require('debug');
-
-var log = debug('build');
-var metalsmith = new Metalsmith(__dirname);
-
+var Metalsmith = require('metalsmith');
+var markdown = require('metalsmith-markdown');
+var templates = require('metalsmith-templates');
+var collections = require('metalsmith-collections');
+var permalinks = require('metalsmith-permalinks');
+var less = require('metalsmith-less');
+var debug = require('debug');
 
 //Loading partials
 var fs = require('fs');
 var path = require('path');
 var handlebars = require('handlebars');
 
+var log = debug('build');
+var metalsmith = new Metalsmith(__dirname);
+
+
+// Partials
 var partialsDir = './templates/partials/';
 var partialFiles = fs.readdirSync(partialsDir);
-partialFiles.forEach(function(partialFile){
+partialFiles.forEach(function(partialFile) {
   var partialName = path.basename(partialFile, '.hbs');
-  handlebars.registerPartial(partialName, fs.readFileSync(partialsDir, partialFile, 'utf8'));
+  var content = fs.readFileSync(path.join(partialsDir, partialFile), 'utf8');
+  handlebars.registerPartial(partialName, content);
 });
 
 
-
-
 metalsmith
-// .use(setTemplate({
-//   pattern: 'projects#<{(||)}>#*.md',
-//   template: 'projects.html'
-// }))
   .use(markdown())
   .use(collections({
     articles: {
@@ -44,7 +40,6 @@ metalsmith
   .use(permalinks({
     pattern: ':title'
   }))
-
   .use(templates({
     engine: 'handlebars',
     directory: 'templates'
@@ -52,7 +47,7 @@ metalsmith
   .use(less({
     pattern: 'assets/css/**.less'
   }))
-  // .use(deleteDrafts())
+  .use(deleteDrafts())
   .destination('./build')
   .build(function(err) {
     // var m;

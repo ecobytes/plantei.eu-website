@@ -5,4 +5,5 @@ build/vendor
 src/vendor
 build/*
 assets/*
+preview/*
 bower_components
