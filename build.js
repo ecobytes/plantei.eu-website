@@ -6,14 +6,13 @@ var templates = require('metalsmith-templates');
 var collections = require('metalsmith-collections');
 var permalinks = require('metalsmith-permalinks');
 var less = require('metalsmith-less');
-var debug = require('debug');
+var debug = require('debug')('plantei:build');
 
 //Loading partials
 var fs = require('fs');
 var path = require('path');
 var handlebars = require('handlebars');
 
-var log = debug('build');
 var metalsmith = new Metalsmith(__dirname);
 
 
@@ -51,10 +50,10 @@ metalsmith
   .destination('./build')
   .build(function(err) {
     // var m;
-    if (err) log('Error! %s', err);
+    if (err) debug('Error!', err);
 
     // m = metalsmith.metadata();
-    // log('What? ', m);
+    // debug('What? ', m);
   });
 
 
@@ -62,7 +61,7 @@ metalsmith
 function deleteDrafts() {
   return function drafts(files, ms, done) {
     Object.keys(files).forEach(function(file) {
-      log('delete draft %s', file);
+      debug('delete draft %s', file);
       if (files[file].draft) delete files[file];
     });
     done();
