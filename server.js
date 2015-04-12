@@ -28,9 +28,9 @@ var plugins = [{
   options: {
     reporters: [{
       reporter: require('good-console'),
-      args: [{
+      events: [{
         log: '*',
-        response: '*'
+        request: '*'
       }]
     }]
   }
