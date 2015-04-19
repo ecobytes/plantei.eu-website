@@ -44,7 +44,7 @@ metalsmith
     directory: 'templates'
   }))
   .use(less({
-    pattern: 'assets/css/**.less'
+    pattern: 'css/**.less'
   }))
   .use(deleteDrafts())
   .destination('./build')
