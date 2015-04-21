@@ -36,6 +36,12 @@ var plugins = [{
   }
 }];
 
+if (process.env.NODE_ENV === 'development') {
+  plugins.push({
+    register: require('tv'),
+    options: {}
+  });
+}
 
 server.connection({
   host: '127.0.0.1',

@@ -5,7 +5,7 @@ rules:
   no-underscore-dangle: 0
   camelcase: [1, { "properties": "never" }]
   indent: [2, 2]
-  curly: [2, "multi"]
+  curly: [1, "multi"]
   quotes: [2, "single"]
   brace-style: [1, "1tbs", { "allowSingleLine": true }]
   no-use-before-define: [2, "nofunc"]
