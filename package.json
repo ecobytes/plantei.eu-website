@@ -75,9 +75,8 @@
   "scripts": {
     "test": "node_modules/.bin/lab -t 100",
     "dev": "mkdir build -p && mkdir public -p && npm run build-static && npm run build-static-onchange & npm run copy & npm run serve",
-    "build-static": "node build-static-site.js & npm run build-client-js",
+    "build-static": "node build-static-site.js",
     "build-static-onchange": "node_modules/.bin/onchange 'templates/**/*' 'src/**/*' -- npm run build-static",
-    "build-client-js": "node_modules/.bin/browserify client-js/bootstrap-bundle.js -d | node_modules/.bin/exorcist public/js/boostrap-bundle.js.map > public/js/bootstrap-bundle.js",
     "copy": "mkdir -p public && node_modules/.bin/onchange 'build/**/*' -- rsync -cav --exclude 'js/' --exclude 'ongoing/' --delete build/ public",
     "serve": "node_modules/.bin/livereloadx -s -p 9191 ./public",
     "lint": "node utils/html5-lint.js",
