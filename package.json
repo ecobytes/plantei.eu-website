@@ -74,7 +74,7 @@
   },
   "scripts": {
     "test": "node_modules/.bin/lab -t 100",
-    "dev": "mkdir build -p && mkdir public -p && npm run build-static && npm run build-static-onchange & npm run copy & npm run serve",
+    "dev": "mkdir -p build && mkdir -p public && npm run build-static && npm run build-static-onchange & npm run copy & npm run serve",
     "build-static": "node build-static-site.js",
     "build-static-onchange": "node_modules/.bin/onchange 'templates/**/*' 'src/**/*' -- npm run build-static",
     "copy": "mkdir -p public && node_modules/.bin/onchange 'build/**/*' -- rsync -cav --exclude 'js/' --exclude 'ongoing/' --delete build/ public",
