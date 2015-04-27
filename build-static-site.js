@@ -27,6 +27,7 @@ partialFiles.forEach(function(partialFile) {
 
 
 metalsmith
+  .source('./src/contents/contents/pt')
   .use(markdown())
   .use(collections({
     articles: {

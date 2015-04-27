@@ -77,7 +77,7 @@
     "dev": "mkdir -p build && mkdir -p public && npm run build-static && npm run build-static-onchange & npm run copy & npm run serve",
     "build-static": "node build-static-site.js",
     "build-static-onchange": "node_modules/.bin/onchange 'templates/**/*' 'src/**/*' -- npm run build-static",
-    "copy": "mkdir -p public && node_modules/.bin/onchange 'build/**/*' -- rsync -cav --exclude 'js/' --exclude 'ongoing/' --delete build/ public",
+    "copy": "mkdir -p public && node_modules/.bin/onchange 'build/**/*' -- rsync -cav --exclude 'js/' --exclude 'css/' --exclude 'ongoing/' --delete build/ public",
     "serve": "node_modules/.bin/livereloadx -s -p 9191 ./public",
     "lint": "node utils/html5-lint.js",
     "clean": "rm -rf node_modules src/vendor",

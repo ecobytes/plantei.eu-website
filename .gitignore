@@ -7,3 +7,4 @@ build/*
 assets/*
 preview/*
 bower_components
+public

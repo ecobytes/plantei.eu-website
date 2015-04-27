@@ -9,6 +9,7 @@ var exorcist = require('exorcist');
 var del = require('del');
 var ecstatic = require('ecstatic');
 var gulp = require('gulp');
+var less = require('gulp-less');
 var livereload = require('gulp-livereload');
 var gulpif = require('gulp-if');
 var notify = require('gulp-notify');
@@ -27,7 +28,7 @@ gulp.task('browserify-watch', function() {
   browserifyBootstrapBundle();
 });
 
-gulp.task('watch', ['browserify-watch'], function() {
+gulp.task('watch', ['browserify-watch', 'less'], function() {
   http.createServer(ecstatic({
     root: path.join(__dirname, 'public')
   })).listen(process.env.DEV_PORT || 8181);
@@ -36,6 +37,13 @@ gulp.task('watch', ['browserify-watch'], function() {
     basePath: 'public'
   });
 });
+
+gulp.task('less', function() {
+  gulp.src('src/css/style.less')
+  .pipe(less())
+  .pipe(gulp.dest('build/css/'));
+ });
+
 
 gulp.task('clean', function(cb) {
   del(['public/js/**/*.js', 'public/js/**/*.js.map'], cb);
