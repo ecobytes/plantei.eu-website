@@ -1,0 +1,5 @@
+#!/bin/bash
+newestSQL=`ls -t /vagrant/dbdumps | head -1`
+/usr/bin/mysql -uroot -plocalpassword localdatabase < /vagrant/dbdumps/"$newestSQL"
+
+

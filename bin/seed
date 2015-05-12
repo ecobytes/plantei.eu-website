@@ -1,0 +1,4 @@
+#!/bin/bash
+/usr/bin/php /vagrant/src/server/artisan migrate "$@"
+/usr/bin/php /vagrant/src/server/artisan db:seed "$@"
+

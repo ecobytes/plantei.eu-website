@@ -1,0 +1,7 @@
+
+The commands in this page should be ran from inside the VM. just run ´vagrant ssh´ to get there.
+
+This directory was added to $PATH, which makes the commands globally accessible.
+
+
+
