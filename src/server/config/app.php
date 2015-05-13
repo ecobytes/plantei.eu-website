@@ -151,6 +151,7 @@ return [
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
 		'Pingpong\Modules\ModulesServiceProvider',
     'Pingpong\Modules\Providers\BootstrapServiceProvider',
+    'Wetzel\Handlebars\HandlebarsServiceProvider',
 
 	],
 
