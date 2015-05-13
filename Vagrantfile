@@ -57,7 +57,7 @@ Vagrant.configure(2) do |config|
   else
     config.vm.synced_folder "./", "/var/www", create: true, group: "www-data", owner: "www-data"
   end
-  
+
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
@@ -73,7 +73,7 @@ Vagrant.configure(2) do |config|
   # View the documentation for the provider you are using for more
   # information on available options.
   config.vm.provider "virtualbox" do |v|
-    v.name = "Caravel DevelBox 0.2"
+    v.name = "Plantei.eu DevelBox"
   end
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
