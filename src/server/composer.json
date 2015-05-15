@@ -29,7 +29,8 @@
 			"database"
 		],
 		"psr-4": {
-			"Caravel\\": "app/"
+			"Caravel\\": "app/",
+			"Modules\\": "modules/"
 		}
 	},
 	"autoload-dev": {

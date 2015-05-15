@@ -204,6 +204,7 @@ return [
 		//Thirdparty
 		'Debugbar' => 'Barryvdh\Debugbar\Facade',
 		'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
+		'Module' => 'Pingpong\Modules\Facades\Module',
 
 	],
 
