@@ -1,0 +1,67 @@
+@import "variables.less";
+
+::-webkit-input-placeholder {
+   font-style: italic;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   font-style: italic;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   font-style: italic;
+}
+
+:-ms-input-placeholder {
+   font-style: italic;
+}
+
+label {
+	cursor: pointer;
+	font-weight: 500;
+}
+
+
+.form-horizontal .form-group{
+	display: table;
+	width: 100%;
+	margin-bottom: 24px;
+	margin-left: 0;
+	margin-right: 0;
+	.control-label {
+		text-align: left;
+		display: table-cell;
+		white-space: nowrap;
+		padding-right: 12px;
+		vertical-align: middle;
+	}
+	.cell {
+		display: table-cell;
+		width: 100%;
+	}
+
+
+}
+
+.form-control {
+	border: 0;
+	border-bottom: 1px solid @brand-primary;
+	box-shadow: none;
+}
+.form-control:focus {
+	border-width: 2px;
+	border-color: @brand-primary;
+	box-shadow: none;
+}
+
+.background-primary {
+  .form-control, input {
+		color: white;
+	}
+	.form-control {
+		border-bottom: 1px solid white;
+	}
+	.form-control:focus {
+		border-color: white;
+	}
+}

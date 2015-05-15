@@ -1,0 +1,68 @@
+// Breaks at: screen-xs 480px; @screen-sm: 768px; @screen-md: 992px; @screen-lg: 1200px;
+@import "variables.less";
+
+#index{
+	.jumbotron.intro {
+		h1{
+			text-align: center;
+			font-weight: 100;
+		}
+	background: @brand-primary url('/introImages/DSC_1949.jpg') no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+	position: relative;
+	padding: 50px;
+	min-height: 60vh;
+  .inscriptionDescription {
+		letter-spacing: 0.01em;
+	}
+	.mainActions {
+		margin-left: 15px;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		}
+	}
+	padding-top: 0;
+
+	#emailInput, #nameInput {
+		text-align: center
+	}
+	#emailInput::-webkit-input-placeholder {
+	 text-align: center;
+	}
+
+	#emailInput:-moz-placeholder { /* Firefox 18- */
+	 text-align: center;
+	}
+
+	#emailInput::-moz-placeholder {  /* Firefox 19+ */
+	 text-align: center;
+	}
+
+	#emailInput:-ms-input-placeholder {
+	 text-align: center;
+	}
+}
+
+
+@media (max-width: @screen-sm) {
+	#index {
+		.jumbotron.intro .mainActions {
+			position: relative;
+			margin-left: 0;
+			margin-right: 0;
+			margin-top: @lm;
+			text-align: center;
+			.btn, .btn-group {
+				margin-left: 0;
+				margin-right: 0;
+			}
+			.moreinfo {
+				margin-bottom: @mm;
+			}
+		}
+	}
+}
