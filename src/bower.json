@@ -1,8 +1,8 @@
 {
-  "name": "Caravel CMS",
-  "version": "0.2",
+  "name": "Plantei.eu",
+  "version": "0.0.1",
   "dependencies": {
-    "bootstrap": "~3.*",
+    "bootstrap": "~3.*"
   },
   "private": true
 }
