@@ -1,0 +1,15 @@
+{
+    "name": "ProjectPresentation",
+    "alias": "projectpresentation",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\ProjectPresentation\\Providers\\ProjectPresentationServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "start.php"
+    ]
+}

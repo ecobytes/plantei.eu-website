@@ -11,5 +11,5 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
+//Route::get('/', 'Modules\ProjectPresentation\Http\Controllers\ProjectPresentationController@index');
 

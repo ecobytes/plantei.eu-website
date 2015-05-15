@@ -1,0 +1,79 @@
+{{> header}}
+<body id="index">
+<div class="container-fluid">
+ {{#unless isProduction}}
+  <div class="row">
+  <div class="col-md-12 envWarning text-center text-danger smt smb">
+    Site running in test mode. Inserted data will be destroyed regularly.
+  </div>
+  </div>
+  {{/unless}}
+</div>
+<div class="pageWrap">
+  <div class="jumbotron intro background-primary">
+    <h1>
+      plantei.eu
+    </h1>
+    <div class="description">
+    {{subtitle}}
+    </div>
+    <div class="row lmt">
+      <div class="inscriptionDescription mmb col-md-6 col-md-offset-3 text-center"> Projecto para a promoção da <b>soberania alimentar</b>, facilitando a troca de sementes e&nbsp;de&nbsp;conhecimento associado, através de uma plataforma online conjugada com acções no terreno, encontrando-se em fase inicial de desenvolvimento.
+      {{#if showSubscription}}
+      <br/>Inscreva-se na nossa mailing list e acompanhe o desenvolvimento do projecto.
+      {{/if}}
+      </div>
+    </div>
+    {{#if showSubscription}}
+    <div class="row mmt mmb">
+      <form class="newsletterSubscription col-md-6 col-md-offset-3 text-center form-horizontal" method="POST" action='/newsletter'><div class="row">
+          <div class="col-md-6 mmb">
+            <input type="name" placeholder="O seu nome" class="form-control" name="name" id="nameInput" />
+          </div>
+          <div class="col-md-6 mmb">
+            <input type="email" placeholder="o seu email" class="form-control" name="email" id="emailInput" />
+          </div>
+        </div>
+          {{#if errors}}
+          <div class="row validationErrors">
+          {{#each errors}}
+            <div class="alert alert-danger" role="alert">{{this}}</div>
+          {{/each}}
+          {{/if}}
+          </div>
+          <div class="text-muted mmb"><i>Prometemos poucos e-mails</i></div>
+          <div class="col-md-12 text-center">
+            <input type="submit" class="btn btn-success btn-lg" value="Subscrever"/>
+          </div>
+      </form>
+    </div>
+    {{/if}}
+    <!--div class="mainActions lmb lmr">
+      <a href="#moreinfo" class="moreinfo btn btn-default btn-lg smb">Mais informação</a>
+      <div class="btn-group lml" role="group" aria-label="...">
+        <a href="/register.html" class="login btn btn-default btn-lg smb">Registo</a>
+        <a href="/login" class="login btn btn-default btn-lg smb">Login</a>
+      </div>
+    </div-->
+  </div>
+  <div class="container-fluid lmb">
+    <div class="row nml nmr">
+      <!--div class="col-md-12 ">
+        <img id="moreinfo" class="img-responsive" src="http://placehold.it/1500x450">
+      </div-->
+      <div class="col-md-4 mmt">
+        <h2>Bibliotecas Pessoais</h2> 
+        Os utilizadores poderão registar as suas variedades e trocar com outros utilizadores; desta forma o plantei.eu contribui para a descentralização do ciclo produtivo da semente, baixando os custos directos de produção alimentar para agricultores e hortelãos assim como os preços dos alimentos para os consumidores finais.</p>
+      </div>
+      <div class="col-md-4 mmt">
+        <h2>Enciclopédia</h2>
+        <p>Qualquer pessoa poderá aceder e <i>co-produzir conhecimentos sobre sementes, variedades tradicionais, plantas e seus usos</i>, contribuindo para a preservação das variedades autóctones, dos conhecimentos e cultura a elas associados, bem como potenciar o desenvolvimento de inovações por parte de <i>stakeholders</i> do sector (investigadores, agricultores, comerciantes, etc.).</span></p>
+      </div>
+      <div class="col-md-4 mmt">
+        <h2>Partilha e Preservação</h2>
+        <p>Apoiando o desenvolvimento de comunidades de prática e apoiando as já existentes, assim como facilitando agendamento e promoção de encontros de trocas de sementes, seminários, notícias, entre outros.</p>
+      </div>
+    </div>
+  </div>
+  </div>
+{{> footer}}

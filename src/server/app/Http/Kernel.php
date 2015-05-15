@@ -16,7 +16,8 @@ class Kernel extends HttpKernel {
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
 		//'Caravel\Http\Middleware\VerifyCsrfToken',
-		'LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware'
+		'LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware',
+		'Caravel\Http\Middleware\GlobalVars'
 	];
 
 	/**
