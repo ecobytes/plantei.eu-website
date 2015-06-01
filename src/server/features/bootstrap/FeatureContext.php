@@ -36,24 +36,20 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     {
       App::environment('behat');
       $this->baseUrl = $this->getMinkParameter('base_url');
+      $this->setUpDb();
     }
 
     public static function setUpDb()
     {
-        Artisan::call('migrate:install');
-    }
-    
-    
-    /**
-     * @static
-     * @beforeFeature
-     */
-    public static function prepDb()
-    {
-        Artisan::call('migrate:refresh');
+        Artisan::call('module:migrate-reset');
+        Artisan::call('migrate');
+        Artisan::call('module:migrate');
         Artisan::call('db:seed', array('--class' => 'SettingTableSeeder'));
         Artisan::call('db:seed', array('--class' => 'RolesTableSeeder'));
     }
+    
+
+
 
     /**
      * @AfterStep
@@ -77,6 +73,26 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
 
         $this->saveScreenshot($fileName, $filePath);
         print 'Saving screenshot at: test-results/'. $fileName;
+    }
+
+    /**
+     * @Given I have subscribed my email to the newsletter
+     */
+    public function iHaveSubscribedMyEmailToTheNewsletter()
+    {
+      $this->visit('/');
+      $this->fillField('name', $this->name);
+      $this->fillField('email', $this->email);
+      $this->pressButton('Subscrever');
+    }
+
+    /**
+     * @When I go to validation url
+     */
+    public function iGoToValidationUrl()
+    {
+        $subscriptor = \Modules\Newsletter\Entities\NewsletterSubscriptor::where('email', $this->email)->firstOrFail();
+        $this->visit('/newsletter/confirm/'.$subscriptor->verification_key);
     }
   
 }

@@ -5,8 +5,5 @@ Feature: Is Running
 
 Scenario: Home Page
 	Given I am on the homepage
-	Then I should see "Caravel 0.2"
+	Then I should see "Plantei.eu"
 
-Scenario: Admin is not accessible to guests
-	When I go to "admin"
-	Then the url should match "login"
