@@ -39,7 +39,7 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", ip: "192.168.33.10"
   file = File.open("hostname", "rb")
   hostname = file.read
-  config.vm.hostname = hostname + ".dev"
+  config.vm.hostname = hostname.strip + ".dev"
   file.close()
 
   # Create a public network, which generally matched to bridged network.
