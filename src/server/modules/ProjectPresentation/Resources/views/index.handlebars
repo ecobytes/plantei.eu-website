@@ -11,6 +11,26 @@
 </div>
 <div class="pageWrap">
   <div class="jumbotron intro background-primary">
+  <div class="row lang">
+  <div class="pull-right">
+    <ul class="list-unstyled list-inline">
+      <li>
+      {{#if lang.pt}}
+      <span>pt</span>
+      {{else}}
+      <a href="/pt">pt</a>
+      {{/if}}
+      </li>
+      <li>
+      {{#if lang.en}}
+        <span>en</span>
+      {{else}}
+        <a href="/en">en</a>
+      {{/if}}
+      </li>
+    </ul>
+  </div>
+  </div>
     <h1>
       plantei.eu
     </h1>
@@ -18,9 +38,9 @@
     {{subtitle}}
     </div>
     <div class="row lmt">
-      <div class="inscriptionDescription mmb col-md-6 col-md-offset-3 text-center"> Projecto para a promoção da <b>soberania alimentar</b>, facilitando a troca de sementes e&nbsp;de&nbsp;conhecimento associado, através de uma plataforma online conjugada com acções no terreno, encontrando-se em fase inicial de desenvolvimento.
+      <div class="inscriptionDescription mmb col-md-6 col-md-offset-3 text-center"> {{{messages.intro}}}
       {{#if showSubscription}}
-      <br/>Inscreva-se na nossa mailing list e acompanhe o desenvolvimento do projecto.
+      <br/>{{{messages.mailingListSubscriptionTease}}}
       {{/if}}
       </div>
     </div>
@@ -29,10 +49,10 @@
       <form class="newsletterSubscription col-md-6 col-md-offset-3 text-center form-horizontal" method="POST" action='/newsletter'><div class="row">
           <input type="hidden" name="_token" value="{{ csrfToken }}">
           <div class="col-md-6 mmb">
-            <input type="name" placeholder="O seu nome" class="form-control" name="name" id="nameInput" />
+            <input type="name" placeholder="{{messages.yourName}}" class="form-control" name="name" id="nameInput" />
           </div>
           <div class="col-md-6 mmb">
-            <input type="email" placeholder="o seu email" class="form-control" name="email" id="emailInput" />
+            <input type="email" placeholder="{{messages.yourEmail}}" class="form-control" name="email" id="emailInput" />
           </div>
         </div>
           {{#if errors}}
@@ -63,16 +83,17 @@
         <img id="moreinfo" class="img-responsive" src="http://placehold.it/1500x450">
       </div-->
       <div class="col-md-4 mmt">
-        <h2>Bibliotecas Pessoais</h2> 
-        Os utilizadores poderão registar as suas variedades e trocar com outros utilizadores; desta forma o plantei.eu contribui para a descentralização do ciclo produtivo da semente, baixando os custos directos de produção alimentar para agricultores e hortelãos assim como os preços dos alimentos para os consumidores finais.</p>
+        <h2>{{{messages.descriptionTitle1}}}</h2> 
+        <p>{{{messages.descriptionContent1}}}</p>
       </div>
       <div class="col-md-4 mmt">
-        <h2>Enciclopédia</h2>
-        <p>Qualquer pessoa poderá aceder e <i>co-produzir conhecimentos sobre sementes, variedades tradicionais, plantas e seus usos</i>, contribuindo para a preservação das variedades autóctones, dos conhecimentos e cultura a elas associados, bem como potenciar o desenvolvimento de inovações por parte de <i>stakeholders</i> do sector (investigadores, agricultores, comerciantes, etc.).</span></p>
+        <h2>{{{messages.descriptionTitle2}}}</h2>
+        <p>        {{{messages.descriptionContent2}}}</p>
       </div>
       <div class="col-md-4 mmt">
-        <h2>Partilha e Preservação</h2>
-        <p>Apoiando o desenvolvimento de comunidades de prática e apoiando as já existentes, assim como facilitando agendamento e promoção de encontros de trocas de sementes, seminários, notícias, entre outros.</p>
+        <h2>{{{messages.descriptionTitle3}}}</h2>
+        <p>        {{{messages.descriptionContent3}}}</p>
+</p>
       </div>
     </div>
   </div>

@@ -15,7 +15,9 @@ class ProjectPresentationController extends Controller {
 		if(!empty($errors)){
 		\View::share('errors', $errors->default->toArray());
 		}
-		return view('projectpresentation::index')->with('showSubscription', $showSubscription);
+		return view('projectpresentation::index')
+		->with('messages', \Lang::get('projectpresentation::messages'))
+		->with('showSubscription', $showSubscription)
 		->with('csrfToken', csrf_token());
 	}
 	
