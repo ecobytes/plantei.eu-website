@@ -28,8 +28,8 @@ class Kernel extends HttpKernel {
 	protected $routeMiddleware = [
 		'auth' => 'Caravel\Http\Middleware\Authenticate',
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
-		'guest' => 'Caravel\Http\Middleware\RedirectIfAuthenticated',
-		'csrf' => 'App\Http\Middleware\VerifyCsrfToken',
+		'guest' => '\Caravel\Http\Middleware\RedirectIfAuthenticated',
+		'csrf' => '\Caravel\Http\Middleware\VerifyCsrfToken',
 	];
 
 }
