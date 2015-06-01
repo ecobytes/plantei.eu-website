@@ -35,7 +35,9 @@ unset($args[0]);
 $argString = ' '. implode(' ', $args);
 passthru ('cd /vagrant/src; /vagrant/src/vendor/bin/behat'.$argString);
 sleep(1);
-$process->stop();
+if(isset($process)){
+  $process->stop();
+}
 
 /* An easy way to keep in track of external processes.
 * Ever wanted to execute a process in php, but you still wanted to have somewhat controll of the process ? Well.. This is a way of doing it.

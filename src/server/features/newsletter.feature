@@ -20,7 +20,6 @@ Scenario: Subscribed Email with bad email
 	When I press "Subscrever"
 	Then I should see "É necessário fornecer um endereço de email válido"
 
-@current
 Scenario: Subscribed Email with no name
 	Given I am on the homepage
 	When I fill in the following:
@@ -33,7 +32,6 @@ Scenario: Confirmed Email
  Given I have subscribed my email to the newsletter
  When I go to validation url
  Then I should see "Inscrição Confirmada"
-
 
 Scenario: Failed Confirmation
  Given I have subscribed my email to the newsletter

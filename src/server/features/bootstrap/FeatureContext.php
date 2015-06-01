@@ -37,17 +37,17 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
       App::environment('behat');
       $this->baseUrl = $this->getMinkParameter('base_url');
       $this->setUpDb();
-    }
+  }
 
-    public static function setUpDb()
-    {
-        Artisan::call('module:migrate-reset');
-        Artisan::call('migrate');
-        Artisan::call('module:migrate');
-        Artisan::call('db:seed', array('--class' => 'SettingTableSeeder'));
-        Artisan::call('db:seed', array('--class' => 'RolesTableSeeder'));
-    }
-    
+  public static function setUpDb()
+  {
+    Artisan::call('module:migrate-reset');
+    Artisan::call('migrate');
+    Artisan::call('module:migrate');
+    Artisan::call('db:seed', array('--class' => 'SettingTableSeeder'));
+    Artisan::call('db:seed', array('--class' => 'RolesTableSeeder'));
+}
+
 
 
 
