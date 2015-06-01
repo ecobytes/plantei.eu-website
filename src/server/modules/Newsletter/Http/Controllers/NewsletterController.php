@@ -33,13 +33,21 @@ class NewsletterController extends Controller {
 	}
 
 	public function confirm($key){
-		$subscriptor = \Modules\Newsletter\Entities\NewsletterSubscriptor::where('verification_key', '=', $key)->firstOrFail();
+		$subscriptor = \Modules\Newsletter\Entities\NewsletterSubscriptor::where('verification_key', '=', $key)->first();
+		if(!$subscriptor){
+			return view('fullPageMessage', array(
+			'title' => 'Erro na Confirmação da Inscrição',
+			'message' => 'Caso necessite de assistência técnica contacte '. env('TECH_SUPPORT_EMAIL') .'.',
+			'buttons' => array(['label' => 'Página Inicial', 'url' => '/'])
+			));
+		}
 		$subscriptor->verified = true;
 		$subscriptor->active = true;
 		$subscriptor->save();
-		return view('fullPageMessage')
-		->with('title', 'Inscrição Confirmada')
-		->with('message', 'Está agora inscrito na nossa Newsletter.')
-		->with('buttons', array(['label' => 'Página Inicial', 'url' => '/']));
+		return view('fullPageMessage', array(
+			'title' => 'Inscrição Confirmada',
+			'message' => 'Está agora inscrito na nossa Newsletter.',
+			'buttons' => array(['label' => 'Página Inicial', 'url' => '/'])
+		));
 	}
 }
