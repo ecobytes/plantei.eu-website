@@ -12,9 +12,9 @@ class NewsletterController extends Controller {
 
 	public function subscribed(){
 		return view('newsletter::subscribed')
-		->with('title', 'Inscrição bem sucedida')
-		->with('message', 'Foi enviado um e-mail de confirmação para a sua caixa de email.')
-		->with('buttons', array(['label' => 'Página Inicial', 'url' => '/']));
+		->with('title', \Lang::get('newsletter::messages.subscriptionSuccessfulTitle'))
+		->with('message', \Lang::get('newsletter::messages.subscriptionSuccessfulMessage'))
+		->with('buttons', array(['label' => \Lang::get('newsletter::messages.homePage'), 'url' => '/']));
 	}
 
 	public function store(NewsletterRequest $request){
@@ -36,8 +36,8 @@ class NewsletterController extends Controller {
 		$subscriptor = \Modules\Newsletter\Entities\NewsletterSubscriptor::where('verification_key', '=', $key)->first();
 		if(!$subscriptor){
 			return view('fullPageMessage', array(
-			'title' => 'Erro na Confirmação da Inscrição',
-			'message' => 'Caso necessite de assistência técnica contacte '. env('TECH_SUPPORT_EMAIL') .'.',
+			'title' =>  \Lang::get('newsletter::messages.errorConfirmingEmailTitle'),
+			'message' => \Lang::get('newsletter::messages.errorConfirmingEmailMessage'),
 			'buttons' => array(['label' => 'Página Inicial', 'url' => '/'])
 			));
 		}
@@ -45,8 +45,8 @@ class NewsletterController extends Controller {
 		$subscriptor->active = true;
 		$subscriptor->save();
 		return view('fullPageMessage', array(
-			'title' => 'Inscrição Confirmada',
-			'message' => 'Está agora inscrito na nossa Newsletter.',
+			'title' =>  \Lang::get('newsletter::messages.successConfirmingEmailTitle'),
+			'message' => \Lang::get('newsletter::messages.successConfirmingEmailMessage'),
 			'buttons' => array(['label' => 'Página Inicial', 'url' => '/'])
 		));
 	}

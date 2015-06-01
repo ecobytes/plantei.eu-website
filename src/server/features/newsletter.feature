@@ -8,8 +8,8 @@ Scenario: Subscribed Email
 	When I fill in the following:
 	|name  | testUser 						|
 	|email | testuser@example.com |
-	When I press "Subscrever"
-	Then I should see "Inscrição bem sucedida"
+	When I press "Subscribe"
+	Then I should see "Subscription Successfull"
 
 
 Scenario: Subscribed Email with bad email
@@ -17,23 +17,23 @@ Scenario: Subscribed Email with bad email
 	When I fill in the following:
 	|name  | testUser 						|
 	|email | testuserexample.com |
-	When I press "Subscrever"
-	Then I should see "É necessário fornecer um endereço de email válido"
+	When I press "Subscribe"
+	Then I should see "You must supply a valid email address"
 
 Scenario: Subscribed Email with no name
 	Given I am on the homepage
 	When I fill in the following:
 	|name  |  						|
 	|email | testuser@example.com |
-	When I press "Subscrever"
-	Then I should see "É necessário fornecer um nome."
+	When I press "Subscribe"
+	Then I should see "You must provide a name."
 
 Scenario: Confirmed Email
  Given I have subscribed my email to the newsletter
  When I go to validation url
- Then I should see "Inscrição Confirmada"
+ Then I should see "Subscription Confirmed"
 
 Scenario: Failed Confirmation
  Given I have subscribed my email to the newsletter
  When I go to "/newsletter/confirm/wrongvalidationkey"
- Then I should see "Erro na Confirmação da Inscrição"
+ Then I should see "Error Confirming your subscription"
