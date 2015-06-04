@@ -17,7 +17,7 @@ touch /home/vagrant/last-apt-update
 lastUpdate=$(</home/vagrant/last-apt-update)
 
 if [ $((start-lastUpdate)) -gt 86400 ]; then apt-get update; apt-get -y dist-upgrade; fi;
-
+apt-get autoremove
  
 echo "Provisioning virtual machine..."
 
@@ -104,9 +104,33 @@ chmod +x /etc/update-motd.d/99-caravel
 
 cd /vagrant
 npm install
+npm update
 cd /vagrant/src/server
 composer update
 
+echo ">>> Installing Mailhog (testing email server)"
+ 
+# Download binary from github
+mailHogURL=$(curl -s https://api.github.com/repos/mailhog/MailHog/releases | grep browser_download_url | grep 'linux_386' | head -n 1 | cut -d '"' -f 4)
+
+wget -O /usr/local/bin/mailhog "$mailHogURL"
+ 
+# Make it executable
+chmod +x /usr/local/bin/mailhog
+ 
+# Make it start on reboot
+sudo tee /etc/init/mailhog.conf <<EOL
+description "Mailhog"
+start on runlevel [2345]
+stop on runlevel [!2345]
+respawn
+pre-start script
+    exec su - vagrant -c "/usr/bin/env /usr/local/bin/mailhog > /dev/null 2>&1 &"
+end script
+EOL
+ 
+# Start it now in the background
+sudo service mailhog start
 
 
 end=`date +%s`
