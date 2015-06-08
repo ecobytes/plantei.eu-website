@@ -94,13 +94,13 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
       $this->pressButton('Subscribe');
     }
 
-    /**
-     * @When I go to validation url
+   /**
+     * @When I go to :lang validation url
      */
-    public function iGoToValidationUrl()
+    public function iGoToValidationUrl($lang)
     {
-        $subscriptor = \Modules\Newsletter\Entities\NewsletterSubscriptor::where('email', $this->email)->firstOrFail();
-        $this->visit('/newsletter/confirm/'.$subscriptor->verification_key);
+        $subscriptor = \Modules\Newsletter\Entities\NewsletterSubscriptor::firstOrFail();
+        $this->visit('/'.$lang.'/newsletter/confirm/'.$subscriptor->verification_key);
     }
   
     /**
