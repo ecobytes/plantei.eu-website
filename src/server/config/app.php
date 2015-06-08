@@ -208,4 +208,6 @@ return [
 
 	],
 
+	'availableLanguages' => ['en', 'pt'],
+	'availableLanguagesFull' => ['en' => 'English', 'pt' => 'Português'],
 ];
