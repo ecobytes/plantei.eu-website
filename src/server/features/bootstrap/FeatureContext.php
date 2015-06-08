@@ -103,4 +103,27 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         $this->visit('/newsletter/confirm/'.$subscriptor->verification_key);
     }
   
+    /**
+     * @Then I should get an email with the title :arg1
+     */
+    public function iShouldGetAnEmailWithTheTitle($arg1)
+    {
+
+        $latestMail = json_decode(file_get_contents('http://127.0.0.1:8025/api/v2/messages?limit=1'));
+        if(strrpos($latestMail->items[0]->Content->Headers->Subject[0], $arg1) === false){
+          throw new Exception ('Title not found.');
+        }
+    }
+
+     /**
+     * @Then I should get an email containing :arg1
+     */
+    public function iShouldGetAnEmailContaining($arg1)
+    {
+
+        $latestMail = json_decode(file_get_contents('http://127.0.0.1:8025/api/v2/messages?limit=1'));
+        if(strrpos($latestMail->items[0]->Content->Body, $arg1) === false){
+          throw new Exception ('Body does not contain string.');
+        }
+    }
 }
