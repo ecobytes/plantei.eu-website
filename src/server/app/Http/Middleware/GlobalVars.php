@@ -18,6 +18,8 @@ class GlobalVars {
 			$isProduction = true;
 		}
 		 \View::share('isProduction', $isProduction);
+		 \View::share('siteName', env('SITE_NAME'));
+
 		return $next($request);
 	}
 
