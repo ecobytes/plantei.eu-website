@@ -49,6 +49,14 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
 }
 
 
+    /**
+     * @AfterStep
+     */
+    /*public function takeScreenshotOnEachStep(Behat\Behat\Hook\Scope\AfterStepScope $scope)
+    {
+        $this->getSession()->resizeWindow(1280, 1024, 'current');
+      $this->takeScreenshot($scope->getStep()->getText(), 'screenshots');
+     }*/
 
 
     /**
@@ -57,11 +65,11 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     public function takeScreenshotAfterFailedStep(Behat\Behat\Hook\Scope\AfterStepScope $scope)
     {
         if (99 === $scope->getTestResult()->getResultCode()) {
-            $this->takeScreenshot($scope->getStep()->getText());
+            $this->takeScreenshot($scope->getStep()->getText(), '');
         }
     }
 
-    private function takeScreenshot($sufix = '')
+    private function takeScreenshot($sufix = '', $dir)
     {
         $driver = $this->getSession()->getDriver();
         /*if (!$driver instanceof Selenium2Driver) {
@@ -69,7 +77,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         }*/
         $baseUrl = $this->getMinkParameter('base_url');
         $fileName = date('d-m-y') . '-' . $sufix . '.png';
-        $filePath = '/vagrant/test-results';
+        $filePath = '/vagrant/test-results/'.$dir;
 
         $this->saveScreenshot($fileName, $filePath);
         print 'Saving screenshot at: test-results/'. $fileName;
