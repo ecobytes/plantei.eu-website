@@ -1,5 +1,8 @@
 <?php
-
+ $mailEncryption = $_ENV['MAIL_ENCRYPTION'];
+ if($_ENV['MAIL_ENCRYPTION'] == 'null'){
+ 	$mailEncryption = null;
+ }
 return [
 
 	/*
@@ -67,7 +70,7 @@ return [
 	|
 	*/
 
-	'encryption' => $_ENV['MAIL_ENCRYPTION'],
+	'encryption' => $mailEncryption,
 
 	/*
 	|--------------------------------------------------------------------------

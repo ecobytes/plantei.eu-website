@@ -23,7 +23,8 @@ class NewsletterRequest extends Request {
 	{
 		return [
 			'name' => 'required|string|max:255',
-			'email' => 'required|unique:newsletter_subscriptors|email|max:255'
+			'email' => 'required|unique:newsletter_subscriptors|email|max:255',
+			'prefered_language' => 'in:'.implode(',', \Config::get('app.availableLanguages')).'|max:10'
 		];
 	}
 
