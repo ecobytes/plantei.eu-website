@@ -46,7 +46,7 @@
     </div>
     {{#if showSubscription}}
     <div class="row mmt mmb">
-      <form class="newsletterSubscription col-md-6 col-md-offset-3 text-center form-horizontal" method="POST" action='/{{ langString }}/newsletter'><div class="row">
+      <form class="newsletterSubscription col-md-6 col-md-offset-3 text-center form-horizontal" method="POST" novalidate action='/{{ langString }}/newsletter'><div class="row">
           <input type="hidden" name="_token" value="{{ csrfToken }}">
           <div class="col-md-6 mmb">
             <input type="name" placeholder="{{messages.yourName}}" class="form-control" name="name" id="nameInput" />
@@ -58,7 +58,7 @@
           {{#if errors}}
           <div class="row validationErrors">
           {{#each errors}}
-            <div class="alert alert-danger" role="alert">{{this}}</div>
+            <div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert">{{this}}</div>
           {{/each}}
           {{/if}}
           </div>
