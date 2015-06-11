@@ -1,22 +1,23 @@
-Caravel CMS 0.2
+Plantei.eu a seed sharing platform
 =====================
 
-First commits on 0.2a.
 
-WAT?
+What
 ---------------------
-Caravel is a php CMS based on Laravel. The stack goes something like this:
+Plantei.eu is a food sovereignty project. Our goal is to facilitate the exchange of seeds and the knowledge associated with it. 
 
- - server: php, mysql
- - client: angular, less, bootstrap,
+
+Project Status
+---------------------
+The project is currently in an early phase of development.
+We're currently working of finishing the start page english translation and start building the registration and login.
+
 
 Installing and running
 ---------------------
+We're trying to keep server dependencies at a minimum. It should run in any server that is able to run php/mysql
 
-We've been putting a lot of effort in making this fast and easy go [Check the wiki](https://github.com/fimdomeio/CaravelCms/wiki/install) for instructions.
+It is build on top of Caravel which is built on top of Laravel
 
-Why
----------------------
-Tired of passing a project to someone and having him/her take a week to get the development environment running. So here it is.
+We've been putting a lot of effort in making the instalation as fast and easy as possible please [Check the caravel wiki](https://github.com/fimdomeio/CaravelCms/wiki/install) for instructions.
 
-I'm making this a super coder friendly cms. The coder admin area is going to be full of goodies like a code generator, on site documentation, Caravel and project specific issues tracking.
