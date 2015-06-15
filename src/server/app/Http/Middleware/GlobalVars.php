@@ -19,6 +19,7 @@ class GlobalVars {
 		}
 		 \View::share('isProduction', $isProduction);
 		 \View::share('siteName', env('SITE_NAME'));
+		 \View::share('footerText', \Lang::get('footer.text'));
 
 		return $next($request);
 	}
