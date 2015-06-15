@@ -1,5 +1,7 @@
 @bodyTopPadding: 70px;
 @footerHeight: 70px;
+@footerPaddingTop: 24px;
+
 
 html, body {
   height: 100%;
@@ -7,7 +9,7 @@ html, body {
 .pageWrap {
   min-height: 100%;
   /* equal to footer height */
-  margin-bottom: @bodyTopPadding - @footerHeight - 6; 
+  margin-bottom:  (@footerHeight) * -1; 
 }
 .pageWrap:after {
   content: "";
@@ -15,4 +17,8 @@ html, body {
 }
 footer, .pageWrap:after {
   height: @footerHeight;
+}
+
+footer {
+	padding-top: @footerPaddingTop;
 }
