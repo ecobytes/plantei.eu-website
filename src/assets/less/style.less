@@ -5,11 +5,8 @@
 
 @import "helpers.less";
 
-@bodyTopPadding: 70px;
-
 body {
 	padding-bottom: @lm;
-	padding-top: @bodyTopPadding;
 	font-weight: @font-weight-base;
 }
 
@@ -44,7 +41,6 @@ a, a:hover, a:active, a:focus {
 footer {
 	border-top: 1px solid @brand-primary;
 	text-align: center;
-	padding-top: 24px;
 	font-size: 0.9em;
 }
 
@@ -62,4 +58,7 @@ footer {
 	}
 }
 
+.envWarning {
+	background: white;
+}
 @import "index.less";

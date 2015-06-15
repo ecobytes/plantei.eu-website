@@ -18,6 +18,7 @@ class ProjectPresentationController extends Controller {
 		return view('projectpresentation::index')
 		->with('messages', \Lang::get('projectpresentation::messages'))
 		->with('showSubscription', $showSubscription)
+		->with('bodyId', 'index')
 		->with('csrfToken', csrf_token());
 	}
 	
