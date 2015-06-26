@@ -29,12 +29,11 @@ gulp.task('less', function() {
 });
 
 gulp.task('bowercopy', function(){
- /* gulp.src([
-    
+  gulp.src([
+    '/vagrant/src/bower_components/bootstrap/dist/js/bootstrap.min.js',
+    '/vagrant/src/bower_components/jquery/dist/jquery.min.js'
     ])
-  .pipe(gulp.dest('/vagrant/src/client/js/libs'))
-
-  .pipe(gulp.dest('/vagrant/src/client/css/'))*/
+  .pipe(gulp.dest('/vagrant/src/server/public/js/'))
 
 });
 

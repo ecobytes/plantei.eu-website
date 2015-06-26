@@ -21,9 +21,5 @@ src/public/css/style.css
 dbdumps
 src/bower_components
 src/public/css/loading-bar.css
-src/public/js/loading-bar.js
-src/public/js/lodash.js
-src/public/js/angular.js
 src/public/css/admin.css
-src/public/js/ui-bootstrap.js
-src/public/js/angular-route.js
+src/server/public/js
