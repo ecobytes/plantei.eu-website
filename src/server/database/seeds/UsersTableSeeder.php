@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder {
     DB::table('role_user')->delete();
 
     $adminId = Caravel\Role::where('name', 'admin')->first()->id;
-    $editorId = Caravel\Role::where('name', 'editor')->first()->id;
+    $userId = Caravel\Role::where('name', 'user')->first()->id;
     $user = $this->registrar->create([
     	'name' => 'Devel User',
     	'email' => 'devel@example.com',
@@ -42,7 +42,7 @@ class UsersTableSeeder extends Seeder {
      		'email' => $faker->email,
      		'password' => $faker->word,
      	]);
-      $user->roles()->attach($editorId);
+      $user->roles()->attach($userId);
       $user->confirmationString = substr(sha1(rand()), 0, 32);
       $user->confirmed = $faker->randomElement([0, 1]);
       $user->save();
