@@ -4,7 +4,7 @@ use Pingpong\Modules\Routing\Controller;
 use \Modules\Newsletter\Http\Requests\NewsletterRequest;
 
 class NewsletterController extends Controller {
-	
+
 	/*public function index()
 	{
 			\App::setLocale('en');
@@ -27,15 +27,16 @@ class NewsletterController extends Controller {
 		$subscriptor->prefered_language = \App::getLocale();
 		$subscriptor->active = false;
 		$subscriptor->save();
-		\Mail::send('newsletter::emails.confirmation', [
-			'verificationKey' => $verificationKey, 
+		\Mail::send('emails.transactional', [
+			'verificationKey' => $verificationKey,
 			'baseUrl' => \URL::to('/'),
 			'activeLang' => \App::getLocale(),
 			'siteName' => env('SITE_NAME'),
 			'data' => array(
 				'title' => \Lang::get('newsletter::confirmationemail.title'),
 				'text' => \Lang::get('newsletter::confirmationemail.text'),
-				'buttonText' => \Lang::get('newsletter::confirmationemail.buttonText')
+				'buttonText' => \Lang::get('newsletter::confirmationemail.buttonText'),
+				'buttonLink' => \URL::to('/').\App::getLocale().'/confirm/'.$verificationKey
 				)
 
 ], function($message)
@@ -59,7 +60,7 @@ class NewsletterController extends Controller {
 			'message' => null,
 			'buttons' => array(['label' => \Lang::get('newsletter::messages.homePage'), 'url' => '/'.\Input::get('prefered_language')])
 			));
-		
+
 	}
 
 	public function confirm($key){

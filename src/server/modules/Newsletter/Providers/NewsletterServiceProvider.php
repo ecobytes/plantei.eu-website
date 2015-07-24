@@ -17,13 +17,15 @@ class NewsletterServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function register()
-	{		
+	{
+		\Lang::addNamespace('newsletter', __DIR__.'/Resources/lang');
+		\View::addNamespace('newsletter', __DIR__.'/Resources/views');
 		$this->registerConfig();
 	}
 
 	/**
 	 * Register config.
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function registerConfig()
