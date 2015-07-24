@@ -1,0 +1,59 @@
+{{> header}}
+<div class="pageWrap background-primary">
+
+	<div class="container-fluid">
+		<div class="row lmt">
+			<div class="col-md-6 col-md-offset-3">
+				<h2>Register a New Account</h2>
+				{{> formErrors}}
+				<form class="form-horizontal" role="form" method="POST" action="/{{langString}}/auth/register">
+					<input type="hidden" name="_token" value="{{ csrfToken }}">
+
+					<div class="form-group">
+						<label class="control-label">Username</label>
+
+							<span class="cell"><input type="text" class="form-control" placeholder="real name or “internet name” your choice." name="name" value="{{ oldInput.name }}"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Email</label>
+							<span class="cell"><input type="email" class="form-control" name="email" value="{{ oldInput.email }}"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Password</label>
+							<span class="cell"><input type="password" class="form-control" name="password"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Confirm Password</label>
+							<span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">I want to subscribe to plantei.eu rarely updated newsletter</label>
+							<!--span class="cell"><input type="text" class="form-control" name="subscribeNewsletter" value="{{oldInput.subscribeNewsletter}}"></span-->
+
+							<span class="cell btn-group" data-toggle="buttons">
+
+							<label class="btn btn-default {{#if oldInput.subscribeNewsletter.1}}active{{/if}}">
+                    <input type="radio" name="subscribeNewsletter" value="1" /> Yes
+                </label>
+								<label class="btn btn-default {{#if oldInput.subscribeNewsletter.0}}active{{/if}}">
+                    <input type="radio" name="subscribeNewsletter" value="0" /> No
+                </label>
+							</span>
+					</div>
+
+					<div class="form-group lmt">
+						<div class="col-md-12 text-center">
+							<button type="submit" class="btn btn-primary btn-lg">
+								Register
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{{> footer}}

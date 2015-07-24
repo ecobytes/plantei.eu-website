@@ -42,6 +42,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
   public static function setUpDb()
   {
     Artisan::call('module:migrate-reset');
+    Artisan::call('migrate:reset');
     Artisan::call('migrate');
     Artisan::call('module:migrate');
     Artisan::call('db:seed', array('--class' => 'SettingTableSeeder'));
@@ -52,11 +53,11 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     /**
      * @AfterStep
      */
-    /*public function takeScreenshotOnEachStep(Behat\Behat\Hook\Scope\AfterStepScope $scope)
+    public function takeScreenshotOnEachStep(Behat\Behat\Hook\Scope\AfterStepScope $scope)
     {
         $this->getSession()->resizeWindow(1280, 1024, 'current');
-      $this->takeScreenshot($scope->getStep()->getText(), 'screenshots');
-     }*/
+      $this->iTakeScreenshot($scope->getStep()->getText(), 'screenshots');
+     }
 
 
     /**
@@ -65,22 +66,25 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     public function takeScreenshotAfterFailedStep(Behat\Behat\Hook\Scope\AfterStepScope $scope)
     {
         if (99 === $scope->getTestResult()->getResultCode()) {
-            $this->takeScreenshot($scope->getStep()->getText(), '');
+            $this->iTakeScreenshot($scope->getStep()->getText(), '');
         }
     }
 
-    private function takeScreenshot($sufix = '', $dir)
+    /**
+     * @Then I take a screenshot
+     */
+    public function iTakeScreenshot($sufix = '', $dir= '')
     {
         $driver = $this->getSession()->getDriver();
         /*if (!$driver instanceof Selenium2Driver) {
             return;
         }*/
         $baseUrl = $this->getMinkParameter('base_url');
-        $fileName = date('d-m-y') . '-' . $sufix . '.png';
+        $fileName = microtime(true) . ' - ' . str_replace('/', '_',$sufix) . '.png';
         $filePath = '/vagrant/test-results/'.$dir;
 
         $this->saveScreenshot($fileName, $filePath);
-        print 'Saving screenshot at: test-results/'. $fileName;
+        //print 'Saving screenshot at: test-results/'. $fileName;
     }
 
     /**
@@ -102,7 +106,17 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         $subscriptor = \Modules\Newsletter\Entities\NewsletterSubscriptor::firstOrFail();
         $this->visit('/'.$lang.'/newsletter/confirm/'.$subscriptor->verification_key);
     }
-  
+
+    /**
+    * @When I visit the :lang user validation url
+    */
+   public function iVisitTheUserValidationUrl($lang)
+   {
+     $user= \Caravel\User::orderby('created_at', 'desc')->firstOrFail();
+     $this->visit('/'.$lang.'/auth/confirm/'.$user->confirmationString);
+
+   }
+
     /**
      * @Then I should get an email with the title :arg1
      */
