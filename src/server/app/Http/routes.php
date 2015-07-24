@@ -11,5 +11,3 @@
 |
 */
 
-//Route::get('/', 'Modules\ProjectPresentation\Http\Controllers\ProjectPresentationController@index');
-

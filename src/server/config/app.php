@@ -150,8 +150,7 @@ return [
 		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
 		'Pingpong\Modules\ModulesServiceProvider',
-    'Pingpong\Modules\Providers\BootstrapServiceProvider',
-    'Wetzel\Handlebars\HandlebarsServiceProvider',
+		'ProAI\Handlebars\HandlebarsServiceProvider'
 
 	],
 
@@ -202,7 +201,7 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
 
 		//Thirdparty
-		'Debugbar' => 'Barryvdh\Debugbar\Facade',
+		//'Debugbar' => 'Barryvdh\Debugbar\Facade',
 		'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
 		'Module' => 'Pingpong\Modules\Facades\Module',
 
