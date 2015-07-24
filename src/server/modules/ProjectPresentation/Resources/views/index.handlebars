@@ -24,6 +24,14 @@
     <h1>
       {{siteName}}
     </h1>
+      {{#if showAuthentication}}
+      <div class="row lmt mmb">
+        <div class="col-md-12 text-center">
+          <a class="btn btn-default btn-lg" href="/{{ langString }}/auth/register">{{messages.register}}</a>
+          <a class="btn btn-default btn-lg" href="/{{ langString }}/auth/login">{{messages.login}}</a>
+        </div>
+      </div>
+    {{/if}}
     <div class="description">
     {{subtitle}}
     </div>

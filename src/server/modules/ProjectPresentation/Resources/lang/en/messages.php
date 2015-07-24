@@ -1,6 +1,6 @@
 <?php 
 return [
-    'intro' => 'This projects aimas at promoting food sovereignty, by facilitating the exchange of seeds and related knowledge, through a online platform and offline activities.',
+    'intro' => 'This projects aims at promoting food sovereignty, by facilitating the exchange of seeds and related knowledge, through a online platform and offline activities.',
     'mailingListSubscriptionTease' => 'For getting updates on the project subscribe our mailing list.',
     'notManyEmails' => 'We promisse infrequent emails',
     'descriptionTitle1' => 'Personal Seed Banks',
@@ -11,5 +11,7 @@ return [
     'descriptionContent3' => 'In order to support the emergence communities of practice and the dynamics of already existing ones, this is to facilitate such offline initiatives, namely creating an agenda for seed swaps, seminars around the topic, and also to promote the exchange of news.',
    	'yourName' => 'Your name',
 	'yourEmail' => 'Your email',
-	'subscribe' => 'Subscribe'
+	'subscribe' => 'Subscribe',
+    'register' => 'Register',
+    'login' => 'Login'
 ];

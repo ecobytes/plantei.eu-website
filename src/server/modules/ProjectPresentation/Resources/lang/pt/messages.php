@@ -20,5 +20,7 @@ return [
 ',
 	'yourName' => 'o seu nome',
 	'yourEmail' => 'o seu email',
-	'subscribe' => 'Subscrever'
+	'subscribe' => 'Subscrever',
+    'register' => 'Registo',
+    'login' => 'Iniciar Sessão'
 ];

@@ -11,9 +11,4 @@
 | this file as you want.
 |
 */
-
-Lang::addNamespace('projectpresentation', __DIR__.'/Resources/lang');
-
-View::addNamespace('projectpresentation', __DIR__.'/Resources/views');
-
 require __DIR__ . '/Http/routes.php';
