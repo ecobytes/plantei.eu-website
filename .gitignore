@@ -17,9 +17,7 @@ database.sqlite
 *.sublime-workspace
 .project
 .vagrant/
-src/public/css/style.css
+src/server/public/css/style.css
 dbdumps
 src/bower_components
-src/public/css/loading-bar.css
-src/public/css/admin.css
 src/server/public/js
