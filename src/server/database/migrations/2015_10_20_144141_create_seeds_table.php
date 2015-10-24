@@ -16,10 +16,11 @@ class CreateSeedsTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('sci_name');
-            // Open (true)/ Closed (false) polinization
-            $table->boolean('polinization');
-            // Direct planting
-            $table->boolean('direct');
+            $table->string('common_name');
+            // Open (1)/ Closed (2) polinization
+            $table->smallInteger('polinization')->default(0)->unsigned();
+            // Direct planting (0) (1)false (2)true
+            $table->smallInteger('direct')->default(0)->unsigned();
             $table->integer('species_id')->unsigned()->nullable();
             $table->foreign('species_id')->references('id')->on('species');
             $table->integer('variety_id')->unsigned()->nullable();

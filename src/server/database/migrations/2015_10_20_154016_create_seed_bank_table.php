@@ -21,9 +21,10 @@ class CreateSeedBankTable extends Migration
             $table->foreign('seed_id')->references('id')->on('seeds');
             $table->string('local',100);
             $table->smallInteger('year')->unsigned();
-            $table->smallInteger('origin')->unsigned();// Barter(1); Bought(2); Own production(0)
+            $table->smallInteger('origin')->default(0)->unsigned();// Barter(2); Bought(3); Own production(1)
             $table->text('description');
             $table->boolean('available');
+            $table->boolean('public');
         });
     }
 

@@ -46,16 +46,30 @@ class AuthController extends Controller {
 			if($testUserCount == 1);
 			$develUserExists = true;
 		}
-		return view('auth::login')->with('hideMenu', true)->with('develUserExists', $develUserExists);
+		return view('auth::login')
+			->with('hideMenu', true)
+			->with('csrfToken', csrf_token())
+			->with('develUserExists', $develUserExists);
+
 	}
 
 	public function postLogin(Request $request)
 	{
 		$this->validate($request, [
-			'email' => 'required', 'password' => 'required',
+			'name' => 'required', 'password' => 'required',
 		]);
 
-		$credentials = $request->only('email', 'password');
+		$credentials = $request->only('name', 'password');
+      if(filter_var($credentials['name'], FILTER_VALIDATE_EMAIL)) {
+          $credentials['email'] = $credentials['name'];
+		  unset($credentials['name']);
+      }
+      /* else {
+          $credentials['name'] = $username;
+      }
+      if (Auth::once($credentials)) {
+          return Auth::user()->id;
+	  }*/
 
 		$credentials['confirmed'] = 1;
 		if ($this->auth->attempt($credentials, $request->has('remember')))
@@ -64,10 +78,16 @@ class AuthController extends Controller {
 		}
 
 		return redirect($this->loginPath())
-					->withInput($request->only('email', 'remember'))
+					->withInput($request->only('name', 'remember'))
 					->withErrors([
 						'email' => 'These credentials do not match our records or account not active.',
 					]);
+	}
+	public function getLogout()
+	{
+		//\Auth::logout();
+		$this->auth->logout();
+		return redirect('/');
 	}
 
 	public function getRegister()
@@ -93,13 +113,14 @@ class AuthController extends Controller {
 		}
 
 		return view('auth::register')
+		->with('messages', \Lang::get('auth::messages'))
 		->with('csrfToken', csrf_token())
 		->with('oldInput', $oldInput);
 	}
 
 	public function postRegister(Request $request)
 	{
-		$validator = $this->registrar->validator($request->all());
+		$validator = $this->registrar->validator($request->all(), [],\Lang::get('auth::validation'));
 
 		if($validator->fails())
 		{
@@ -109,7 +130,7 @@ class AuthController extends Controller {
 		}
 		$user = $this->registrar->create($request->all());
 		$user->confirmationString = substr(sha1(rand()), 0, 32);
-		$user->confirmed = false;
+		$user->confirmed = true;
 		if(User::count() == 1){
 			$adminId = \Caravel\Role::where('name', 'admin')->first()->id;
 			$user->roles()->attach($adminId);
@@ -119,7 +140,7 @@ class AuthController extends Controller {
 		}
 
 		$user->push();
-
+/*
 		$verificationKey = $user->confirmationString;
 		\Mail::send('emails.transactional', [
 			'activeLang' => \App::getLocale(),
@@ -135,7 +156,7 @@ class AuthController extends Controller {
 		{
     	$message->to(\Request::input('email'), \Request::input('name'))->subject(\Lang::get('newsletter::confirmationemail.title'));
 		});
-
+ */
 		return View('auth::successful-registration')
 		->with('title', 'Registration Successful')
 		->with('message', \Lang::get('auth::messages.subscriptionSuccessfulMessage'))
@@ -145,12 +166,14 @@ class AuthController extends Controller {
 
 	public function redirectPath()
 	{
+		return property_exists($this, 'redirectTo') ? $this->redirectTo : '/seedbank';
 		if (property_exists($this, 'redirectPath'))
 		{
 			return $this->redirectPath;
 		}
 
-		return property_exists($this, 'redirectTo') ? $this->redirectTo : '/admin';
+		//return property_exists($this, 'redirectTo') ? $this->redirectTo : '/admin';
+		return property_exists($this, 'redirectTo') ? $this->redirectTo : '/seedbank';
 	}
 
 	public function getConfirm($confirmationString){

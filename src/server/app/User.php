@@ -22,7 +22,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password'];
+	protected $fillable = ['name', 'email', 'password', 'lat', 'lon', 'place_name'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -41,4 +41,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 			return (int) $value;
 	}
 
+	public function getseeds() {
+	  $seedbank = \DB::table('seeds')->join('seeds_bank', 'seeds_bank.seed_id', '=', 'seeds.id')
+		->where('user_id', $this->id)->get();
+	  $result = array();
+	  foreach($seedbank as $i){
+		$result[] = (array)$i;
+	  };
+		
+			return $result;
+	}
 }

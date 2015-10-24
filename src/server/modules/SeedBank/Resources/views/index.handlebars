@@ -1,0 +1,59 @@
+{{> header}}
+{{> menu}}
+<div class="pageWrap background-primary">
+	<div class="container">
+		<div class="row lmt">
+			<div class="col-md-12 text-center">
+				<h1>As minhas sementes
+				<span class="cell btn-group">
+					<button type="button" class="btn btn-primary btn-md" id="new_seed">
+						Adicionar
+					</button>
+				</span></h1>
+				<div class="btn-group">
+				</div>
+				<div class="row">
+  					<div class="col-md-3 col-md-offset-4">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Nome comum</th>
+									<th>Nome ciêntifico</th>
+									<th>Disponível</th>
+									<th>Pública</th>
+								</tr>
+							</thead>
+							<tbody>
+							{{#each seeds}}
+								<tr data-seed_id="{{id}}">
+									<td>{{common_name}}</td>
+									<td>{{sci_name}}</td>
+									<td style="text-align: center;">{{#if available.1}}X{{/if}}</td>
+									<td style="text-align: center;">{{#if public.1}}X{{/if}}</td>
+								</tr>
+							{{/each}}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{{>scripts}}
+<script>
+  $('tbody tr').on('click', function () {
+	window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
+    return false;
+    }).mouseover(function () {
+    $(this).addClass('active');
+    }).mouseout(function () {
+    $(this).removeClass('active');
+  });
+  $('#new_seed').on('click', function () {
+    window.open('/seedbank/register', '_self');
+	return false;
+  });
+</script>
+{{>footer}}

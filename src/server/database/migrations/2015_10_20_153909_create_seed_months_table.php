@@ -15,7 +15,7 @@ class CreateSeedMonthsTable extends Migration
         Schema::create('seed_months', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('month')->unsigned();
+            $table->smallInteger('month')->unsigned();
             $table->integer('seed_id')->unsigned();
             $table->foreign('seed_id')->references('id')->on('seeds');
         });

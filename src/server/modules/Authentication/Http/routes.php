@@ -19,11 +19,12 @@ Route::group(array('prefix' => $locale), function(){
 
 		Route::group(['middleware' => 'csrf'], function(){
 			Route::post('/register', 'AuthController@postRegister');
-			//Route::post('/login', '');
+			Route::post('/login', 'AuthController@postLogin');
 		});
 		Route::get('/register', 'AuthController@getRegister');
 		Route::get('/login', 'AuthController@getLogin');
-		Route::get('/confirm/{key}', 'Authcontroller@getConfirm');
+		Route::get('/logout', 'AuthController@getLogout');
+		//Route::get('/confirm/{key}', 'Authcontroller@getConfirm');
 	});
 
 

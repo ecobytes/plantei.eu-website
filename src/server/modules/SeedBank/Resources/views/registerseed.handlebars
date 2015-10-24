@@ -1,0 +1,176 @@
+{{> header}}
+{{> menu}}
+<div class="pageWrap background-primary">
+	<div class="container">
+		<div class="row lmt">
+			{{> formErrors}}
+					<div class="col-md-12 text-center">
+						<h1>{{#if update}}Actualizar{{else}}Registar um nova{{/if}} semente</h1>
+					</div>
+			<form class="form-horizontal" role="form" method="POST" action="/seedbank/register">
+				<div class="col-md-6">
+					<div class="form-group">
+						<h2>Identificação</h2>
+					</div>
+					<input type="hidden" name="_token" value="{{ csrfToken }}">
+					<input type="hidden" name="_id" value="{{ oldInput.id }}">
+					<input type="hidden" name="seed_id" value="{{ oldInput.seed_id }}">
+					{{#with oldInput }}
+					<div class="form-group">
+						<label class="control-label">Nome comum</label>
+						<span class="cell">
+							<input type="text" class="form-control" placeholder="" name="common_name" value="{{common_name }}">
+						</span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Local da recolha</label>
+						<span class="cell"><input type="text" class="form-control" name="local" value="{{ local }}"></span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Ano da recolha</label>
+						<span class="cell"><input type="text" class="form-control" name="year" value="{{ year }}"></span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Origem</label>
+						<span class="cell btn-group" data-toggle="buttons">
+							<label class="btn btn-default {{#if origin.1}}active{{/if}}">
+								<input type="radio" name="origin" {{#if origin.1}}checked{{/if}} value="1" /> Própria
+							</label>
+							<label class="btn btn-default {{#if origin.2}}active{{/if}}">
+								<input type="radio" name="origin" {{#if origin.2}}checked{{/if}} value="2" /> Troca
+							</label>
+							<label class="btn btn-default {{#if origin.3}}active{{/if}}">
+								<input type="radio" name="origin" {{#if origin.3}}checked{{/if}} value="3" /> Comercial
+							</label>
+						</span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Público</label>
+						<span class="cell btn-group" data-toggle="buttons">
+							<label class="btn btn-default {{#if public.1}}active{{/if}}">
+								<input type="radio" name="public" {{#if public.1}}checked{{/if}} value="1" /> Sim
+							</label>
+							<label class="btn btn-default {{#if public.0}}active{{/if}}">
+								<input type="radio" name="public" {{#if public.0}}checked{{/if}} value="0" /> Não
+							</label>
+						</span>
+					</div>
+					<div class="form-group">
+						<label class="control-label"><h2>Cultivo</h2></label>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Sementeira Directa</label>
+						<span class="cell btn-group" data-toggle="buttons">
+							<label class="btn btn-default {{#if direct.2}}active{{/if}}">
+								<input type="radio" name="direct" value="2" /> Sim
+							</label>
+							<label class="btn btn-default {{#if direct.1}}active{{/if}}">
+								<input type="radio" name="direct" value="1" /> Não
+							</label>
+						</span>
+					</div>
+						<label class="control-label">Meses de cultivo</label>
+					<div class="form-group">
+						<span class="cell btn-group"  data-toggle="buttons" >
+							<label class="btn btn-default {{#if months.1}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.1}}checked{{/if}} value="1" /> Jan
+							</label>
+							<label class="btn btn-default {{#if months.2}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.2}}checked{{/if}} value="2" /> Fev
+							</label>
+							<label class="btn btn-default {{#if months.3}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.3}}checked{{/if}} value="3" /> Mar
+							</label>
+							<label class="btn btn-default {{#if months.4}}active{{/if}}">
+								<input type="checkbox" name="months[]"  {{#if months.4}}checked{{/if}}value="4" /> Abr
+							</label>
+							<label class="btn btn-default {{#if months.5}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.5}}checked{{/if}} value="5" /> Mai
+							</label>
+							<label class="btn btn-default {{#if months.6}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.6}}checked{{/if}} value="6" /> Jun
+							</label>
+						</span>
+					</div>
+					<div class="form-group">
+						<span class="cell btn-group"  data-toggle="buttons">
+							<label class="btn btn-default {{#if months.7}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.7}}checked{{/if}} value="7" /> Jul
+							</label>
+							<label class="btn btn-default {{#if months.8}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.8}}checked{{/if}} value="8" /> Ago
+							</label>
+							<label class="btn btn-default {{#if months.9}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.9}}checked{{/if}} value="9" /> Set
+							</label>
+							<label class="btn btn-default {{#if months.10}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.10}}checked{{/if}} value="10" /> Out
+							</label>
+							<label class="btn btn-default {{#if months.11}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.11}}checked{{/if}} value="11" /> Nov
+							</label>
+							<label class="btn btn-default {{#if months.12}}active{{/if}}">
+								<input type="checkbox" name="months[]" {{#if months.12}}checked{{/if}} value="12" /> Dez
+							</label>
+						</span>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label"><h2>Características</h2></label>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Nome ciêntifico</label>
+						<span class="cell">
+							<input type="text" class="form-control" placeholder="" name="sci_name" value="{{ sci_name }}">
+						</span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Família</label>
+						<span class="cell"><input type="text" class="form-control" name="family" value="{{ family }}"></span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Espécie</label>
+						<span class="cell"><input type="text" class="form-control" name="species" value="{{ species }}"></span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Variedade</label>
+						<span class="cell"><input type="text" class="form-control" name="variety" value="{{ variety }}"></span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Polinização</label>
+						<span class="cell btn-group" data-toggle="buttons">
+							<label class="btn btn-default {{#if polinization.1}}active{{/if}}">
+								<input type="radio" name="polinization" {{#if polinization.1}}checked{{/if}} value="1" /> Aberta
+							</label>
+							<label class="btn btn-default {{#if polinization.2}}active{{/if}}">
+								<input type="radio" name="polinization" {{#if polinization.2}}checked{{/if}} value="0" /> Fechada
+							</label>
+						</span>
+					</div>
+				</div>
+				{{/with}}
+				<div class="row">
+					<div class="form-group lmt">
+						<div class="col-md-12 text-center">
+							<button type="submit" class="btn btn-primary btn-lg">
+								{{#if update}}Actualizar{{ else }}Registar{{/if}}
+							</button>
+							<button type="button" class="btn btn-danger btn-lg" id="cancel_seed">
+								Cancelar
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{{>scripts}}
+<script>
+  $('#cancel_seed').on('click', function () {
+    window.open('/seedbank', '_self');
+	return false;
+  });
+</script>
+{{>footer}}
