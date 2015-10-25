@@ -8,14 +8,14 @@
           {{#if lang.pt}}
           <span class="text-muted">pt</span>
           {{else}}
-          <a href="/pt">pt</a>
+          <a href="/pt/auth/login">pt</a>
           {{/if}}
           </li>
           <li>
           {{#if lang.en}}
             <span class="text-muted">en</span>
           {{else}}
-            <a href="/en">en</a>
+            <a href="/en/auth/login">en</a>
           {{/if}}
           </li>
         </ul>
@@ -23,22 +23,22 @@
     </div>
 	<div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <h2>Login</h2>
+        <h2>{{messages.login}}</h2>
         {{> formErrors}}
         <form class="form-horizontal" role="form" method="POST" action="/{{langString}}/auth/login">
           <input type="hidden" name="_token" value="{{ csrfToken }}">
           <div class="form-group">
-            <label class="control-label">Username</label>
-            <span class="cell"><input type="text" class="form-control" placeholder="username or email address" name="name" value="{{ oldInput.name }}"></span>
+            <label class="control-label">{{ messages.username }}</label>
+            <span class="cell"><input type="text" class="form-control" placeholder="{{mesages.username}}" name="name" value="{{ oldInput.name }}"></span>
           </div>
           <div class="form-group">
-            <label class="control-label">Password</label>
-            <span class="cell"><input type="password" class="form-control" placeholder="palavra passe" name="password"></span>
+            <label class="control-label">{{messages.password}}</label>
+            <span class="cell"><input type="password" class="form-control" placeholder="{{messages.password}}" name="password"></span>
           </div>
           <div class="form-group lmt">
             <div class="col-md-12 text-center">
               <button type="submit" class="btn btn-primary btn-lg">
-                Login
+                {{messages.login}}
               </button>
             </div>
           </div>

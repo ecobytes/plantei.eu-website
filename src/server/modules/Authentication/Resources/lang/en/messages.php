@@ -22,4 +22,5 @@ return [
 	'longitude' => 'Longitude',
 	'register' => 'Register',
 	'registertitle' => 'Register a new account',
+	'login' => 'Login',
 ];

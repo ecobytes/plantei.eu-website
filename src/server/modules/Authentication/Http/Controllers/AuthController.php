@@ -47,6 +47,7 @@ class AuthController extends Controller {
 			$develUserExists = true;
 		}
 		return view('auth::login')
+			->with('messages', \Lang::get('auth::messages'))
 			->with('hideMenu', true)
 			->with('csrfToken', csrf_token())
 			->with('develUserExists', $develUserExists);
