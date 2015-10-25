@@ -31,9 +31,15 @@ gulp.task('less', function() {
 gulp.task('bowercopy', function(){
   gulp.src([
     '/vagrant/src/bower_components/bootstrap/dist/js/bootstrap.min.js',
-    '/vagrant/src/bower_components/jquery/dist/jquery.min.js'
+    '/vagrant/src/bower_components/jquery/dist/jquery.min.js',
+    '/vagrant/src/bower_components/jquery-ui/jquery-ui.min.js'
     ])
-  .pipe(gulp.dest('/vagrant/src/server/public/js/'))
+  .pipe(gulp.dest('/vagrant/src/server/public/js/'));
+  gulp.src([
+    '/vagrant/src/bower_components/jquery-ui/themes/ui-lightness/jquery-ui.min.css',
+    '/vagrant/src/bower_components/jquery-ui/themes/ui-lightness/images**/*'
+    ], {base: '/vagrant/src/bower_components/jquery-ui/themes/ui-lightness'})
+  .pipe(gulp.dest('/vagrant/src/server/public/css'));
 
 });
 
@@ -47,4 +53,24 @@ gulp.task('browser-sync', function() {
     browserSync({
         proxy: "127.0.0.1"
     });
+});
+
+
+gulp.task('local', function() {
+  gulp.src('src/assets/less/style.less')
+    .pipe(less())
+    .pipe(gulp.dest('src/server/public/css/'))
+    .pipe(reload({stream:true})); //Browser Sync
+  gulp.src([
+    'src/bower_components/bootstrap/dist/js/bootstrap.min.js',
+    'src/bower_components/jquery/dist/jquery.min.js',
+    'src/bower_components/jquery-ui/jquery-ui.min.js'
+    ])
+  .pipe(gulp.dest('src/server/public/js/'));
+  gulp.src([
+    'src/bower_components/jquery-ui/themes/ui-lightness/jquery-ui.min.css',
+    'src/bower_components/jquery-ui/themes/ui-lightness/images**/*'
+    ], {base: 'src/bower_components/jquery-ui/themes/ui-lightness'})
+  .pipe(gulp.dest('src/server/public/css'));
+
 });

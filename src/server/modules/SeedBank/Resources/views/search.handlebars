@@ -1,14 +1,115 @@
 {{> header}}
 {{> menu}}
+<div class="modal fade" id="seed_info">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <div class="pageWrap background-primary">
 	<div class="container">
 		<div class="row lmt">
 			{{> formErrors}}
 					<div class="col-md-12 text-center">
 						<h1>Pesquisa</h1>
+			<form class="form-horizontal" role="form" method="POST" action="/seedbank/search">
+					<input type="hidden" name="_token" value="{{ csrfToken }}">
+					<div class="form-group">
+						<span class="cell">
+						<input type="text" class="form-control search_autocomplete" placeholder="Nome Comum" name="common_name" value="">
+						</span>
+					</div>
+					<div class="form-group">
+						<span class="cell">
+						<input type="text" class="form-control search_autocomplete" placeholder="Nome Ciêntifico" name="sci_name" value="">
+						</span>
+					</div>
+					<div class="form-group lmt">
+							<button id="search" type="button" class="btn btn-primary btn-lg">
+								Pesquisa
+							</button>
+					</div>
+					</form>
+					</div>
+					<div class="col-md-12 text-center" id="results" style="display: none;">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Nome comum</th>
+									<th>Nome ciêntifico</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
 					</div>
 		</div>
 	</div>
 </div>
 {{>scripts}}
+<script src="/js/jquery-ui.min.js"></script>
+<script>
+$('.search_autocomplete').autocomplete({
+  delay: 300, minLength: 2, 
+  source: function (request, response) {
+    var formdata = [
+      {name: "_token", value: "{{ csrfToken }}"},
+      {name: 'query' , value: request.term},
+	  {name: 'query_name', value: this.element.attr('name')},
+    ];
+    $.post("/seedbank/autocomplete", formdata, 
+           function (data) {  response(data);}, 'json')
+    },
+  select: function( event, ui ) {
+    //console.log(ui.item.id);
+    $('#hidden_section_id').val(ui.item.id)
+  }
+});
+$('#search').on('click', function (e) {
+	$('#results tbody').empty();
+	if ( $('#results').is(':visible')) {
+		$('#results').hide();
+		$('.search_autocomplete').show();
+		$('#search').text('Pesquisa');
+		return false;
+	};
+    var formdata = $('form').serialize();
+    $.post("/seedbank/search", formdata, function (data) {
+		if (! data){
+			return false;
+		}
+		$.each( data, function(i,info){
+			//console.log(info);
+			$('#results tbody').append('<tr data-seed_id="' + info.id + '"><td>' + info.common_name + '</td><td>' + info.sci_name + '</td</tr>');
+			$('#results').show();
+			$('.search_autocomplete').hide();
+			$('#search').text('Nova Pesquisa');
+		});
+	},
+	'json');
+});
+$('#results').on('click', 'tbody tr', function () {
+	//window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
+	var data = [];
+	$.each($(this).children('td'), function(i, info) {
+		data[i] = [info.textContent];
+	});
+	$('#seed_info .modal-title').text(data[0]);
+	$('#seed_info .modal-body').text(data[1]);
+	$('#seed_info').modal('show');
+	return false;
+	}).on('mouseover', 'tbody tr', function () {
+    $(this).addClass('active');
+    }).on('mouseout', 'tbody tr', function () {
+    $(this).removeClass('active');
+  });
+</script>
 {{>footer}}

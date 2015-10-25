@@ -2,7 +2,8 @@
   "name": "Plantei.eu",
   "version": "0.0.1",
   "dependencies": {
-    "bootstrap": "~3.*"
+    "bootstrap": "~3.*",
+    "jquery-ui": "*"
   },
   "private": true
 }

@@ -177,9 +177,53 @@ class SeedBankController extends Controller {
 			->with('active', ['search' => true]);
 
 	}
-	public function postSearch()
+	public function postSearch(Request $request)
 	{
-		//
+		// $user = \Auth::user();
+		$user = $request->user();
+		$q = [];
+		foreach($request->input() as $key => $value){
+			if (in_array($key, ['common_name', 'sci_name']) && ($value)){
+				$q[$key] = $value;
+			}
+		}
+		if (! $q){ return [];}
+		$query = \DB::table('seeds');
+		foreach($q as $key => $value){
+			$query->orWhere($key, 'like', '%' . $value . '%');
+		}
+		$results = $query->select('id', 'common_name', 'sci_name')->distinct()->get();
+		/*$result = [];
+		foreach($results as $i){
+			$myarray = (array)$i;
+			$result[] = $myarray;
+		};*/
+		return $results;
+	}
+	public function postAutocomplete(Request $request)
+	{
+		// $user = \Auth::user();
+		$user = $request->user();
+		$query_term = $request->input('query');
+		$query_name = $request->input('query_name');
+		if (! in_array($query_name, ['common_name', 'sci_name'])){
+			return [];
+		}
+		$results = \DB::table('seeds')
+			->join('seeds_bank', 'seeds_bank.seed_id', '=', 'seeds.id')
+			->where($query_name, 'like', '%' . $query_term . '%')
+			->where(function($query) use ($user) { $query->where('public', true)->orWhere('user_id', $user->id);})
+			->select('seed_id', $query_name)->distinct()
+			->get();
+		$result = array();
+		foreach($results as $i){
+			$myarray = (array)$i;
+			$myarray['value'] = $myarray[$query_name];
+			$myarray['id'] = $myarray['seed_id'];
+
+			$result[] = $myarray;
+		};
+		return $result;
 	}
 	
 }
