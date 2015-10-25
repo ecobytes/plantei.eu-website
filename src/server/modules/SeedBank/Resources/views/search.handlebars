@@ -57,7 +57,7 @@
 {{>scripts}}
 <script src="/js/jquery-ui.min.js"></script>
 <script>
-$('.search_autocomplete').autocomplete({
+/*$('.search_autocomplete').autocomplete({
   delay: 300, minLength: 2, 
   source: function (request, response) {
     var formdata = [
@@ -72,7 +72,7 @@ $('.search_autocomplete').autocomplete({
     //console.log(ui.item.id);
     $('#hidden_section_id').val(ui.item.id)
   }
-});
+});*/
 $('#search').on('click', function (e) {
 	$('#results tbody').empty();
 	if ( $('#results').is(':visible')) {
