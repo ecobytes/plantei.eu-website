@@ -42,9 +42,13 @@ class SeedBankController extends Controller {
 		if ($id){
 			if (! isset($info)) {
 				$info = (array)\DB::table('seeds')
-					->join('seeds_bank', 'seeds_bank.seed_id', '=', 'seeds.id')
-					->where('seeds_bank.id', $id)->first();
+					->join('seeds_banks', 'seeds_banks.seed_id', '=', 'seeds.id')
+					->where('seeds_banks.id', $id)->first();
 				$info['months'] = (array)\DB::table('seed_months')->where('seed_id', $info['seed_id'])->lists('month');
+				foreach(['variety', 'family', 'species'] as $field){
+					$field_a = (array)\DB::table($field)->select('name')->find($info[$field . '_id']);
+					$info[$field] = $field_a['name'];
+				};
 			}
 			$info['id'] = $id;
 			$update = true;
@@ -91,9 +95,9 @@ class SeedBankController extends Controller {
 			'common_name' => 'required|max:10',
 			'origin' => 'required',
 		]);
-		$seeds_bank_keys = ['quantity','origin','year', 'local', 'description', 'public', 'available'];
-		$seeds_keys = ['sci_name','common_name','polinization','direct'];
-		//,'species', 'variety','family'];
+		$seeds_bank_keys = ['quantity','origin','year', 'local', 'description', 'public', 'available', 'description'];
+		$seeds_keys = ['sci_name','common_name','polinization','direct', 'description'];
+		$seeds_taxonomy = ['species', 'variety','family'];
 		$seeds_bank_new = [];
 		$seeds_new = [];
 		$months_new = [];
@@ -104,9 +108,17 @@ class SeedBankController extends Controller {
 			if (in_array($key, $seeds_bank_keys)){
 				$seeds_bank_new[$key] = $value;
 			}
+			if (in_array($key, $seeds_taxonomy)){
+				$t = (array)\DB::table($key)->where('name', $value)->first();
+				if (! $t) {
+					$t['id'] = \DB::table($key)->insertGetId(['name' => $value]);
+				}
+				$seeds_new[$key . '_id'] = $t['id'];
+			}
 			if ($key == 'months'){
 				$months_new = $value;
 			}
+
 		}
         // dd($request->input('months'));
         // dd($months_new);
@@ -118,7 +130,7 @@ class SeedBankController extends Controller {
 
 		if ($request->input('_id')){
 			$seed_id = $request->input('seed_id');
-			\DB::table('seeds_bank')->where('id', $request->input('_id'))
+			\DB::table('seeds_banks')->where('id', $request->input('_id'))
 				->update($seeds_bank_new);
 			\DB::table('seeds')->where('id', $seed_id)
 				->update($seeds_new);
@@ -142,7 +154,7 @@ class SeedBankController extends Controller {
 			$seed_id = \DB::table('seeds')
 				->insertGetId($seeds_new);
 			$seeds_bank_new['seed_id'] = $seed_id;
-			\DB::table('seeds_bank')
+			\DB::table('seeds_banks')
 				->insert($seeds_bank_new);
 			foreach($months_new as $month){
 				\DB::table('seed_months')
@@ -210,7 +222,7 @@ class SeedBankController extends Controller {
 			return [];
 		}
 		$results = \DB::table('seeds')
-			->join('seeds_bank', 'seeds_bank.seed_id', '=', 'seeds.id')
+			->join('seeds_banks', 'seeds_banks.seed_id', '=', 'seeds.id')
 			->where($query_name, 'like', '%' . $query_term . '%')
 			->where(function($query) use ($user) { $query->where('public', true)->orWhere('user_id', $user->id);})
 			->select('seed_id', $query_name)->distinct()
@@ -225,5 +237,10 @@ class SeedBankController extends Controller {
 		};
 		return $result;
 	}
+	/*public function postSeed(Request $request, $id = null)
+	{
+		$seed = \Caravel\Seed::find($id);
+		return $seed;
+	}*/
 	
 }

@@ -33,45 +33,46 @@ class SeedBankTableSeeder extends Seeder
         foreach (DB::table('family')->get() as $family) {
             foreach (DB::table('species')->where('family_id', $family->id)->get() as $specie) {
                 foreach (DB::table('variety')->where('species_id', $specie->id)->get() as $variety) {
-                    DB::table('seeds')->insert([
+                    /*DB::table('seeds')->insert([
                         'sci_name' => 'sci_name' . str_random(5), 
                         'common_name' => 'common_name' . str_random(5), 
                         'polinization' => true, 'direct' => false,
                         'species_id' => $specie->id,
                         'variety_id' => $variety->id,
                         'family_id' => $family->id
+                    ]);*/
+                    $seed = Caravel\Seed::firstOrCreate([
+			'sci_name' => 'sci_name' . str_random(5), 
+                        'common_name' => 'common_name' . str_random(5), 
+                        'polinization' => true, 'direct' => false,
+                        'species_id' => $specie->id,
+                        'variety_id' => $variety->id,
+                        'family_id' => $family->id
+		    ]);
+                DB::table('seed_months')->insert([
+                    'seed_id' => $seed->id,
+                    'month' => random_int(1,12),
                     ]);
+                DB::table('seed_months')->insert([
+                    'seed_id' => $seed->id,
+                    'month' => random_int(1,12),
+                    ]);
+
                 };
             };
         };
-        $count = 1;
-        foreach ([1,2,3,4] as $i){
-            $user = \Caravel\User::find($i);
-            $count++;
-            foreach([1,2,3,4] as $j){
-                $seed = DB::table('seeds')->where('id', $j + $count)->first();
-                DB::table('seeds_bank')->insert([
+        foreach (\Caravel\Seed::get() as $seed){
+            $user = \Caravel\User::find(random_int(1,10));
+            $seeds_bank = Caravel\SeedsBank::firstOrCreate([
                     'local' => 'local' . str_random(3),
-                        'origin' => 1,
-                        'year' => 1920,
-                        'description' => "description " . str_random(21),
-                        'available' => true,
-                        'public' => true,
-                        'user_id' => $user->id,
-                        'seed_id' => $seed->id
-                    ]);
-                DB::table('seed_months')->insert([
-                    'seed_id' => $seed->id,
-                    'month' => 6,
-                    ]);
-                DB::table('seed_months')->insert([
-                    'seed_id' => $seed->id,
-                    'month' => 9,
-                    ]);
-
-
-
-            };
+                    'origin' => random_int(1,3),
+                    'year' => random_int(2010,2015),
+                    'description' => "description " . str_random(221),
+                    'available' => true,
+                    'public' => true,
+                    'user_id' => $user->id,
+                    'seed_id' => $seed->id
+            ]);
         };
     }
 }

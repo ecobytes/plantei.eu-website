@@ -42,7 +42,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	public function getseeds() {
-	  $seedbank = \DB::table('seeds')->join('seeds_bank', 'seeds_bank.seed_id', '=', 'seeds.id')
+	  // TODO: Replace DB::query by Eloquent model Query
+	  $seedbank = \DB::table('seeds')->join('seeds_banks', 'seeds_banks.seed_id', '=', 'seeds.id')
 		->where('user_id', $this->id)->get();
 	  $result = array();
 	  foreach($seedbank as $i){

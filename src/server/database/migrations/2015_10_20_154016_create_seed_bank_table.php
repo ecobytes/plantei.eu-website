@@ -12,7 +12,7 @@ class CreateSeedBankTable extends Migration
      */
     public function up()
     {
-        Schema::create('seeds_bank', function (Blueprint $table) {
+        Schema::create('seeds_banks', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->integer('user_id')->unsigned();
@@ -35,6 +35,6 @@ class CreateSeedBankTable extends Migration
      */
     public function down()
     {
-        Schema::drop('seeds_bank');
+        Schema::drop('seeds_banks');
     }
 }

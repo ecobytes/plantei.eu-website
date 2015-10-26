@@ -10,5 +10,14 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 		Route::post('/search', 'SeedBankController@postSearch');
 		Route::post('/autocomplete', 'SeedBankController@postAutocomplete');
 		Route::get('/preferences', 'SeedBankController@getPreferences');
+		//Route::post('/seed/{id}', 'SeedBankController@postSeed');
+		Route::get('/seed/{id}', function ($id) {
+			$seed = \Caravel\Seed::findOrFail($id);
+			foreach(['variety', 'family', 'species'] as $field){
+				$field_a = (array)DB::table($field)->select('name')->find($seed[$field . '_id']);
+				$seed[$field] = $field_a['name'];
+			};
+			return $seed;
+		});
 	});
 });
