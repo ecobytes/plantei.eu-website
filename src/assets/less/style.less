@@ -35,6 +35,9 @@ a, a:hover, a:active, a:focus {
 .btn {
 	letter-spacing: 1px;
 }
+.btn.active, .btn:active {
+    background-color: #fff;
+}
 @import "stickyFooter";
 @import "forms";
 
@@ -56,9 +59,17 @@ footer {
 	footer {
 		border-top-color: white;
 	}
+	textarea {
+		border-top: 1px solid;
+	}
 }
 
 .envWarning {
 	background: white;
 }
+
+.table > tbody > tr.active > td {
+				color: #000000;
+			}
+
 @import "index.less";

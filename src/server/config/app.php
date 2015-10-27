@@ -52,7 +52,7 @@ return [
 	|
 	*/
 
-	'locale' => 'en',
+	'locale' => 'pt',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -135,6 +135,7 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
+                'Illuminate\Broadcasting\BroadcastServiceProvider',
 
 		/*
 		 * Application Service Providers...
@@ -146,12 +147,11 @@ return [
 		'Caravel\Providers\RouteServiceProvider',
 
 		//Thirdparty
-		'Barryvdh\Debugbar\ServiceProvider',
+		//'Barryvdh\Debugbar\ServiceProvider',
 		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
 		'Pingpong\Modules\ModulesServiceProvider',
-    'Pingpong\Modules\Providers\BootstrapServiceProvider',
-    'Wetzel\Handlebars\HandlebarsServiceProvider',
+		'ProAI\Handlebars\HandlebarsServiceProvider'
 
 	],
 
@@ -200,9 +200,10 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
+		'Gate'      => 'Illuminate\Support\Facades\Gate',
 
 		//Thirdparty
-		'Debugbar' => 'Barryvdh\Debugbar\Facade',
+		//'Debugbar' => 'Barryvdh\Debugbar\Facade',
 		'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
 		'Module' => 'Pingpong\Modules\Facades\Module',
 

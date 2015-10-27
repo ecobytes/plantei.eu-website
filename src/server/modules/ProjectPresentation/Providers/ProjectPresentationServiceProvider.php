@@ -17,13 +17,17 @@ class ProjectPresentationServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function register()
-	{		
+	{
+
+		\Lang::addNamespace('projectpresentation', dirname (__DIR__).'/Resources/lang');
+
+		\View::addNamespace('projectpresentation', dirname (__DIR__).'/Resources/views');
 		$this->registerConfig();
 	}
 
 	/**
 	 * Register config.
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function registerConfig()

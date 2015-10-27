@@ -13,7 +13,7 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "fimdomeio/caravel"
-  # config.vm.provision :shell, path: "provision/bootstrap.sh"
+  config.vm.provision :shell, path: "provision/bootstrap.sh"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -73,7 +73,7 @@ Vagrant.configure(2) do |config|
   # View the documentation for the provider you are using for more
   # information on available options.
   config.vm.provider "virtualbox" do |v|
-    v.name = "Plantei.eu DevelBox"
+    v.name = "Plantei.eu DevelBoxScaleway"
   end
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies

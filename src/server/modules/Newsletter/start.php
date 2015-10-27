@@ -12,7 +12,7 @@
 |
 */
 
-Lang::addNamespace('newsletter', __DIR__.'/Resources/lang');
+//Lang::addNamespace('newsletter', __DIR__.'/Resources/lang');
 
 View::addNamespace('newsletter', __DIR__.'/Resources/views');
 

@@ -6,9 +6,9 @@ return [
     
     'notManyEmails' => 'Prometemos poucos emails',
     
-    'descriptionTitle1' => 'Bibliotecas Pessoais',
+    'descriptionTitle1' => 'Bancos Pessoais de Sementes',
     
-    'descriptionContent1' => 'Os utilizadores poderão registar as suas variedades e trocar com outros utilizadores; desta forma o plantei.eu contribui para a descentralização do ciclo produtivo da semente, baixando os custos directos de produção alimentar para agricultores e hortelãos assim como os preços dos alimentos para os consumidores finais.',
+    'descriptionContent1' => 'Os utilizadores poderão registar as suas variedades, procurar as que outros utilizadores possuem, e trocar com eles; desta forma o plantei.eu contribui para a descentralização do ciclo produtivo da semente, baixando os custos directos de produção alimentar para agricultores e hortelãos assim como os preços dos alimentos para os consumidores finais.',
     
     'descriptionTitle2' => 'Enciclopédia',
     
@@ -20,5 +20,7 @@ return [
 ',
 	'yourName' => 'o seu nome',
 	'yourEmail' => 'o seu email',
-	'subscribe' => 'Subscrever'
+	'subscribe' => 'Subscrever',
+    'register' => 'Registo',
+    'login' => 'Iniciar Sessão'
 ];

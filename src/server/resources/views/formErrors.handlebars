@@ -1,0 +1,7 @@
+{{#if errors}}
+  <div class="row validationErrors">
+    {{#each errors}}
+      <div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert">{{this}}</div>
+    {{/each}}
+  </div>
+{{/if}}

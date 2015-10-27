@@ -1,0 +1,15 @@
+{
+	"name": "pingpong-modules/seedbank",
+	"description": "",
+	"authors": [
+		{
+			"name": "Pingpong Labs",
+			"email": "pingpong.labs@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Modules\\SeedBank\\": ""
+		}
+	}
+}

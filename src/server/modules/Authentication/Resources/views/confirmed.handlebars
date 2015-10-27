@@ -1,0 +1,20 @@
+{{>header}}
+<div class="pageWrap background-primary">
+<div class="container-fluid">
+	<div class="row lmt">
+		<div class="col-md-6 col-md-offset-3 text-center">
+				<h1>{{title}}</h1>
+				{{{ message }}}
+
+				{{#if buttons}}
+					<div class="buttons mmt">
+							{{#each buttons}}
+								<a class="btn btn-default btn-lg" href="{{url}}">{{label}}</a>
+							{{/each}}
+					</div>
+				{{/if}}
+		</div>
+	</div>
+</div>
+</div>
+{{> footer}}

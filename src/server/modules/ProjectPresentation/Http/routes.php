@@ -7,8 +7,8 @@ if(in_array($locale, $languages)){
 	\View::share('langString', $locale);
 }else{
 	$locale = null;
-	\View::share('lang', ['en' => true]);
-	\View::share('langString', 'en');
+	\View::share('lang', ['pt' => true]);
+	\View::share('langString', 'pt');
 
 }
 

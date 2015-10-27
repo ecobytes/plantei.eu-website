@@ -1,0 +1,15 @@
+{
+    "name": "SeedBank",
+    "alias": "seedbank",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\SeedBank\\Providers\\SeedBankServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "start.php"
+    ]
+}

@@ -7,7 +7,7 @@ Scenario: Subscribed Email in English
 	Given I am on the homepage
 	When I fill in the following:
 	|name  | testUser 						|
-	|email | testuser@example.com |
+	|email | test@example.com |
 	When I press "Subscribe"
 	Then I should not see "This email address is already on the list"
 	Then I should see "Subscription Successfull"

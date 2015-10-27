@@ -49,14 +49,15 @@ echo "Installing Mysql"
 apt-get install mysql-server -y
 
 
-sed -i "s/^bind-address/#bind-address/" /etc/mysql/my.cnf
+#sed -i "s/^bind-address/#bind-address/" /etc/mysql/my.cnf
 mysql -u root -plocalpassword -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'localpassword' WITH GRANT OPTION; FLUSH PRIVILEGES;"
 sudo /etc/init.d/mysql restart
 mysql -uroot -plocalpassword -e 'create database localdatabase;' 2> /dev/null
 mysql -uroot -plocalpassword -e 'create database testing;' 2> /dev/null
 
 echo "Installing nodejs npm bower phantomjs and gulp"
-apt-get install nodejs npm phantomjs -y
+curl --silent --location https://deb.nodesource.com/setup_4.x | sudo bash -
+apt-get install nodejs -y
 if [ ! -f "/usr/bin/node" ]; then ln /usr/bin/nodejs /usr/bin/node ; fi;
 
 if [ ! -f "/usr/local/bin/bower" ]; then npm install -g bower; fi;

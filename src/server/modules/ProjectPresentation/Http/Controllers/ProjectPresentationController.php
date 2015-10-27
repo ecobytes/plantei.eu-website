@@ -3,13 +3,17 @@
 use Pingpong\Modules\Routing\Controller;
 
 class ProjectPresentationController extends Controller {
-	
+
 	public function index()
 	{
 		$showSubscription = false;
+		$showAuthentication = false;
 		$enabledModules = \Module::enabled();
 		if(isset($enabledModules['Newsletter'])){
 			$showSubscription = true;
+		}
+		if(isset($enabledModules['Authentication'])){
+			$showAuthentication = true;
 		}
 		$errors = \Session::get('errors');
 		if(!empty($errors)){
@@ -18,8 +22,9 @@ class ProjectPresentationController extends Controller {
 		return view('projectpresentation::index')
 		->with('messages', \Lang::get('projectpresentation::messages'))
 		->with('showSubscription', $showSubscription)
+		->with('showAuthentication', $showAuthentication)
 		->with('bodyId', 'index')
 		->with('csrfToken', csrf_token());
 	}
-	
+
 }
