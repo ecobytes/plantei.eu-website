@@ -200,6 +200,7 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
+		'Gate'      => 'Illuminate\Support\Facades\Gate',
 
 		//Thirdparty
 		//'Debugbar' => 'Barryvdh\Debugbar\Facade',

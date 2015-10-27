@@ -1,6 +1,8 @@
 <?php namespace Modules\Authentication\Providers;
 
-use Illuminate\Support\ServiceProvider;
+//use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 
 class AuthenticationServiceProvider extends ServiceProvider {
 
@@ -16,7 +18,7 @@ class AuthenticationServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function boot()
+	public function boot(GateContract $gate)
 	{
 		\Lang::addNamespace('auth', dirname (__DIR__).'/Resources/lang');
 		\View::addNamespace('auth', dirname (__DIR__).'/Resources/views');
@@ -24,6 +26,13 @@ class AuthenticationServiceProvider extends ServiceProvider {
 		$this->registerConfig();
 		$this->registerTranslations();
 		$this->registerViews();
+		$this->registerPolicies($gate);
+
+        $gate->define('update-seeds_bank', function ($user, $seeds_bank) {
+            return $user->id === $seeds_bank->user_id;
+		});
+
+		
 	}
 
 	/**

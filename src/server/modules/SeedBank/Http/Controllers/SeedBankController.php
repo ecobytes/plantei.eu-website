@@ -2,6 +2,7 @@
 
 use Pingpong\Modules\Routing\Controller;
 use Illuminate\Http\Request;
+use Gate;
 
 class SeedBankController extends Controller {
 	
@@ -32,6 +33,13 @@ class SeedBankController extends Controller {
 	public function getRegister($id = null)
 	{
 		$update = false;
+		// Authorization
+		if($id){
+			$seeds_bank= \Caravel\SeedsBank::findOrFail($id);
+			if (Gate::denies('update-seeds_bank', $seeds_bank)){
+				abort(403);
+			}
+		}
 		//$errors = \Session::get('errors');
 		if(\Session::hasOldInput()){
 			$info =  \Session::getOldInput();
