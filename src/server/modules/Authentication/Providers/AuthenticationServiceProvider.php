@@ -29,7 +29,7 @@ class AuthenticationServiceProvider extends ServiceProvider {
 		$this->registerPolicies($gate);
 
         $gate->define('update-seeds_bank', function ($user, $seeds_bank) {
-            return $user->id === $seeds_bank->user_id;
+            return $user->id == $seeds_bank->user_id;
 		});
 
 		
