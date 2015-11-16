@@ -1,6 +1,9 @@
 <?php 
 return [
-    'profile' => 'Preferences',
-    'myseeds' => 'Seedbank',
-    'search' => 'Search'
+  'profile' => 'Preferences',
+  'home' => 'Home',
+  'myseeds' => 'My Seed Bank',
+  'search' => 'Search',
+  'messages' => 'Messages',
+  'logout' => 'Logout'
 ];

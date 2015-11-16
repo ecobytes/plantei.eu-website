@@ -159,9 +159,9 @@ class AuthController extends Controller {
 		});
  */
 		return View('auth::successful-registration')
-		->with('title', 'Registration Successful')
-		->with('message', \Lang::get('auth::messages.subscriptionSuccessfulMessage'))
-		->with('buttons', array(['label' => \Lang::get('newsletter::messages.homePage'), 'url' => '/']));
+		->with('title', \Lang::get("auth::messages.registrationSuccessfulTitle"))
+		//->with('message', \Lang::get("auth::messages.subscriptionSuccessfulMessage")
+		->with('buttons', array(['label' => \Lang::get("auth::messages.homePage"), 'url' => '/']));
 
 	}
 
@@ -184,12 +184,12 @@ class AuthController extends Controller {
 			$user->confirmed = true;
 			$user->save();
 			$success = true;
-			$title = \Lang::get('auth::messages.successConfirmingTitle');
-			$message =  \Lang::get('auth::messages.successConfirmingMessage');
+			$title = \Lang::get("auth::messages.successConfirmingTitle");
+			$message =  \Lang::get("auth::messages.successConfirmingMessage");
 		}else {
 			$success = false;
-			$title = \Lang::get('auth::messages.errorConfirmingTitle');
-			$message =  \Lang::get('auth::messages.errorConfirmingMessage');
+			$title = \Lang::get("auth::messages.errorConfirmingTitle");
+			$message =  \Lang::get("auth::messages.errorConfirmingMessage");
 
 		}
 

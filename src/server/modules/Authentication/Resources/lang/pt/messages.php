@@ -1,6 +1,6 @@
 <?php
 return [
-	'registrationSuccessfulTitle' => 'Registo bem Sucedida',
+	'registrationSuccessfulTitle' => 'Registo bem Sucedido',
 	'registrationSuccessfulMessage' => 'Um email de confirmação foi enviado para o seu endereço.',
 	'homePage' => 'Página Inicial',
 
