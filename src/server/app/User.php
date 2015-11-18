@@ -36,11 +36,25 @@ class User extends Model implements AuthenticatableContract,
 	protected $hidden = ['password', 'remember_token'];
 
 
-	public function roles()
+    public function roles()
+    {
+      return $this->belongsToMany('Caravel\Role');
+    }
+
+	public function messages()
   {
-    return $this->belongsToMany('Caravel\Role');
+	return $this->belongsToMany('Caravel\Message', 'message_user')
+	  //->sortByDesc('created_at')
+	  ->withPivot('read', 'replied', 'root_message_id');
   }
 
+    public function messageById($id)
+    {
+      if (! $id){
+        return false;
+      }
+      return $this->messages()->where('id', $id)->first();
+    }
 	public function getIdAttribute($value) {
 			return (int) $value;
 	}

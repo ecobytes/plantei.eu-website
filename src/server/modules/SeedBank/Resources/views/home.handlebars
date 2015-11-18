@@ -54,22 +54,26 @@
       </div>
       <div class="col-md-6">
         <h1>{{messages.latestMessages}}<span class="badge">
-          10 por ler
+          {{unreadmessages}}
         </span></h1>
         <table class="table">
           <thead>
             <tr>
               <th>{{messages.subject}}</th>
-              <th>{{messages.from}}</th>
-              <th></th>
+              <th>{{messages.date}}</th>
+              <th>{{messages.unread}}/{{messages.read}}</th>
             </tr>
           </thead>
           <tbody>
           {{#each usermessages}}
-            <tr data-message_id="{{id}}">
+            <tr data-message_id="{{id}}" {{#unless pivot.read.1}}style="font-weight: bold;"{{/unless}}>
               <td>{{subject}}</td>
-              <td>{{from}}</td>
-              <td style="text-align: center;">({{count}})</td>
+              <td>({{id}}){{created_at}}</td>
+              <td style="text-align: center;">
+					{{#if pivot.read.1}} {{../../messages.read}} 
+						{{else}} {{../../messages.unread}} 
+					{{/if}}
+				</td>
             </tr>
           {{/each}}
           </tbody>

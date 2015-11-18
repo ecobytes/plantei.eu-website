@@ -12,24 +12,25 @@ class SeedBankController extends Controller {
 
     $seeds = \Caravel\Seed::orderBy('created_at', 'desc')
       ->select('id', 'sci_name', 'common_name')
-      ->limit(5)
       ->get()
+      ->chunk(4)[0]
       ->toArray();
 
-    $userMessages = [];
-    $userMessages[] = ['subject' => 'assunto 3',
-                 'from' => 'userfrom 1',
-           'count' => 10];
-    
-    $userMessages[] = ['subject' => 'assunto 2',
-                 'from' => 'userfrom 2',
-           'count' => 0];
-    $userMessages[] = ['subject' => 'assunto 3',
-                 'from' => 'userfrom 3',
-           'count' => 1];
+    $userMessages = $user->messages()->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
+    $unreadmessages = 0;
+    foreach($userMessages as &$m) {
+      $t = array();
+      if ($m['pivot']['read']){
+        $t[1] = true;
+        $m['pivot']['read'] = $t;
+      } else {
+        $unreadmessages++;
+      }
+    }
     return view('seedbank::home')
       ->with('seeds', $seeds)
       ->with('usermessages', $userMessages)
+      ->with('unreadmessages', $unreadmessages)
       ->with('messages', \Lang::get('seedbank::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
@@ -100,19 +101,6 @@ class SeedBankController extends Controller {
           $info[$key] = [$info[$key] => true];
         }
       }
-      //$t[] = $info;
-    /*foreach(['origin', 'polinization', 'direct'] as $key){
-      if(isset($info[$key])){
-        $info[$key] = [$info[$key] => true];
-      }
-    }
-    foreach(['public', 'available'] as $key){
-      if(isset($key)){
-        $info[$key] = true;
-      } else {
-        $info[$key] = false;
-      }
-    }*/
 
     if(isset($info['months'])){
       $o = array();
@@ -162,10 +150,6 @@ class SeedBankController extends Controller {
       }
 
     }
-        // dd($request->input('months'));
-        // dd($months_new);
-
-    //$user = \Caravel\User::where('id', 1)->first();
 
     $user = \Auth::user();
     $seeds_bank_new['user_id'] = $user->id;
