@@ -32,7 +32,8 @@ gulp.task('bowercopy', function(){
   gulp.src([
     '/vagrant/src/bower_components/bootstrap/dist/js/bootstrap.min.js',
     '/vagrant/src/bower_components/jquery/dist/jquery.min.js',
-    '/vagrant/src/bower_components/jquery-ui/jquery-ui.min.js'
+    '/vagrant/src/bower_components/jquery-ui/jquery-ui.min.js',
+    '/vagrant/src/bower_components/laravel-bootstrap-modal-form/src/laravel-bootstrap-modal-form.js'
     ])
   .pipe(gulp.dest('/vagrant/src/server/public/js/'));
   gulp.src([

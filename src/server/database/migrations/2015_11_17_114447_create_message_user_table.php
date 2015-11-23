@@ -18,8 +18,6 @@ class CreateMessageUserTable extends Migration
             $table->integer('message_id')->unsigned();
             $table->foreign('message_id')->references('id')->on('messages');
             $table->primary(['user_id', 'message_id']);
-            $table->integer('root_message_id')->unsigned();
-            $table->foreign('root_message_id')->references('id')->on('messages');
             $table->boolean('read')->default(false);
             $table->boolean('replied')->default(false);
         });

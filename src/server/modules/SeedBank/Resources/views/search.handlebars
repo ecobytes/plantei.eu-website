@@ -8,8 +8,19 @@
         <h4 class="modal-title"></h4>
       </div>
       <div class="modal-body">
+	    <div class="row">
+		  <div class="col-md-12 body-read"></div>
+		</div>
+	    <div class="row">
+		  <div class="col-md-10 col-md-offset-1 body-form" style="border: solid; display: none;">
+		  </div>
+		</div>
       </div>
       <div class="modal-footer">
+	    <div class="col-md-4 footer-left">
+		</div>
+	    <div class="col-md-8 footer-right">
+		</div>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -33,7 +44,7 @@
 						</span>
 					</div>
 					<div class="form-group lmt">
-							<button id="search" type="button" class="btn btn-primary btn-lg">
+							<button id="search" type="submit" class="btn btn-primary btn-lg">
 								Pesquisa
 							</button>
 					</div>
@@ -56,6 +67,7 @@
 </div>
 {{>scripts}}
 <script src="/js/jquery-ui.min.js"></script>
+<script src="/js/laravel-bootstrap-modal-form.js"></script>
 <script>
 /*$('.search_autocomplete').autocomplete({
   delay: 300, minLength: 2, 
@@ -72,7 +84,36 @@
     //console.log(ui.item.id);
     $('#hidden_section_id').val(ui.item.id)
   }
-});*/
+});
+*/
+
+$(".container form").on('submit', function(){
+	$('#results tbody').empty();
+	if ( $('#results').is(':visible')) {
+		$('#results').hide();
+		$('.search_autocomplete').show();
+		$('#search').text('Pesquisa');
+		return false;
+	};
+    var formdata = $('form').serialize();
+	$.post("/seedbank/search", formdata, function (data) {
+	    console.log(data);
+		if (! data){
+			return false;
+		}
+		$.each( data, function(i,info){
+			//console.log(info);
+			$('#results tbody').append('<tr data-seed_id="' + info.id + '"><td>' + info.common_name + '</td><td>' + info.sci_name + '</td</tr>');
+			$('#results').show();
+			$('.search_autocomplete').hide();
+			$('#search').text('Nova Pesquisa');
+		});
+	},
+	'json');
+	return false;
+});
+
+/*
 $('#search').on('click', function (e) {
 	$('#results tbody').empty();
 	if ( $('#results').is(':visible')) {
@@ -96,19 +137,23 @@ $('#search').on('click', function (e) {
 	},
 	'json');
 });
+*/
 $('#results').on('click', 'tbody tr', function () {
 	var seed_id = $(this).data('seed_id');
     $.get("/seedbank/seed/" + seed_id, function (data) {
 		if (! data){
 			return false;
 		}
-		$('#seed_info .modal-title').text('[' + data.id + '] ' + data.common_name);
-		$('#seed_info .modal-body').html('<p><em>' + data.sci_name + '</em></p>\n<p>' + data.description + '</p>');
-		$('#seed_info .modal-footer').html('<p><em>' + data.sci_name + '</em></p>\n\
+		$('#seed_info .modal-title').text('[' + data.id + '] ' + data.common_name).data("seed_id", data.id);
+		$('#seed_info .modal-body .body-read').html('<p><em>' + data.sci_name + '</em></p>\n<p>' + data.description + '</p>');
+		$('#seed_info .modal-footer .footer-right').html('<p><em>' + data.sci_name + '</em></p>\n\
 			<p><b>Família:</b>' + data.family + '</p>' + '\n\
 			<p><b>Espécie:</b>' + data.species + '</p>' + '\n\
 			<p><b>Variedade:</b>' + data.variety + '</p>' + '\n'
 			);
+		$('#seed_info .modal-footer .footer-left')
+		    .html('<button class="btn btn-default col-md-12" style="height: 50px;">\
+			  {{messages.sendmessage}}Manda Mensagem</button>');
 
 		$('#seed_info').modal('show');
 		},
@@ -118,5 +163,36 @@ $('#results').on('click', 'tbody tr', function () {
 }).on('mouseout', 'tbody tr', function () {
     $(this).removeClass('active');
 });
+
+$('#seed_info .modal-footer .footer-left').on('click', 'button', function(){
+  $('#seed_info .modal-body .body-form').html('\
+    <form class="form-horizontal bootstrap-modal-form" method="POST" action="/seedbank/message/send">\
+	  <input type="hidden" name="seed_id" value="' + $(".modal-title").data('seed_id') + '"/>\
+	  <div class="form-group">\
+	    <span class="cell">\
+		  <input class="form-control" placeholder="Assunto" type="text" name="subject"/>\
+		</span>\
+	  </div>\
+	  <div class="form-group">\
+	    <span class="cell">\
+	      <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="Escreve uma mensagem" name="body"></textarea>\
+		</span>\
+	  </div>\
+      <div class="form-group lmt">\
+        <div class="col-md-12 text-center">\
+            <button type="button" class="btn btn-danger btn-md" id="cancel">\
+              Cancelar\
+            </button>\
+            <button type="submit" class="btn btn-primary btn-md">\
+              Enviar\
+            </button>\
+        </div>\
+      </div>\
+	</form>');
+  $('.body-form').show();
+  });
+$('.body-form').on('click', '#cancel', function(){
+  $('.body-form').empty().hide();
+  });
 </script>
 {{>footer}}

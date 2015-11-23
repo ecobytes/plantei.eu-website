@@ -63,6 +63,44 @@ class SeedBankController extends Controller {
       ->with('active', ['myseeds' => true]);
   }
 
+  public function getMessages()
+  {
+    $user = \Auth::user();
+
+    $userMessages = $user->lastMessages(10)->toArray();
+      //->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
+    $unreadmessages = 0;
+    foreach($userMessages as &$m) {
+      if (($m['sender_id'] != $user->id) && (!$m['read'])){
+        $unreadmessages++;
+        $m['enabled'] = true;
+      }
+      if ($m['sender_id'] == $user->id){
+        $m['sent'] = true;
+      }
+      
+      //foreach($mgroup as &$m){
+      /*  if (isset($m['pivot'])) {
+          $t = array();
+          if ($m['pivot']['read']){
+            $t[1] = true;
+            $m['pivot']['read'] = $t;
+          
+          } else {
+            $unreadmessages++;
+          }
+    }*/
+      //}
+    }
+    return view('seedbank::messages')
+      ->with('usermessages', $userMessages)
+      ->with('unreadmessages', $unreadmessages)
+      ->with('messages', \Lang::get('seedbank::messages'))
+      ->with('menu', \Lang::get('seedbank::menu'))
+      ->with('username', $user->name)
+      ->with('active', ['messages' => true]);
+  }
+
   public function getRegister($id = null)
   {
     $user = \Auth::user();
@@ -116,8 +154,10 @@ class SeedBankController extends Controller {
       ->with('messages', \Lang::get('seedbank::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
+      ->with('active', ['myseeds' => true])
       ->with('oldInput', $info); 
   }
+
   public function postRegister(Request $request)
   {
     // if error with form
@@ -189,15 +229,11 @@ class SeedBankController extends Controller {
       // maybe flash an 'Added new seed' message
     }
 
-
-    //return back()->withInput();
-      //->withErrors(['some error' => "Aconteceu qualquer coisa com o formulário"]);
-    // all is done
-    
     return redirect('/seedbank');
   }
   public function getPreferences()
   {
+    $user = \Auth::user();
     return view('seedbank::preferences')
       ->with('messages', \Lang::get('seedbank::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
@@ -229,6 +265,7 @@ class SeedBankController extends Controller {
       }
     }
     if (! $q){ return [];}
+    //dd($q);
     $query = \DB::table('seeds');
     foreach($q as $key => $value){
       $query->orWhere($key, 'like', '%' . $value . '%');
@@ -271,5 +308,73 @@ class SeedBankController extends Controller {
     $seed = \Caravel\Seed::find($id);
     return $seed;
   }*/
-  
+
+  public function postMessageReply(Request $request)
+  {
+    // if error with form
+    $this->validate($request, [
+      'body' => 'required',
+      'message_id' => 'required',
+    ]);
+    $message_id = $request->input('message_id');
+    $message = $request->user()->messages()->where('id', $message_id)->first();
+    if (Gate::denies('reply-message', $message)){
+      abort(403);
+    }
+    $reply = $message->reply(['body' => $request->input('body')]);
+    $message->pivot->replied = true;
+    $message->pivot->save();
+
+    if ($reply){
+      return ["response" => "Message sent"];
+    }
+    return false;
+
+
+
+    // maybe flash an 'Added new seed' message
+    //return redirect('/seedbank');
+  }
+
+  public function postMessageSend(Request $request)
+  {
+    // if error with form
+    $this->validate($request, [
+      'body' => 'required',
+      'seed_id' => 'required',
+    ]);
+    $subject = $request->input('subject');
+    $body = $request->input('body');
+    $seed_id = $request->input('seed_id');
+    $seed = \Caravel\Seed::findOrFail($seed_id);
+    $user_ids = \Caravel\SeedsBank::where('seed_id', $seed_id)
+      ->where('public', true)
+      ->get(['user_id'])
+      ->map(function($item, $key)
+      {
+        return $item['user_id'];
+      })->all();
+    if (!$user_ids)
+    {
+      abort(403);
+    }
+    if (!$subject)
+    {
+      $subject = $seed->common_name;
+    }
+    $message = \Caravel\Message::create([
+        'user_id' => $request->user()->id,
+        'subject' => $subject,
+        'body' => $body,
+      ]);
+    $message->save();
+    $message->root_message_id = $message->id;
+    $message->save();
+    $message->users()->attach($user_ids);
+
+    //return ["response" => "Message sent"];
+
+    // maybe flash an 'Added new seed' message
+    return redirect('/seedbank/search');
+  }
 }

@@ -31,6 +31,15 @@ class AuthenticationServiceProvider extends ServiceProvider {
         $gate->define('update-seeds_bank', function ($user, $seeds_bank) {
             return $user->id == $seeds_bank->user_id;
 		});
+        $gate->define('reply-message', function ($user, $message) {
+			/*echo $user->id;
+			dd($message);*/
+			if ($user->messages()->where('id', $message->id)->get()->toArray())
+			{
+				return true;
+			}
+			return false;
+		});
 
 		
 	}

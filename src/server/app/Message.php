@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
 
-    protected $fillable = ['subject', 'body', 'user_id', 'reply_to'];
+    protected $fillable = ['subject', 'body', 'user_id', 'reply_to', 'root_message_id'];
 
     public function users()
     {
@@ -53,14 +53,17 @@ class Message extends Model
                 $subject = "RE: " . $subject;
             }
         }
+        $root_message_id = ($this->root_message_id)?$this->root_message_id:$this->id;
+
         $reply = \Caravel\Message::create([
             'subject' => $subject,
             'body' => $body,
             'user_id' => $this->pivot->user_id,
-            'reply_to' => $this->id
+            'reply_to' => $this->id,
+            'root_message_id' => $root_message_id
         ]);
         $reply->save();
-        $reply->users()->attach($this->user_id, ['root_message_id' => $this->pivot->root_message_id]);
+        $reply->users()->attach($this->user_id);
         $this->pivot->read = true;
         $this->pivot->replied = true;
         $this->pivot->save();

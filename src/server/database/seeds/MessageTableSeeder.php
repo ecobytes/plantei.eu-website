@@ -20,9 +20,11 @@ class MessageTableSeeder extends Seeder
                     'body' => $faker->paragraph, 
                     'user_id' => $user->id,
                 ]);
+                $message->root_message_id = $message->id;
+                $message->save();
                 if (($user->id != 1) && ($counter<5)){
                     $counter++;
-                    $message->users()->attach(1, ['root_message_id' => $message->id]);
+                    $message->users()->attach(1);
                 }
 
             }

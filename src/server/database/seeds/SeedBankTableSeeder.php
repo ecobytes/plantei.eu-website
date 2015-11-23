@@ -11,6 +11,7 @@ class SeedBankTableSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker\Factory::create();
         DB::table('family')->insert([
             ['name' => 'family' . str_random(5)],
             ['name' => 'family' . str_random(5)],
@@ -67,7 +68,7 @@ class SeedBankTableSeeder extends Seeder
                     'local' => 'local' . str_random(3),
                     'origin' => random_int(1,3),
                     'year' => random_int(2010,2015),
-                    'description' => "description " . str_random(221),
+                    'description' => "description " . $faker->text(500),
                     'available' => true,
                     'public' => true,
                     'user_id' => $user->id,

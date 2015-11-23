@@ -141,6 +141,14 @@ class AuthController extends Controller {
 		}
 
 		$user->push();
+		$m = \Caravel\Message::create([
+			'subject' => \Lang::get('auth::confirmationemail.title'), 
+			'body' => \Lang::get('auth::confirmationemail.text'), 
+			'user_id' => 1,
+		]);
+		$m->users()->attach($user->id, ['root_message_id' => $m->id]);
+
+
 /*
 		$verificationKey = $user->confirmationString;
 		\Mail::send('emails.transactional', [

@@ -45,7 +45,7 @@ class User extends Model implements AuthenticatableContract,
   {
 	return $this->belongsToMany('Caravel\Message', 'message_user')
 	  //->sortByDesc('created_at')
-	  ->withPivot('read', 'replied', 'root_message_id');
+	  ->withPivot('read', 'replied');
   }
 
     public function messageById($id)
@@ -70,4 +70,55 @@ class User extends Model implements AuthenticatableContract,
 		
 			return $result;
 	}
+
+    /**
+     * Get all sent messages.
+     *
+     * @return HasMany
+     */
+    public function sentMessages()
+    {
+        return $this->hasMany('Caravel\Message', 'user_id');
+    }
+
+    /**
+     * Get all user messages.
+     *
+     * @return HasMany
+     */
+    public function lastMessages($limit=10)
+	{
+	  $col = \Caravel\Message::select(\DB::raw('*, messages.user_id as sender_id'))
+		->join('message_user', 'message_user.message_id', '=', 'messages.id')
+		->where('message_user.user_id', $this->id)
+		->orWhere('messages.user_id', $this->id)
+		->orderBy('created_at', 'desc')
+		->limit($limit)->get();
+		//->get()->sortByDesc('created_at')->forPage($page, $chunks);
+
+	  
+	 /* $sent = $this->sentMessages()->get();
+	  $received = $this->messages()->get();
+	  $all = $sent->merge($received)
+		->sortByDesc('created_at')
+		->groupBy('root_message_id')
+		->forPage($page, $chunks);
+	  /*if ($all->count() > $page + 1
+		[$page]->sortBy('created_at');*/
+	  return $col;
+    }
+
+    /**
+     * Get latest user messages.
+     *
+     * @return HasMany
+     */
+ /*   public function latestMessages($limit=6)
+	{
+	  $latest = $this->messages()
+		->orderBy('created_at', 'desc')
+		->take($limit)->get();
+	  return $latest;
+    }
+	  */
 }

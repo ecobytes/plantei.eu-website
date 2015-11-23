@@ -1,70 +1,70 @@
 {{> header}}
 <div class="pageWrap background-primary">
-	<div class="container-fluid">
-		<div class="row lmt">
-			<div class="col-md-6 col-md-offset-3">
-				<h2>{{messages.registertitle}}</h2>
-				{{> formErrors}}
-				<form class="form-horizontal" role="form" method="POST" action="/{{langString}}/auth/register">
-					<input type="hidden" name="_token" value="{{ csrfToken }}">
+  <div class="container-fluid">
+    <div class="row lmt">
+      <div class="col-md-6 col-md-offset-3">
+        <h2>{{messages.registertitle}}</h2>
+        {{> formErrors}}
+        <form class="form-horizontal" role="form" method="POST" action="/{{langString}}/auth/register">
+          <input type="hidden" name="_token" value="{{ csrfToken }}">
 
-					<div class="form-group">
-						<label class="control-label">{{messages.username}}</label>
-							<span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{ oldInput.name }}"></span>
-					</div>
+          <div class="form-group">
+            <label class="control-label">{{messages.username}}</label>
+              <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{ oldInput.name }}"></span>
+          </div>
 
-					<div class="form-group">
-						<label class="control-label">{{messages.email}}</label>
-							<span class="cell"><input type="email" class="form-control" name="email" value="{{ oldInput.email }}"></span>
-					</div>
+          <div class="form-group">
+            <label class="control-label">{{messages.email}}</label>
+              <span class="cell"><input type="email" class="form-control" name="email" value="{{ oldInput.email }}"></span>
+          </div>
 
-					<div class="form-group">
-						<label class="control-label">{{messages.password}}</label>
-							<span class="cell"><input type="password" class="form-control" name="password"></span>
-					</div>
+          <div class="form-group">
+            <label class="control-label">{{messages.password}}</label>
+              <span class="cell"><input type="password" class="form-control" name="password"></span>
+          </div>
 
-					<div class="form-group">
-						<label class="control-label">{{messages.confirmpassword}}</label>
-							<span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
-					</div>
-					<div class="form-group">
-						<label class="control-label">{{messages.whereareyou}}</label>
-						<span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ oldInput.place_name }}"></span>
-					</div>
-					<div class="form-group"><div class="row">
-						<div class="col-md-6">
-						<label class="control-label">{{messages.latitude}}</label>
-						<span class="cell"><input type="text" class="form-control" placeholder="" name="lat" value="{{ oldInput.lat }}"></span>
-						</div>
-						<div class="col-md-6">
-						<label class="control-label">{{messages.longitude}}</label>
-						<span class="cell"><input type="text" class="form-control" placeholder="" name="lon" value="{{ oldInput.lon }}"></span>
-						</div>
-					</div></div>
-					<!--
-					<div class="form-group">
-						<label class="control-label">{{messages.iwanttosubscribenewsletter}}</label>
-							<span class="cell btn-group" data-toggle="buttons">
-								<label class="btn btn-default {{#if oldInput.subscribeNewsletter.1}}active{{/if}}">
-									<input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.1}}checked{{/if}} value="1" /> {{messages.yes}}
-								</label>
-								<label class="btn btn-default {{#if oldInput.subscribeNewsletter.0}}active{{/if}}">
-									<input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.0}}checked{{/if}} value="0" /> {{messages.no}}
-								</label>
-							</span>
-					</div>
-					-->
-					<div class="form-group lmt">
-						<div class="col-md-12 text-center">
-							<button type="submit" class="btn btn-primary btn-lg">
-								{{messages.register}}
-							</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+          <div class="form-group">
+            <label class="control-label">{{messages.confirmpassword}}</label>
+              <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{messages.whereareyou}}</label>
+            <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ oldInput.place_name }}"></span>
+          </div>
+          <div class="form-group"><div class="row">
+            <div class="col-md-6">
+            <label class="control-label">{{messages.latitude}}</label>
+            <span class="cell"><input type="text" class="form-control" placeholder="" name="lat" value="{{ oldInput.lat }}"></span>
+            </div>
+            <div class="col-md-6">
+            <label class="control-label">{{messages.longitude}}</label>
+            <span class="cell"><input type="text" class="form-control" placeholder="" name="lon" value="{{ oldInput.lon }}"></span>
+            </div>
+          </div></div>
+          <!--
+          <div class="form-group">
+            <label class="control-label">{{messages.iwanttosubscribenewsletter}}</label>
+              <span class="cell btn-group" data-toggle="buttons">
+                <label class="btn btn-default {{#if oldInput.subscribeNewsletter.1}}active{{/if}}">
+                  <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.1}}checked{{/if}} value="1" /> {{messages.yes}}
+                </label>
+                <label class="btn btn-default {{#if oldInput.subscribeNewsletter.0}}active{{/if}}">
+                  <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.0}}checked{{/if}} value="0" /> {{messages.no}}
+                </label>
+              </span>
+          </div>
+          -->
+          <div class="form-group lmt">
+            <div class="col-md-12 text-center">
+              <button type="submit" class="btn btn-primary btn-lg">
+                {{messages.register}}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {{> scripts }}
 {{> footer}}
