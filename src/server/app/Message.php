@@ -70,4 +70,40 @@ class Message extends Model
         return $reply;
     }
 
+    /**
+     * Send a message.
+     *
+     * @param  array() ['subject'=>false, 'body'=>false, 'user_id'=>false, 'recipients' => []]
+     * @return Message
+     */
+    public static function send($params = array())
+    {
+        $defaults = array(
+            'subject' => false,
+            'body' => false,
+            'user_id'=>false,
+            'recipients' => []
+        );
+        $params = array_merge($defaults, $params);
+
+        if ((! $params['subject']) || (!$params['body']) || (!$params['user_id']) || (!$params['recipients']))
+        {
+            return false;
+        }
+        $subject = $params['subject'];
+        $body = $params['body'];
+        $user_id = $params['user_id'];
+        $recipients = $params['recipients'];
+
+        $message = \Caravel\Message::create([
+            'subject' => $subject,
+            'body' => $body,
+            'user_id' => $user_id,
+        ]);
+        $message->save();
+        $message->where('id', $message->id)->update(['root_message_id' => $message->id]);
+
+        $message->users()->attach($recipients);
+        return $message;
+    }
 }

@@ -59,22 +59,16 @@ class User extends Model implements AuthenticatableContract,
 			return (int) $value;
 	}
 
-	public function getseeds() {
-	  // TODO: Replace DB::query by Eloquent model Query
-	  $seedbank = \DB::table('seeds')->join('seeds_banks', 'seeds_banks.seed_id', '=', 'seeds.id')
-		->where('user_id', $this->id)->get();
-	  $result = array();
-	  foreach($seedbank as $i){
-		$result[] = (array)$i;
-	  };
-		
-			return $result;
+	public function seeds() {
+	  return $this->hasMany('Caravel\SeedsBank', 'user_id')
+		->join('seeds', 'seeds.id', '=', 'seed_id')
+		->get()->toArray();
 	}
 
     /**
      * Get all sent messages.
      *
-     * @return HasMany
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function sentMessages()
     {
@@ -82,30 +76,18 @@ class User extends Model implements AuthenticatableContract,
     }
 
     /**
-     * Get all user messages.
-     *
-     * @return HasMany
+     * Get last messages.
+     * @param integer
+     * @return Illuminate\Database\Eloquent\Collection
      */
     public function lastMessages($limit=10)
 	{
-	  $col = \Caravel\Message::select(\DB::raw('*, messages.user_id as sender_id'))
+	  return Message::select(\DB::raw('*, messages.user_id as sender_id'))
 		->join('message_user', 'message_user.message_id', '=', 'messages.id')
 		->where('message_user.user_id', $this->id)
 		->orWhere('messages.user_id', $this->id)
 		->orderBy('created_at', 'desc')
 		->limit($limit)->get();
-		//->get()->sortByDesc('created_at')->forPage($page, $chunks);
-
-	  
-	 /* $sent = $this->sentMessages()->get();
-	  $received = $this->messages()->get();
-	  $all = $sent->merge($received)
-		->sortByDesc('created_at')
-		->groupBy('root_message_id')
-		->forPage($page, $chunks);
-	  /*if ($all->count() > $page + 1
-		[$page]->sortBy('created_at');*/
-	  return $col;
     }
 
     /**
@@ -121,4 +103,59 @@ class User extends Model implements AuthenticatableContract,
 	  return $latest;
     }
 	  */
+    /**
+     * Get pending transactions.
+     * @param integer
+     * @return array
+     */
+    public function transactionsPending($limit=10)
+	{
+	  //Transactions started by other
+	  $askedTo = $this->hasMany('Caravel\SeedsExchange', 'asked_to')
+		->where('accepted', true)
+		->join('users', 'users.id', '=', 'asked_by')
+		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
+		->select('seeds_exchanges.*', 'users.name', 'users.email', 'seeds.common_name', 'seeds.sci_name')
+		->get()->toArray();
+	  //Transactions started by self
+	  $askedBy = $this->hasMany('Caravel\SeedsExchange', 'asked_by')
+		->where('completed', false)
+		->join('users', 'users.id', '=', 'asked_to')
+		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
+		->select('seeds_exchanges.*', 'users.name', 'users.place_name', 'users.email', 'seeds.common_name', 'seeds.sci_name')
+		->get()->toArray();
+
+	  return ['asked_to' => $askedTo, 'asked_by' => $askedBy];
+    }
+
+    /**
+     * Get pending transactions.
+     * @param  integer
+     * @return Collection
+     */
+    public function transactionsLatest($limit=10)
+	{
+		return SeedsExchange::where('asked_to', $this->user_id)
+			->orWhere('asked_by', $this->user_id)
+			->orderByDesc('updated_at')
+			->limit($limit)
+			->get();
+	}
+
+    /**
+     * Start a new transaction.
+     * @param  array
+     * @return Caravel\SeedExchange
+     */
+    public function startTransaction($data)
+	{
+	  if ((! isset($data['asked_to'])) && (! isset($data['seed_id'])))
+	  {
+		return false;
+	  }
+	  $data['asked_by'] = $this->id;
+
+	  return SeedsExchange::firstOrCreate($data);
+	}
+
 }

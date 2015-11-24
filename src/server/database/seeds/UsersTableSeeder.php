@@ -17,6 +17,25 @@ class UsersTableSeeder extends Seeder {
 
 	}
 
+	public function create(array $data)
+	{
+		foreach ($data as $key => $value){
+			if ((!$value) || (!in_array($key, ['name', 'email', 'password', 'lon', 'lat', 'place_name']))){
+				unset($data[$key]);
+			}
+		}
+		$data['password'] = bcrypt($data['password']);
+		//dd($data);
+		return Caravel\User::create($data);
+			/*[
+			'name' => $data['name'],
+			'email' => $data['email'],
+			'password' => bcrypt($data['password']),
+			'lon' => $data['lon'],
+			'lat' => $data['lat'],
+			'place_name' => $data['place_name'],
+		]);*/
+	}
   public function run()
   {
     DB::table('users')->delete();
@@ -24,7 +43,7 @@ class UsersTableSeeder extends Seeder {
 
     $adminId = Caravel\Role::where('name', 'admin')->first()->id;
     $userId = Caravel\Role::where('name', 'user')->first()->id;
-    $user = $this->registrar->create([
+    $user = $this->create([
     	'name' => 'Devel User',
     	'email' => 'devel@example.com',
     	'password' => 'develuser',
@@ -40,7 +59,7 @@ class UsersTableSeeder extends Seeder {
     $faker = Faker\Factory::create();
 
     for($i = 0; $i < 10; $i++){
-    	$user = $this->registrar->create([
+    	$user = $this->create([
     		'name' => $faker->name,
      		'email' => $faker->email,
      		'password' => $faker->word,

@@ -43,7 +43,7 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
     //dd($user->id);
     //$user = \Caravel\User::where('id', 1)->first();
-    $seeds = $user->getseeds();
+    $seeds = $user->seeds();
     $t = [];
     foreach($seeds as $seed){
 
@@ -55,8 +55,12 @@ class SeedBankController extends Controller {
       $t[] = $seed;
     }
     //dd($t);
+    $transactions = $user->transactionsPending();
+
     return view('seedbank::myseeds')
       ->with('seeds', $t)
+      ->with('transactionsBy', $transactions['asked_by']) 
+      ->with('transactionsTo', $transactions['asked_to']) 
       ->with('messages', \Lang::get('seedbank::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
@@ -371,7 +375,10 @@ class SeedBankController extends Controller {
     $message->root_message_id = $message->id;
     $message->save();
     $message->users()->attach($user_ids);
-
+    foreach($user_ids as $u_id)
+    {
+      $request->user()->startTransaction(['asked_to'=>$u_id, 'seed_id'=>$seed_id]);
+    }
     //return ["response" => "Message sent"];
 
     // maybe flash an 'Added new seed' message

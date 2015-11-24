@@ -23,6 +23,8 @@ class CreateMessagesTable extends Migration
             $table->foreign('root_message_id')->references('id')->on('messages');
             $table->string('subject');
             $table->text('body');
+            $table->integer('seed_id')->unsigned()->nullable();
+            $table->foreign('seed_id')->references('id')->on('seeds');
         });
     }
 

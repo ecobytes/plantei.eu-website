@@ -1,5 +1,6 @@
 <?php namespace Modules\Authentication\Http\Controllers;
 
+use Validator;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -30,12 +31,58 @@ class AuthController extends Controller {
 	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
 	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
 	 * @return void
-	 */
+	 *
 	public function __construct(Guard $auth, Registrar $registrar)
 	{
 		$this->auth = $auth;
 		$this->registrar = $registrar;
 		$this->middleware('guest', ['except' => ['getLogout', 'getSettings']]);
+	}
+	 */
+	/**
+	 * Create a new authentication controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		$this->middleware('guest', ['except' => ['getLogout', 'getSettings']]);
+	}
+
+	/**
+	 * Get a validator for an incoming registration request.
+	 *
+	 * @param  array  $data
+	 * @return \Illuminate\Contracts\Validation\Validator
+	 */
+	public function validator(array $data)
+	{
+		if (!$data['email']){unset($data['email']);};
+		return Validator::make($data, [
+			'name' => 'required|max:255',
+			'email' => 'sometimes|required|email|max:255|unique:users',
+			'password' => 'required|confirmed|min:6',
+			'lon' => 'required_with:lat,place_name',
+			'lat' => 'required_with:lon,place_name',
+			'place_name' => 'max:255',
+		]);
+	}
+
+	/**
+	 * Create a new user instance after a valid registration.
+	 *
+	 * @param  array  $data
+	 * @return Caravel\User
+	 */
+	public function create(array $data)
+	{
+		foreach ($data as $key => $value){
+			if ((!$value) || (!in_array($key, ['name', 'email', 'password', 'lon', 'lat', 'place_name']))){
+				unset($data[$key]);
+			}
+		}
+		$data['password'] = bcrypt($data['password']);
+		return User::create($data);
 	}
 
 	public function getLogin()
@@ -61,33 +108,26 @@ class AuthController extends Controller {
 		]);
 
 		$credentials = $request->only('name', 'password');
-      if(filter_var($credentials['name'], FILTER_VALIDATE_EMAIL)) {
-          $credentials['email'] = $credentials['name'];
-		  unset($credentials['name']);
-      }
-      /* else {
-          $credentials['name'] = $username;
-      }
-      if (Auth::once($credentials)) {
-          return Auth::user()->id;
-	  }*/
+      		if(filter_var($credentials['name'], FILTER_VALIDATE_EMAIL)) {
+          		$credentials['email'] = $credentials['name'];
+		  	unset($credentials['name']);
+      		}
 
 		$credentials['confirmed'] = 1;
-		if ($this->auth->attempt($credentials, $request->has('remember')))
+		if (\Auth::attempt($credentials, $request->has('remember')))
 		{
 			return redirect()->intended($this->redirectPath());
 		}
 
 		return redirect($this->loginPath())
-					->withInput($request->only('name', 'remember'))
-					->withErrors([
-						'email' => 'These credentials do not match our records or account not active.',
-					]);
-	}
+		  ->withInput($request->only('name', 'remember'))
+		  ->withErrors([
+		    'email' => 'These credentials do not match our records or account not active.',
+		  ]);
+	} 
 	public function getLogout()
 	{
-		//\Auth::logout();
-		$this->auth->logout();
+		\Auth::logout();
 		return redirect('/');
 	}
 
@@ -121,14 +161,23 @@ class AuthController extends Controller {
 
 	public function postRegister(Request $request)
 	{
-		$validator = $this->registrar->validator($request->all(), [],\Lang::get('auth::validation'));
-
+		/*$this->validate($request, [
+			'name' => 'required', 
+                        'password' => 'required', 
+                        'password_confirmation' => 'required|same:password',
+			'email' => 'email'
+		]);*/
+		$validator = $this->validator($request->all(), [],\Lang::get('auth::validation'));
+		//dd($validator->fails());
+                /*
+		//$validator = $this->registrar->validator($request->all(), [],\Lang::get('auth::validation'));
+				 */
 		if($validator->fails())
 		{
 			$this->throwValidationException(
 				$request, $validator
 			);
-		}
+		}/*
 		$user = $this->registrar->create($request->all());
 		$user->confirmationString = substr(sha1(rand()), 0, 32);
 		$user->confirmed = true;
@@ -139,15 +188,26 @@ class AuthController extends Controller {
 			$userId = \Caravel\Role::where('name', 'user')->first()->id;
 			$user->roles()->attach($userId);
 		}
+                */
+		$user= $this->create($request->all());
+		$user->confirmed = true;
+		if(User::count() == 1){
+			$adminId = \Caravel\Role::where('name', 'admin')->first()->id;
+			$user->roles()->attach($adminId);
+		}else{
+			$userId = \Caravel\Role::where('name', 'user')->first()->id;
+			$user->roles()->attach($userId);
+		}
+
 
 		$user->push();
-		$m = \Caravel\Message::create([
+		$message = \Caravel\Message::send([
 			'subject' => \Lang::get('auth::confirmationemail.title'), 
 			'body' => \Lang::get('auth::confirmationemail.text'), 
 			'user_id' => 1,
+			'recipients' => [$user->id]
 		]);
-		$m->users()->attach($user->id, ['root_message_id' => $m->id]);
-
+		if (!$message){ dd("Error Creating Message");};
 
 /*
 		$verificationKey = $user->confirmationString;
