@@ -2,59 +2,104 @@
 {{> menu}}
 <div class="pageWrap background-primary">
   <div class="container">
-    <div class="row lmt">
       <div class="col-md-6 text-center">
         <h1>Trocas pendentes</h1>
-		<div class="row">
-          <div class="col-md-12 text-center">
-			<h3>Eu quero a semente</h3>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Nome comum</th>
-                  <th>Nome do utilizador</th>
-                  <th>Localização</th>
-                  <th>Email</th>
-                </tr>
-              </thead>
-              <tbody>
-              {{#each transactionsBy}}
-                <tr data-seed_id="{{id}}">
-                  <td>{{common_name}}</td>
-                  <td>{{name}}</td>
-                  <td>{{place_name}}</td>
-                  <td>{{email}}</td>
-                </tr>
-              {{/each}}
-              </tbody>
-            </table>
-		  </div>
-		</div>
-		<div class="row">
-          <div class="col-md-12 text-center">
-			<h3>Outros querem a semente</h3>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Nome comum</th>
-                  <th>Nome do utilizador</th>
-                  <th>Localização</th>
-                  <th>Email</th>
-                </tr>
-              </thead>
-              <tbody>
-              {{#each transactionsTo}}
-                <tr data-seed_id="{{id}}">
-                  <td>{{common_name}}</td>
-                  <td>{{name}}</td>
-                  <td>{{place_name}}</td>
-                  <td>{{email}}</td>
-                </tr>
-              {{/each}}
-              </tbody>
-            </table>
-		  </div>
-		</div>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="color: black;">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingSent">
+              <h4 class="panel-title">
+                <a style="color: black;" role="button" data-toggle="collapse" href="#transactionsSent" aria-expanded="true" aria-controls="collapseSent">
+                  Pedidos Enviados
+                </a>
+              </h4>
+            </div>
+			{{#if transactionsBy}}
+            <div id="transactionsSent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingSent">
+              <div class="panel-body">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Nome comum</th>
+                          <th>Data</th>
+                          <th>Localização</th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {{#each transactionsBy}}
+                        <tr data-seed_id="{{id}}">
+                          <td>{{common_name}}</td>
+                          <td>{{updated_at}}</td>
+                          <td>{{place_name}}</td>
+                          <td><button type="button" class="btn btn-sm btn-primary">Mensagem</button></td>
+                          <td>
+						    {{#if accepted.0}}
+						    <button type="button" class="btn btn-sm btn-danger">Cancelada</button>
+							{{/if}}
+						    {{#if accepted.1}}
+						    <button type="button" class="btn btn-sm btn-success">Confirma</button>
+							{{/if}}
+						    {{#if accepted.2}}
+						    <button type="button" class="btn btn-sm btn-warning">Pendente</button>
+							{{/if}}
+						  </td>
+                        </tr>
+                      {{/each}}
+                      </tbody>
+                    </table>
+              </div>
+            </div>
+			{{/if}}
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingReceived">
+              <h4 class="panel-title">
+                <a  style="color: black;" class="collapsed" role="button" data-toggle="collapse" href="#transactionsReceived" aria-expanded="false" aria-controls="transactionsReceived">
+        		  Pedidos Recebidos
+                </a>
+              </h4>
+            </div>
+			{{#unless transactionsTo.empty}}
+            <div id="transactionsReceived" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingReceived">
+              <div class="panel-body">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Nome comum</th>
+                          <th>Data</th>
+                          <th>Localização</th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {{#each transactionsTo}}
+                        <tr data-seed_id="{{id}}">
+                          <td>{{common_name}}</td>
+                          <td>{{updated_at}}</td>
+                          <td>{{place_name}}</td>
+                          <td><button type="button" class="btn btn-sm btn-primary">Mensagem</button></td>
+                          <td>
+						    {{#if accepted.0}}
+						    <button type="button" class="btn btn-sm btn-danger">Cancelada</button>
+							{{/if}}
+						    {{#if accepted.1}}
+						    <button type="button" class="btn btn-sm btn-success">Já foi aceite</button>
+							{{/if}}
+						    {{#if accepted.2}}
+						    <button type="button" class="btn btn-sm btn-warning">Aceita Pedido</button>
+							{{/if}}
+						  </td>
+                        </tr>
+                      {{/each}}
+                      </tbody>
+                    </table>
+              </div>
+            </div>
+			{{/unless}}
+          </div>
+        </div>
 	  </div>
       <div class="col-md-6 text-center">
         <h1>As minhas sementes
@@ -67,7 +112,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-            <table class="table">
+            <table class="table" id="mySeeds">
               <thead>
                 <tr>
                   <th>Nome comum</th>
@@ -90,13 +135,12 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 </div>
 
 {{>scripts}}
 <script>
-  $('tbody tr').on('click', function () {
+  $('#mySeeds tbody tr').on('click', function () {
   window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
     return false;
     }).mouseover(function () {

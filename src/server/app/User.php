@@ -53,7 +53,17 @@ class User extends Model implements AuthenticatableContract,
       if (! $id){
         return false;
       }
-      return $this->messages()->where('id', $id)->first();
+	  $message = $this->messages()->where('id', $id)->first();
+	  if (!$message){
+		$message = \Caravel\Message::findOrFail($id);
+		if ($message->user_id != $this->id){
+		  abort(403);
+		} else {
+		  $message['read'] = true;
+		  $message['replied'] = true;
+		}
+	  }
+	  return $message;
     }
 	public function getIdAttribute($value) {
 			return (int) $value;
@@ -62,6 +72,7 @@ class User extends Model implements AuthenticatableContract,
 	public function seeds() {
 	  return $this->hasMany('Caravel\SeedsBank', 'user_id')
 		->join('seeds', 'seeds.id', '=', 'seed_id')
+		->select('seeds.*', 'seeds.description as root_description', 'seeds.id as seed_id', 'seeds_banks.*')
 		->get()->toArray();
 	}
 
@@ -105,25 +116,37 @@ class User extends Model implements AuthenticatableContract,
 	  */
     /**
      * Get pending transactions.
-     * @param integer
+     * @param $limit(integer), $orderBy(string), $toArray(boolean)
      * @return array
      */
-    public function transactionsPending($limit=10)
+    public function transactionsPending($limit=10, $orderBy='updated_at', $toArray=true)
 	{
 	  //Transactions started by other
 	  $askedTo = $this->hasMany('Caravel\SeedsExchange', 'asked_to')
-		->where('accepted', true)
 		->join('users', 'users.id', '=', 'asked_by')
 		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
-		->select('seeds_exchanges.*', 'users.name', 'users.email', 'seeds.common_name', 'seeds.sci_name')
-		->get()->toArray();
+		->select('seeds_exchanges.*', 'users.name', 'users.place_name', 'users.email', 'seeds.common_name', 'seeds.sci_name');
+		//->get()->toArray();
 	  //Transactions started by self
 	  $askedBy = $this->hasMany('Caravel\SeedsExchange', 'asked_by')
 		->where('completed', false)
 		->join('users', 'users.id', '=', 'asked_to')
 		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
-		->select('seeds_exchanges.*', 'users.name', 'users.place_name', 'users.email', 'seeds.common_name', 'seeds.sci_name')
-		->get()->toArray();
+		->select('seeds_exchanges.*', 'users.name', 'users.place_name', 'users.email', 'seeds.common_name', 'seeds.sci_name');
+	  //->get()->toArray();
+	  if ($orderBy)
+	  { 
+		$askedTo = $askedTo->orderBy($orderBy, 'desc'); 
+		$askedBy = $askedBy->orderBy($orderBy, 'desc'); 
+	  }
+	  $askedTo = $askedTo->limit($limit);
+	  $askedBy = $askedBy->limit($limit);
+	  if ($toArray)
+	  { 
+		$askedTo = $askedTo->get()->toArray();
+		$askedBy = $askedBy->get()->toArray(); 
+	  }
+
 
 	  return ['asked_to' => $askedTo, 'asked_by' => $askedBy];
     }
@@ -147,9 +170,10 @@ class User extends Model implements AuthenticatableContract,
      * @param  array
      * @return Caravel\SeedExchange
      */
-    public function startTransaction($data)
+	// TODO: maybe @param should be the destination seedbank Caravel\SeedsBank
+    public function transactionStart($data)
 	{
-	  if ((! isset($data['asked_to'])) && (! isset($data['seed_id'])))
+	  if ((! isset($data['asked_to'])) || (! isset($data['seed_id'])))
 	  {
 		return false;
 	  }

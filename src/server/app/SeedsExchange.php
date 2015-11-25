@@ -41,6 +41,7 @@ class SeedsExchange extends Model
      *
      * @return void
      */
+    //TODO: create and return the new SeedBank
     public function transactionCompleted()
 	{
         $this->update(['completed' => true]);

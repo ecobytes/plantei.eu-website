@@ -59,12 +59,12 @@ class AuthController extends Controller {
 	{
 		if (!$data['email']){unset($data['email']);};
 		return Validator::make($data, [
-			'name' => 'required|max:255',
+			'name' => 'required|max:255|unique:users',
 			'email' => 'sometimes|required|email|max:255|unique:users',
 			'password' => 'required|confirmed|min:6',
-			'lon' => 'required_with:lat,place_name',
-			'lat' => 'required_with:lon,place_name',
-			'place_name' => 'max:255',
+			'lon' => 'required_with:lat',
+			'lat' => 'required_with:lon',
+			'place_name' => 'max:255|required_with:lon,lat',
 		]);
 	}
 
@@ -201,6 +201,7 @@ class AuthController extends Controller {
 
 
 		$user->push();
+		// TODO: Cleanup messages
 		$message = \Caravel\Message::send([
 			'subject' => \Lang::get('auth::confirmationemail.title'), 
 			'body' => \Lang::get('auth::confirmationemail.text'), 
@@ -208,6 +209,35 @@ class AuthController extends Controller {
 			'recipients' => [$user->id]
 		]);
 		if (!$message){ dd("Error Creating Message");};
+
+		// DEBUG:TEST:TODO: Initiate transactions, to and from user
+		//                : Create one seed
+
+		$faker = \Faker\Factory::create();
+		$seed_id =  random_int(1,10);
+		$seeds_bank_initial = \Caravel\SeedsBank::firstOrCreate([
+			'local' => 'teste-' . $faker->city,
+			'origin' => random_int(1,3),
+			'year' => random_int(2010,2015),
+			'description' => "Semente para testar plataforma:\n" . $faker->text(500),
+			'available' => true,
+			'public' => true,
+			'user_id' => $user->id,
+			'seed_id' => $seed_id
+		]);
+		$seeds_bank = false;
+		while (!$seeds_bank){
+			$seeds_bank = \Caravel\SeedsBank::find(random_int(1,20));
+			if ($seeds_bank){
+				if ($seeds_bank->user_id == $user->id){ $seeds_bank = false;}
+			}
+		}
+		
+		\Caravel\User::find(1)
+			->transactionStart(['asked_to'=>$user->id, 'seed_id'=>$seeds_bank_initial->seed_id]);
+		$user->transactionStart(['asked_to'=>$seeds_bank->user_id, 'seed_id'=>$seeds_bank->seed_id]);
+
+
 
 /*
 		$verificationKey = $user->confirmationString;

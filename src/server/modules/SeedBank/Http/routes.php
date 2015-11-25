@@ -35,8 +35,11 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 			$user = \Auth::user();
 			//$message = \Caravel\Message::findOrFail($id);
                         $message = $user->messageById($id);
-			$message->pivot->read = true;
-			$message->pivot->save();
+			if (!$message->user_id == $user->id)
+			{
+				$message->pivot->read = true;
+				$message->pivot->save();
+			}
 			return $message;
 		});
 		Route::post('/message/reply', 'SeedBankController@postMessageReply');

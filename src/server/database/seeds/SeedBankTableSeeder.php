@@ -4,6 +4,65 @@ use Illuminate\Database\Seeder;
 
 class SeedBankTableSeeder extends Seeder
 {
+
+    public function randomTransactionBy($user_id){
+        $user = \Caravel\User::find($user_id);
+        $exchange = false;
+        while(!$exchange){
+            $seedsbank = false;
+            while (!$seedsbank){
+                $seedsbank = \Caravel\SeedsBank::find(random_int(1,20));
+                if ($seedsbank){
+                    if ($seedsbank->user_id == $user->id){ $seedsbank = false;}
+                }
+            }
+            if (\Caravel\SeedsExchange::where([
+                'asked_by' => $user_id,
+                'asked_to'=>$seedsbank->user_id, 
+                'seed_id'=>$seedsbank->seed_id
+            ])->first())
+            {
+                $exchange = false;
+            } else {
+                $exchange = $user->transactionStart([
+                    'asked_to'=>$seedsbank->user_id, 
+                    'seed_id'=>$seedsbank->seed_id
+                ]);
+            }
+        }
+        return $exchange;
+    }
+    public function randomTransactionTo($user_id){
+        $user = false;
+        $seeds = false;
+        $exchange = false;
+        while(!$exchange){
+            while (!$user){
+                $user = \Caravel\User::where('id', '!=', $user_id)->get()[random_int(2,11)];
+                if ($user){
+                    $seeds = $user->seeds();
+                    if (!$seeds) { $user = false;
+                    $seeds = false;}
+                }
+            }
+            $rindex = random_int(0,sizeof($seeds) - 1);
+            $seedsbank = \Caravel\SeedsBank::find($seeds[$rindex]['id']);
+            if (\Caravel\SeedsExchange::where([
+                'asked_by' => $seedsbank->user_id,
+                'asked_to'=> $user_id,
+                'seed_id'=>$seedsbank->seed_id
+            ])->first())
+            {
+                $exchange = false;
+            } else {
+                $exchange = $user->transactionStart([
+                    'asked_to'=>$user_id, 
+                    'seed_id'=>$seedsbank->seed_id
+                ]);
+            }
+        }
+        return $exchange;
+    }
     /**
      * Run the database seeds.
      *
@@ -75,5 +134,19 @@ class SeedBankTableSeeder extends Seeder
                     'seed_id' => $seed->id
             ]);
         };
+        $exchange = $this->randomTransactionTo(1);
+        $exchange = $this->randomTransactionBy(1);
+        $exchange = $this->randomTransactionBy(1);
+        $exchange->update(['accepted' => false]); 
+        $exchange = $this->randomTransactionTo(1);
+        $exchange->update(['accepted' => true]); 
+        $exchange = $this->randomTransactionBy(1);
+        $exchange->update(['accepted' => true, 'completed' => true]);
+        $exchange = $this->randomTransactionTo(1);
+        $exchange->update(['accepted' => false]);
+        $exchange = $this->randomTransactionTo(1);
+        $exchange->update(['accepted' => true, 'completed' => true]);
+        $exchange = $this->randomTransactionBy(1);
+        $exchange->update(['accepted' => true]); 
     }
 }

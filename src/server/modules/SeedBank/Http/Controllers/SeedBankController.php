@@ -56,7 +56,30 @@ class SeedBankController extends Controller {
     }
     //dd($t);
     $transactions = $user->transactionsPending();
-
+    if ($transactions['asked_by']){
+      foreach($transactions['asked_by'] as &$tr){
+        $ta = [];
+        //pending
+        if ($tr['accepted'] === null){$ta[2]=true;}
+        //canceled
+        elseif ($tr['accepted'] == false){$ta[0]=true;}
+        //accepted
+        elseif ($tr['accepted']){$ta[1]=true;} 
+        $tr['accepted']=$ta;;
+      }
+    }
+    if ($transactions['asked_to']){
+      foreach($transactions['asked_to'] as &$tr){
+        $ta = [];
+        //pending
+        if ($tr['accepted'] === null){$ta[2]=true;}
+        //canceled
+        elseif ($tr['accepted'] == false){$ta[0]=true;}
+        //accepted
+        elseif ($tr['accepted']){$ta[1]=true;} 
+        $tr['accepted'] = $ta;
+      }
+    }
     return view('seedbank::myseeds')
       ->with('seeds', $t)
       ->with('transactionsBy', $transactions['asked_by']) 
@@ -377,7 +400,7 @@ class SeedBankController extends Controller {
     $message->users()->attach($user_ids);
     foreach($user_ids as $u_id)
     {
-      $request->user()->startTransaction(['asked_to'=>$u_id, 'seed_id'=>$seed_id]);
+      $request->user()->transactionStart(['asked_to'=>$u_id, 'seed_id'=>$seed_id]);
     }
     //return ["response" => "Message sent"];
 
