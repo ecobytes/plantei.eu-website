@@ -2,6 +2,9 @@
 
 class ExampleTest extends TestCase {
 
+
+	protected $baseUrl = 'http://localhost';
+
 	/**
 	 * A basic functional test example.
 	 *
@@ -14,4 +17,10 @@ class ExampleTest extends TestCase {
 		$this->assertEquals(200, $response->getStatusCode());
 	}
 
+	public function testRootPage()
+	{
+		$this->visit('/')
+			->see(\Lang::get('projectpresentation::messages')['intro'])
+			->see(\Lang::get('projectpresentation::messages')['descriptionTitle1']);
+	}
 }
