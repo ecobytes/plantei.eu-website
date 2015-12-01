@@ -3,4 +3,4 @@
 .env
 modules/TestModule
 public/css
-reboot_database.sh
+tmp

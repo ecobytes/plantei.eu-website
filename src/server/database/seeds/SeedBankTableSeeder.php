@@ -9,24 +9,24 @@ class SeedBankTableSeeder extends Seeder
         $user = \Caravel\User::find($user_id);
         $exchange = false;
         while(!$exchange){
-            $seedsbank = false;
-            while (!$seedsbank){
-                $seedsbank = \Caravel\SeedsBank::find(random_int(1,20));
-                if ($seedsbank){
-                    if ($seedsbank->user_id == $user->id){ $seedsbank = false;}
+            $seed = false;
+            while (!$seed){
+                $seed = \Caravel\Seed::find(random_int(1,20));
+                if ($seed){
+                    if ($seed->user_id == $user->id){ $seed = false;}
                 }
             }
             if (\Caravel\SeedsExchange::where([
                 'asked_by' => $user_id,
-                'asked_to'=>$seedsbank->user_id, 
-                'seed_id'=>$seedsbank->seed_id
+                'asked_to'=>$seed->user_id, 
+                'seed_id'=>$seed->id
             ])->first())
             {
                 $exchange = false;
             } else {
                 $exchange = $user->transactionStart([
-                    'asked_to'=>$seedsbank->user_id, 
-                    'seed_id'=>$seedsbank->seed_id
+                    'asked_to'=>$seed->user_id, 
+                    'seed_id'=>$seed->id
                 ]);
             }
         }
@@ -38,26 +38,26 @@ class SeedBankTableSeeder extends Seeder
         $exchange = false;
         while(!$exchange){
             while (!$user){
-                $user = \Caravel\User::where('id', '!=', $user_id)->get()[random_int(2,11)];
+                $user = \Caravel\User::find(random_int(2,11));
                 if ($user){
                     $seeds = $user->seeds();
-                    if (!$seeds) { $user = false;
+                    if (!$seeds->count()) { $user = false;
                     $seeds = false;}
                 }
             }
-            $rindex = random_int(0,sizeof($seeds) - 1);
-            $seedsbank = \Caravel\SeedsBank::find($seeds[$rindex]['id']);
+            $rindex = random_int(0,$seeds->count() - 1);
+            $seed = $seeds->get()[$rindex];
             if (\Caravel\SeedsExchange::where([
-                'asked_by' => $seedsbank->user_id,
+                'asked_by' => $seed->user_id,
                 'asked_to'=> $user_id,
-                'seed_id'=>$seedsbank->seed_id
+                'seed_id'=>$seed->id
             ])->first())
             {
                 $exchange = false;
             } else {
                 $exchange = $user->transactionStart([
                     'asked_to'=>$user_id, 
-                    'seed_id'=>$seedsbank->seed_id
+                    'seed_id'=>$seed->id
                 ]);
             }
         }
@@ -101,38 +101,32 @@ class SeedBankTableSeeder extends Seeder
                         'variety_id' => $variety->id,
                         'family_id' => $family->id
                     ]);*/
-                    $seed = Caravel\Seed::firstOrCreate([
-			'sci_name' => 'sci_name' . str_random(5), 
-                        'common_name' => 'common_name' . str_random(5), 
-                        'polinization' => true, 'direct' => false,
-                        'species_id' => $specie->id,
-                        'variety_id' => $variety->id,
-                        'family_id' => $family->id
-		    ]);
-                DB::table('seed_months')->insert([
-                    'seed_id' => $seed->id,
-                    'month' => random_int(1,12),
-                    ]);
-                DB::table('seed_months')->insert([
-                    'seed_id' => $seed->id,
-                    'month' => random_int(1,12),
-                    ]);
+                    $seed = Caravel\Seed::firstOrCreate(
+                        [
+                            'common_name' => 'common_name' . str_random(5),
+                            'local' => 'local' . str_random(3),
+                            //'origin' => random_int(1,3),
+                            'year' => random_int(2010,2015),
+                            'description' => "description " . $faker->text(500),
+                            'available' => true,
+                            'public' => true,
+                            'user_id' => random_int(1,10),
+                            'latin_name' => 'latin_name' . str_random(5),
+                            'species_id' => $specie->id,
+                            'variety_id' => $variety->id,
+                            'family_id' => $family->id,
+                            'polinization' => true, 
+                            'direct' => false
+                        ]);
+
+                    $seed_months = $seed->months()->saveMany(
+                        [
+                            new Caravel\SeedMonth(['month' => random_int(1,12)]),
+                            new Caravel\SeedMonth(['month' => random_int(1,12)]),
+                        ]);
 
                 };
             };
-        };
-        foreach (\Caravel\Seed::get() as $seed){
-            $user = \Caravel\User::find(random_int(1,10));
-            $seeds_bank = Caravel\SeedsBank::firstOrCreate([
-                    'local' => 'local' . str_random(3),
-                    'origin' => random_int(1,3),
-                    'year' => random_int(2010,2015),
-                    'description' => "description " . $faker->text(500),
-                    'available' => true,
-                    'public' => true,
-                    'user_id' => $user->id,
-                    'seed_id' => $seed->id
-            ]);
         };
         $exchange = $this->randomTransactionTo(1);
         $exchange = $this->randomTransactionBy(1);

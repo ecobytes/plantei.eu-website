@@ -14,7 +14,18 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 		Route::get('/preferences', 'SeedBankController@getPreferences');
 		//Route::post('/seed/{id}', 'SeedBankController@postSeed');
 		Route::get('/seed/{id}', function ($id) {
+			$user = \Auth::user();
 			$seed = \Caravel\Seed::findOrFail($id);
+			if (($seed->public) && ($seed->user_id == $user->id))
+			{
+				$seed->variety;
+				$seed->species;
+				$seed->family;
+				$seed->cookings();
+				$seed->medicines();
+
+				return $seed;
+			}
 			$seedsbank_entry = \Caravel\SeedsBank::where('seed_id',$id)
 				->where('public', true)
 				->firstOrFail();
@@ -34,7 +45,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 			//$message = \Caravel\Message::findOrFail($id);
 			$user = \Auth::user();
 			//$message = \Caravel\Message::findOrFail($id);
-                        $message = $user->messageById($id);
+                       $message = $user->messageById($id);
 			if (!$message->user_id == $user->id)
 			{
 				$message->pivot->read = true;

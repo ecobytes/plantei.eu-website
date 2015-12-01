@@ -122,23 +122,23 @@
 					<div class="form-group">
 						<label class="control-label">Nome ciêntifico</label>
 						<span class="cell">
-							<input type="text" class="form-control" placeholder="" name="sci_name" value="{{ sci_name }}">
+							<input type="text" class="form-control" placeholder="" name="latin_name" value="{{ latin_name }}">
 						</span>
 					</div>
 					<div class="form-group">
 						<label class="control-label">Família</label>
-						<input type="hidden" name="family_id" value="{{ family_id }}">
-						<span class="cell"><input type="text" class="form-control" name="family" value="{{ family }}"></span>
+						<input type="hidden" name="family_id" value="{{ family.id }}">
+						<span class="cell"><input type="text" class="form-control" name="family" value="{{ family.name }}"></span>
 					</div>
 					<div class="form-group">
 						<label class="control-label">Espécie</label>
-						<input type="hidden" name="species_id" value="{{ species_id }}">
-						<span class="cell"><input type="text" class="form-control" name="species" value="{{ species }}"></span>
+						<input type="hidden" name="species_id" value="{{ species.id }}">
+						<span class="cell"><input type="text" class="form-control" name="species" value="{{ species.name }}"></span>
 					</div>
 					<div class="form-group">
 						<label class="control-label">Variedade</label>
-						<input type="hidden" name="variety_id" value="{{ variety_id }}">
-						<span class="cell"><input type="text" class="form-control" name="variety" value="{{ variety }}"></span>
+						<input type="hidden" name="variety_id" value="{{ variety.id }}">
+						<span class="cell"><input type="text" class="form-control" name="variety" value="{{ variety.name }}"></span>
 					</div>
 					<div class="form-group">
 						<label class="control-label">Polinização</label>

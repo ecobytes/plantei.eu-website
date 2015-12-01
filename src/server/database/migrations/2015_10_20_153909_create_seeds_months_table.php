@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeedMonthsTable extends Migration
+class CreateSeedsMonthsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,13 @@ class CreateSeedMonthsTable extends Migration
      */
     public function up()
     {
-        Schema::create('seed_months', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+        Schema::create('seeds_months', function (Blueprint $table) {
+            //$table->increments('id');
+            //$table->timestamps();
             $table->smallInteger('month')->unsigned();
             $table->integer('seed_id')->unsigned();
             $table->foreign('seed_id')->references('id')->on('seeds');
+            $table->index(['month', 'seed_id']);
         });
     }
 
@@ -28,6 +29,6 @@ class CreateSeedMonthsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('seed_months');
+        Schema::drop('seeds_months');
     }
 }

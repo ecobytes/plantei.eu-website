@@ -70,10 +70,7 @@ class User extends Model implements AuthenticatableContract,
 	}
 
 	public function seeds() {
-	  return $this->hasMany('Caravel\SeedsBank', 'user_id')
-		->join('seeds', 'seeds.id', '=', 'seed_id')
-		->select('seeds.*', 'seeds.description as root_description', 'seeds.id as seed_id', 'seeds_banks.*')
-		->get()->toArray();
+	  return $this->hasMany('Caravel\Seed', 'user_id');
 	}
 
     /**
@@ -119,21 +116,19 @@ class User extends Model implements AuthenticatableContract,
      * @param $limit(integer), $orderBy(string), $toArray(boolean)
      * @return array
      */
-    public function transactionsPending($limit=10, $orderBy='updated_at', $toArray=true)
+    public function transactionsPending($limit=10, $orderBy='seeds_exchanges.updated_at', $toArray=true)
 	{
 	  //Transactions started by other
 	  $askedTo = $this->hasMany('Caravel\SeedsExchange', 'asked_to')
 		->join('users', 'users.id', '=', 'asked_by')
-		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
-		->select('seeds_exchanges.*', 'users.name', 'users.place_name', 'users.email', 'seeds.common_name', 'seeds.sci_name');
-		//->get()->toArray();
+		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id');
+		//->select('seeds_exchanges.*');
 	  //Transactions started by self
 	  $askedBy = $this->hasMany('Caravel\SeedsExchange', 'asked_by')
 		->where('completed', false)
 		->join('users', 'users.id', '=', 'asked_to')
-		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
-		->select('seeds_exchanges.*', 'users.name', 'users.place_name', 'users.email', 'seeds.common_name', 'seeds.sci_name');
-	  //->get()->toArray();
+		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id');
+		//->select('seeds_exchanges.*', );
 	  if ($orderBy)
 	  { 
 		$askedTo = $askedTo->orderBy($orderBy, 'desc'); 

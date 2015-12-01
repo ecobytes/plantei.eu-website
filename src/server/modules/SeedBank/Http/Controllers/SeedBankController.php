@@ -10,8 +10,9 @@ class SeedBankController extends Controller {
   {
     $user = \Auth::user();
 
-    $seeds = \Caravel\Seed::orderBy('created_at', 'desc')
-      ->select('id', 'sci_name', 'common_name')
+    $seeds = \Caravel\Seed::where('public', true)
+      ->orWhere('user_id', $user->id)->orderBy('created_at', 'desc')
+      ->select('id', 'latin_name', 'common_name')
       ->get()
       ->chunk(4)[0]
       ->toArray();
@@ -43,16 +44,16 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
     //dd($user->id);
     //$user = \Caravel\User::where('id', 1)->first();
-    $seeds = $user->seeds();
+    $seeds = $user->seeds->all();
     $t = [];
     foreach($seeds as $seed){
-
+      $tseed = $seed->toArray();
       foreach(['origin', 'polinization', 'direct', 'public', 'available'] as $key){
-        if(isset($seed[$key])){
-          $seed[$key] = [$seed[$key] => true];
+        if(isset($tseed[$key])){
+          $tseed[$key] = [$tseed[$key] => true];
         }
       }
-      $t[] = $seed;
+      $t[] = $tseed;
     }
     //dd($t);
     $transactions = $user->transactionsPending();
@@ -134,55 +135,62 @@ class SeedBankController extends Controller {
     $update = false;
     // Authorization
     if($id){
-      $seeds_bank= \Caravel\SeedsBank::findOrFail($id);
-      if (Gate::denies('update-seeds_bank', $seeds_bank)){
+      $seed = \Caravel\Seed::findOrFail($id);
+      if (Gate::denies('update-seed', $seed)){
         abort(403);
       }
+
+      /*foreach(['variety', 'family', 'species'] as $field){
+        $field_a = (array)\DB::table($field)->select('name')->find($oldInput[$field . '_id']);
+        $oldInput[$field] = $field_a['name'];
+      };*/
+
     }
     //$errors = \Session::get('errors');
     if(\Session::hasOldInput()){
-      $info =  \Session::getOldInput();
+      $oldInput =  \Session::getOldInput();
       if(!empty($errors)){
         \View::share('errors', $errors->default->toArray());
       }
     } 
     if ($id){
-      if (! isset($info)) {
-        $info = (array)\DB::table('seeds')
-          ->join('seeds_banks', 'seeds_banks.seed_id', '=', 'seeds.id')
-          ->where('seeds_banks.id', $id)->first();
-        $info['months'] = (array)\DB::table('seed_months')->where('seed_id', $info['seed_id'])->lists('month');
-        foreach(['variety', 'family', 'species'] as $field){
-          $field_a = (array)\DB::table($field)->select('name')->find($info[$field . '_id']);
-          $info[$field] = $field_a['name'];
-        };
+      if (! isset($oldInput)) {
+       $seed->variety;
+       $seed->family;
+       $seed->species;
+       $oldInput = $seed->toArray();
+       $oldInput['months'] = $seed->months()->lists('month')->toArray();
+       /* foreach(['variety', 'family', 'species'] as $field){
+          $field_a = (array)\DB::table($field)->select('name')->find($oldInput[$field . '_id']);
+          $oldInput[$field] = $field_a['name'];
+       };*/
       }
-      $info['id'] = $id;
+      $oldInput['id'] = $id;
       $update = true;
     }
     //$t = [];
-      foreach(['origin', 'polinization', 'direct', 'public', 'available'] as $key){
-        if(isset($info[$key])){
-          $info[$key] = [$info[$key] => true];
-        }
+    foreach(['origin', 'polinization', 'direct', 'public', 'available'] as $key){
+      if(isset($oldInput[$key])){
+        $oldInput[$key] = [$oldInput[$key] => true];
       }
+    }
 
-    if(isset($info['months'])){
+    if(isset($oldInput['months'])){
       $o = array();
-      foreach($info['months'] as $i){
+      foreach($oldInput['months'] as $i){
         $o[$i] = true;
       }
-      $info['months'] = $o;
+      $oldInput['months'] = $o;
     }
-    if (! isset($info)){
-      $info = [];
+    if (! isset($oldInput)){
+      $oldInput = [];
     }
     return view('seedbank::registerseed', ['update' => $update])
       ->with('messages', \Lang::get('seedbank::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
       ->with('active', ['myseeds' => true])
-      ->with('oldInput', $info); 
+      ->with('oldInput', $oldInput); 
   }
 
   public function postRegister(Request $request)
@@ -190,27 +198,26 @@ class SeedBankController extends Controller {
     // if error with form
     $this->validate($request, [
       'common_name' => 'required',
-      'origin' => 'required',
+      //'origin' => 'required',
     ]);
-    $seeds_bank_keys = ['quantity','origin','year', 'local', 'description', 'public', 'available', 'description'];
-    $seeds_keys = ['sci_name','common_name','polinization','direct', 'description'];
-    $seeds_taxonomy = ['species', 'variety','family'];
-    $seeds_bank_new = [];
-    $seeds_new = [];
+    $seed_keys = ['quantity','year', 'local', 'description', 'public', 'available', 'description',
+      'latin_name','common_name','polinization','direct',
+    ];
+    $seed_taxonomy = ['species', 'variety','family'];
+    $seed_new = [];
     $months_new = [];
     foreach ( $request->input() as $key =>  $value ){
-      if (in_array($key, $seeds_keys)){
-        $seeds_new[$key] = $value;
+      if (in_array($key, $seed_keys)){
+        $seed_new[$key] = $value;
       }
-      if (in_array($key, $seeds_bank_keys)){
-        $seeds_bank_new[$key] = $value;
-      }
-      if (in_array($key, $seeds_taxonomy)){
+      if (in_array($key, $seed_taxonomy)){
+        // TODO: Should do a special function to work this out
         $t = (array)\DB::table($key)->where('name', $value)->first();
         if (! $t) {
           $t['id'] = \DB::table($key)->insertGetId(['name' => $value]);
         }
-        $seeds_new[$key . '_id'] = $t['id'];
+        $seed_new[$key . '_id'] = $t['id'];
+        unset($seed_new[$key]);
       }
       if ($key == 'months'){
         $months_new = $value;
@@ -218,45 +225,37 @@ class SeedBankController extends Controller {
 
     }
 
-    $user = \Auth::user();
-    $seeds_bank_new['user_id'] = $user->id;
-
     if ($request->input('_id')){
-      $seed_id = $request->input('seed_id');
-      \DB::table('seeds_banks')->where('id', $request->input('_id'))
-        ->update($seeds_bank_new);
-      \DB::table('seeds')->where('id', $seed_id)
-        ->update($seeds_new);
+      $seed_id = $request->input('_id');
+      $seed = \Caravel\Seed::findOrFail($seed_id);
+      if (Gate::denies('update-seed', $seed)){
+        abort(403);
+      }
+      $seed->update($seed_new);
+      //TODO: create a dedicated function in \Caravel\Seed->syncMonths
       if (! $months_new){
-        \DB::table('seed_months')->where('seed_id', $seed_id)->delete();
+        $seed->months->delete();
       } else {
-        $months = \DB::table('seed_months')->where('seed_id', $seed_id)->lists('month');
-        \DB::table('seed_months')->where('seed_id', $seed_id)
-          ->whereNotIn('month', $months_new)->delete();
+        $seed->months()->whereNotIn('month', $months_new)->delete();
+        $months = $seed->months->lists('month')->toArray();
         foreach($months_new as $month){
           if (! in_array($month, $months)){
-            \DB::table('seed_months')
-              ->insert(['seed_id' => $seed_id, 'month'=> $month ]);
+            $seed->months()->save(new \Caravel\SeedMonth(['month'=> $month ]));
           }
         }
       }
       // maybe flash an 'Updated $id' message
       //dd('has has ID');
     } else {
-      $seeds_bank_new['available'] = true;
-      $seed_id = \DB::table('seeds')
-        ->insertGetId($seeds_new);
-      $seeds_bank_new['seed_id'] = $seed_id;
-      \DB::table('seeds_banks')
-        ->insert($seeds_bank_new);
+      $seed_new['user_id'] = $request->user()->id;
+      $seed = \Caravel\Seed::create($seed_new);
       foreach($months_new as $month){
-        \DB::table('seed_months')
-          ->insert(['seed_id' => $seed_id, 'month'=> $month ]);
+        $seed->months()->save(new \Caravel\SeedMonth(['month'=> $month ]));
       }
       // maybe flash an 'Added new seed' message
     }
 
-    return redirect('/seedbank');
+    return redirect('/seedbank/myseeds');
   }
   public function getPreferences()
   {
@@ -287,17 +286,20 @@ class SeedBankController extends Controller {
     $user = $request->user();
     $q = [];
     foreach($request->input() as $key => $value){
-      if (in_array($key, ['common_name', 'sci_name']) && ($value)){
+      if (in_array($key, ['common_name', 'latin_name']) && ($value)){
         $q[$key] = $value;
       }
     }
     if (! $q){ return [];}
     //dd($q);
-    $query = \DB::table('seeds');
-    foreach($q as $key => $value){
-      $query->orWhere($key, 'like', '%' . $value . '%');
-    }
-    $results = $query->select('id', 'common_name', 'sci_name')->distinct()->get();
+    $query = \Caravel\Seed::query()->where('public', true)->where('available', true);
+    $query->where(function($qu) use ($q){
+
+      foreach($q as $key => $value){
+        $qu->orWhere($key, 'like', '%' . $value . '%');
+      }
+    });
+    $results = $query->select('id', 'common_name', 'latin_name')->distinct()->get();
     /*$result = [];
     foreach($results as $i){
       $myarray = (array)$i;
@@ -311,7 +313,7 @@ class SeedBankController extends Controller {
     $user = $request->user();
     $query_term = $request->input('query');
     $query_name = $request->input('query_name');
-    if (! in_array($query_name, ['common_name', 'sci_name'])){
+    if (! in_array($query_name, ['common_name', 'latin_name'])){
       return [];
     }
     $results = \DB::table('seeds')
@@ -374,7 +376,22 @@ class SeedBankController extends Controller {
     $body = $request->input('body');
     $seed_id = $request->input('seed_id');
     $seed = \Caravel\Seed::findOrFail($seed_id);
-    $user_ids = \Caravel\SeedsBank::where('seed_id', $seed_id)
+    $user_id = $seed->user_id;
+    if (!$subject)
+    {
+      $subject = $seed->common_name;
+    }
+    $message = \Caravel\Message::create(
+      [
+        'user_id' => $request->user()->id,
+          'subject' => $subject,
+          'body' => $body,
+        ]
+      );
+    $message->save();
+    $message->root_message_id = $message->id;
+    $request->user()->transactionStart(['asked_to'=>$user_id, 'seed_id'=>$seed_id]);
+    /*  \Caravel\SeedsBank::where('seed_id', $seed_id)
       ->where('public', true)
       ->get(['user_id'])
       ->map(function($item, $key)
@@ -385,23 +402,12 @@ class SeedBankController extends Controller {
     {
       abort(403);
     }
-    if (!$subject)
-    {
-      $subject = $seed->common_name;
-    }
-    $message = \Caravel\Message::create([
-        'user_id' => $request->user()->id,
-        'subject' => $subject,
-        'body' => $body,
-      ]);
-    $message->save();
-    $message->root_message_id = $message->id;
     $message->save();
     $message->users()->attach($user_ids);
     foreach($user_ids as $u_id)
-    {
+   {
       $request->user()->transactionStart(['asked_to'=>$u_id, 'seed_id'=>$seed_id]);
-    }
+    }*/
     //return ["response" => "Message sent"];
 
     // maybe flash an 'Added new seed' message

@@ -35,12 +35,12 @@
 					<input type="hidden" name="_token" value="{{ csrfToken }}">
 					<div class="form-group">
 						<span class="cell">
-						<input type="text" class="form-control search_autocomplete" placeholder="Nome Comum" name="common_name" value="" autocomplete="off">
+						<input type="text" class="form-control search_autocomplete" placeholder="{{messages.common_name}}Nome Comum" name="common_name" value="" autocomplete="off">
 						</span>
 					</div>
 					<div class="form-group">
 						<span class="cell">
-						<input type="text" class="form-control search_autocomplete" placeholder="Nome Ciêntifico" name="sci_name" value="" autocomplete="off">
+						<input type="text" class="form-control search_autocomplete" placeholder="{{messages.latin_name}}Nome Latim" name="latin_name" value="" autocomplete="off">
 						</span>
 					</div>
 					<div class="form-group lmt">
@@ -54,8 +54,8 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th>Nome comum</th>
-									<th>Nome ciêntifico</th>
+									<th>Nome comum{{messages.common_name}}</th>
+									<th>Nome latim{{messages.latin_name}}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -103,7 +103,7 @@ $(".container form").on('submit', function(){
 		}
 		$.each( data, function(i,info){
 			//console.log(info);
-			$('#results tbody').append('<tr data-seed_id="' + info.id + '"><td>' + info.common_name + '</td><td>' + info.sci_name + '</td</tr>');
+			$('#results tbody').append('<tr data-seed_id="' + info.id + '"><td>' + info.common_name + '</td><td>' + info.latin_name + '</td</tr>');
 			$('#results').show();
 			$('.search_autocomplete').hide();
 			$('#search').text('Nova Pesquisa');
@@ -129,7 +129,7 @@ $('#search').on('click', function (e) {
 		}
 		$.each( data, function(i,info){
 			//console.log(info);
-			$('#results tbody').append('<tr data-seed_id="' + info.id + '"><td>' + info.common_name + '</td><td>' + info.sci_name + '</td</tr>');
+			$('#results tbody').append('<tr data-seed_id="' + info.id + '"><td>' + info.common_name + '</td><td>' + info.latin_name + '</td</tr>');
 			$('#results').show();
 			$('.search_autocomplete').hide();
 			$('#search').text('Nova Pesquisa');
@@ -145,8 +145,8 @@ $('#results').on('click', 'tbody tr', function () {
 			return false;
 		}
 		$('#seed_info .modal-title').text('[' + data.id + '] ' + data.common_name).data("seed_id", data.id);
-		$('#seed_info .modal-body .body-read').html('<p><em>' + data.sci_name + '</em></p>\n<p>' + data.description + '</p>');
-		$('#seed_info .modal-footer .footer-right').html('<p><em>' + data.sci_name + '</em></p>\n\
+		$('#seed_info .modal-body .body-read').html('<p><em>' + data.latin_name + '</em></p>\n<p>' + data.description + '</p>');
+		$('#seed_info .modal-footer .footer-right').html('<p><em>' + data.latin_name + '</em></p>\n\
 			<p><b>Família:</b>' + data.family + '</p>' + '\n\
 			<p><b>Espécie:</b>' + data.species + '</p>' + '\n\
 			<p><b>Variedade:</b>' + data.variety + '</p>' + '\n'
@@ -170,12 +170,12 @@ $('#seed_info .modal-footer .footer-left').on('click', 'button', function(){
 	  <input type="hidden" name="seed_id" value="' + $(".modal-title").data('seed_id') + '"/>\
 	  <div class="form-group">\
 	    <span class="cell">\
-		  <input class="form-control" placeholder="Assunto" type="text" name="subject"/>\
+		  <input class="form-control" placeholder="{{messages.subject}}Assunto" type="text" name="subject"/>\
 		</span>\
 	  </div>\
 	  <div class="form-group">\
 	    <span class="cell">\
-	      <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="Escreve uma mensagem" name="body"></textarea>\
+	      <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{messages.writemessage}}"Escreve uma mensagem" name="body"></textarea>\
 		</span>\
 	  </div>\
       <div class="form-group lmt">\
