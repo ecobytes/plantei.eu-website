@@ -98,20 +98,8 @@ class User extends Model implements AuthenticatableContract,
 		->limit($limit)->get();
     }
 
-    /**
-     * Get latest user messages.
-     *
-     * @return HasMany
-     */
- /*   public function latestMessages($limit=6)
-	{
-	  $latest = $this->messages()
-		->orderBy('created_at', 'desc')
-		->take($limit)->get();
-	  return $latest;
-    }
-	  */
-    /**
+
+	/**
      * Get pending transactions.
      * @param $limit(integer), $orderBy(string), $toArray(boolean)
      * @return array
@@ -120,12 +108,19 @@ class User extends Model implements AuthenticatableContract,
 	{
 	  //Transactions started by other
 	  $askedTo = $this->hasMany('Caravel\SeedsExchange', 'asked_to')
+		->whereNotNull('parent_id')
+		->where(function ($query) {
+		  $query->where('completed', false)->orWhere('completed', null);
+		})
 		->join('users', 'users.id', '=', 'asked_by')
 		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id');
 		//->select('seeds_exchanges.*');
 	  //Transactions started by self
 	  $askedBy = $this->hasMany('Caravel\SeedsExchange', 'asked_by')
-		->where('completed', false)
+		->whereNotNull('parent_id')
+		->where( function ($query) {
+		  $query->where('completed', false)->orWhere('completed', null);
+		})
 		->join('users', 'users.id', '=', 'asked_to')
 		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id');
 		//->select('seeds_exchanges.*', );
@@ -165,16 +160,116 @@ class User extends Model implements AuthenticatableContract,
      * @param  array
      * @return Caravel\SeedExchange
      */
-	// TODO: maybe @param should be the destination seedbank Caravel\SeedsBank
-    public function transactionStart($data)
+    public function startTransaction($data)
 	{
-	  if ((! isset($data['asked_to'])) || (! isset($data['seed_id'])))
+	  if ((! isset($data['asked_to'])) || ( ! isset($data['seed_ids']) ))
 	  {
 		return false;
 	  }
-	  $data['asked_by'] = $this->id;
+	  if ( ! is_array($data['seed_ids'])) { return false; }
+      $data['asked_by'] = $this->id;
+      $seed_ids = array_pull($data, 'seed_ids');
+      if ( ! isset($data['parent_id']) )
+      {
+        $parent = SeedsExchange::create($data);
+	  } else {
+		$parent = SeedsExchange::findOrFail($data['parent_id']);
+	  }
+	  foreach ($seed_ids as $seed_id)
+	  {
+        $data['seed_id'] = $seed_id;
+        $data['parent_id'] = $parent->id;
+		$transaction = SeedsExchange::create($data);
+	  }
+      return $parent;
+	}
 
-	  return SeedsExchange::firstOrCreate($data);
+
+    /**
+     * Accept transaction.
+     * 
+     * @return void
+     */
+    public function acceptTransaction(SeedsExchange $transaction)
+	{
+	  if ( $transaction->asked_to != $this->id)
+	  {
+		return false;
+	  }
+	  if ( ! $transaction->parent_id )
+	  {
+		foreach ($transaction->childs()->get() as $child)
+		{
+		  $child->update(['accepted' => true]);
+		}
+		$transaction->update(['accepted' => true]);
+	  } else {
+		$transaction->update(['accepted' => true]);
+	  }
+	  return $transaction->updateParent();
+	}
+
+    /**
+     * Reject transaction.
+     * 
+     * @return void
+     */
+    public function rejectTransaction(SeedsExchange $transaction)
+	{
+	  if ( $transaction->asked_to == $this->id)
+	  {
+	    if ( ! $transaction->parent_id )
+	    {
+	      foreach ($transaction->childs()->get() as $child)
+	      {
+	        $child->update(['accepted' => false]);
+	      }
+	      $transaction->update(['accepted' => false]);
+	    } else {
+	      $transaction->update(['accepted' => false]);
+	    }
+	    return $transaction->updateParent();
+	  } 
+	  if ( $transaction->asked_by == $this->id)
+	  {
+	    if ( ! $transaction->parent_id )
+	    {
+	      foreach ($transaction->childs()->get() as $child)
+	      {
+	        $child->update(['completed' => false]);
+	      }
+	      $transaction->update(['completed' => false]);
+	    } else {
+	      $transaction->update(['completed' => false]);
+	    }
+	    return $transaction->updateParent();
+	  }
+      return false;
+
+	}
+
+    /**
+     * Complete transaction.
+     *
+     * @return void
+     */
+    public function completeTransaction(SeedsExchange $transaction)
+	{
+	  if ( $transaction->asked_by != $this->id )
+	  {
+		return false;
+	  }
+	  if ( ! $transaction->parent_id )
+	  {
+	    foreach ($transaction->childs()->get() as $child)
+	    {
+	      $child->update(['completed' => true]);
+	    }
+	    $transaction->update(['completed' => true]);
+	  } else {
+	    $transaction->update(['completed' => true]);
+	  }
+	  return $transaction->updateParent();
 	}
 
 }

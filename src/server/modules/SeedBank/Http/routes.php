@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
 	Route::group(['middleware' => 'auth'], function(){
@@ -16,7 +18,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 		Route::get('/seed/{id}', function ($id) {
 			$user = \Auth::user();
 			$seed = \Caravel\Seed::findOrFail($id);
-			if (($seed->public) && ($seed->user_id == $user->id))
+			if (($seed->public) && ($seed->user_id != $user->id))
 			{
 				$seed->variety;
 				$seed->species;
@@ -26,20 +28,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 
 				return $seed;
 			}
-			$seedsbank_entry = \Caravel\SeedsBank::where('seed_id',$id)
-				->where('public', true)
-				->firstOrFail();
-			foreach(['variety', 'family', 'species'] as $field){
-				$field_a = (array)DB::table($field)->select('name')->find($seed[$field . '_id']);
-				$seed[$field] = $field_a['name'];
-			};
-			$seed['description'] = $seedsbank_entry->description;
-			/* In case multiple descriptions exist in multiple SeedsBanks
-				foreach(\Caravel\SeedsBank::where('seed_id', $seed->id)->get() as $seedsbank){
-					$seed['description'] = $seed['description'] . $seedsbank->description . "\n";
-				}
-			 */
-			return $seed;
+			return [];
 		});
 		Route::get('/message/get/{id}', function ($id) {
 			//$message = \Caravel\Message::findOrFail($id);
@@ -55,5 +44,44 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 		});
 		Route::post('/message/reply', 'SeedBankController@postMessageReply');
 		Route::post('/message/send', 'SeedBankController@postMessageSend');
+		Route::get('/user_seeds/{id}', function ($id) {
+			$user = \Auth::user();
+			$seed_owner = \Caravel\User::findOrFail($id);
+		    $seeds = $seed_owner->seeds()
+				->where('public', true)->where('available', true)
+				->leftJoin('seeds_exchanges', function($join) use ($user)
+				{
+					$join->on('seeds.id', '=', 'seed_id')
+						->where('asked_by', '=', $user->id)
+						->where('completed', '<>', true);
+				})
+				->select('seeds.id', 'seeds.common_name', 'seeds_exchanges.parent_id',
+					'seeds_exchanges.accepted', 'seeds_exchanges.completed',
+					'seeds_exchanges.id as exchange_id')->get();
+			return ["seeds" => $seeds,
+				"user" => $seed_owner];
+
+		});
+		// Start transaction for seed $id
+		// TODO: Accept multiple IDs
+		Route::get('/start_transaction/{id}', function (Request $request, $id) {
+			$user = \Auth::user();
+			$seed = \Caravel\Seed::findOrFail($id);
+			if ( $seed->user_id == $user->id ) { return false; }
+			if (($seed->available) && ($seed->public))
+			{
+				$data = [
+					'asked_to' => $seed->user_id, 
+					'seed_ids' => [$seed->id]
+				];
+				if ($request->input('parent_id'))
+				{
+					$data['parent_id'] = $request->input('parent_id');
+				} 
+			    return $user->startTransaction($data);
+			} else {
+				return false;
+			}
+		});
 	});
 });

@@ -16,6 +16,21 @@ class Seed extends Model
     {
         return $this->hasMany('Caravel\SeedMonth');
     }
+    public function syncMonths($months_new)
+    {
+      //TODO: create a dedicated function in \Caravel\Seed->syncMonths
+      if (! $months_new){
+        $this->months->delete();
+      } else {
+        $this->months()->whereNotIn('month', $months_new)->delete();
+        $months = $this->months->lists('month')->toArray();
+        foreach($months_new as $month){
+          if (! in_array($month, $months)){
+            $this->months()->save(new SeedMonth(['month'=> $month ]));
+          }
+        }
+      }
+    }
     public function cookings()
     {
         return $this->hasMany('Caravel\SeedCooking');
@@ -36,6 +51,11 @@ class Seed extends Model
     {
         return $this->belongsTo('Caravel\Family');
     }
+    public function transactions()
+    {
+        return $this->hasMany('\Caravel\SeedsExchange', 'seed_id');
+    }
+    
 }
 
 class Family extends Model

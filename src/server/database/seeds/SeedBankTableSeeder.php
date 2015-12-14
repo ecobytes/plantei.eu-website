@@ -16,49 +16,48 @@ class SeedBankTableSeeder extends Seeder
                     if ($seed->user_id == $user->id){ $seed = false;}
                 }
             }
-            if (\Caravel\SeedsExchange::where([
-                'asked_by' => $user_id,
-                'asked_to'=>$seed->user_id, 
-                'seed_id'=>$seed->id
-            ])->first())
+
+            $data = [
+                'asked_by' => $user->id,
+                'asked_to' => $seed->user_id, 
+                'seed_id' => $seed->id
+            ];
+            if (\Caravel\SeedsExchange::where($data)->first())
             {
                 $exchange = false;
             } else {
-                $exchange = $user->transactionStart([
+                $exchange = $user->startTransaction([
                     'asked_to'=>$seed->user_id, 
-                    'seed_id'=>$seed->id
-                ]);
+                    'seed_ids'=> [$seed->id]
+                ])->childs->first();
             }
         }
         return $exchange;
     }
     public function randomTransactionTo($user_id){
         $user = false;
-        $seeds = false;
+        $seeds = \Caravel\User::find($user_id)->seeds()->get();
         $exchange = false;
         while(!$exchange){
             while (!$user){
                 $user = \Caravel\User::find(random_int(2,11));
-                if ($user){
-                    $seeds = $user->seeds();
-                    if (!$seeds->count()) { $user = false;
-                    $seeds = false;}
-                }
             }
             $rindex = random_int(0,$seeds->count() - 1);
-            $seed = $seeds->get()[$rindex];
-            if (\Caravel\SeedsExchange::where([
-                'asked_by' => $seed->user_id,
-                'asked_to'=> $user_id,
-                'seed_id'=>$seed->id
-            ])->first())
+            $seed = $seeds[$rindex];
+            $data = [
+                'asked_by' => $user->id,
+                'asked_to' => $user_id, 
+                'seed_id' => $seed->id
+            ];
+            if (\Caravel\SeedsExchange::where($data)->first())
             {
                 $exchange = false;
+                $user = false;
             } else {
-                $exchange = $user->transactionStart([
-                    'asked_to'=>$user_id, 
-                    'seed_id'=>$seed->id
-                ]);
+                $exchange = $user->startTransaction([
+                    'asked_to'=>$user_id,
+                    'seed_ids'=>[$seed->id]
+                ])->childs->first();
             }
         }
         return $exchange;
@@ -119,6 +118,23 @@ class SeedBankTableSeeder extends Seeder
                             'direct' => false
                         ]);
 
+                    $seed1 = Caravel\Seed::firstOrCreate(
+                        [
+                            'common_name' => 'common_name' . str_random(5),
+                            'local' => 'local' . str_random(3),
+                            //'origin' => random_int(1,3),
+                            'year' => random_int(2010,2015),
+                            'description' => "description " . $faker->text(500),
+                            'available' => true,
+                            'public' => true,
+                            'user_id' => 1,
+                            'latin_name' => 'latin_name' . str_random(5),
+                            'species_id' => $specie->id,
+                            'variety_id' => $variety->id,
+                            'family_id' => $family->id,
+                            'polinization' => true, 
+                            'direct' => false
+                        ]);
                     $seed_months = $seed->months()->saveMany(
                         [
                             new Caravel\SeedMonth(['month' => random_int(1,12)]),
@@ -128,19 +144,23 @@ class SeedBankTableSeeder extends Seeder
                 };
             };
         };
-        $exchange = $this->randomTransactionTo(1);
-        $exchange = $this->randomTransactionBy(1);
-        $exchange = $this->randomTransactionBy(1);
-        $exchange->update(['accepted' => false]); 
-        $exchange = $this->randomTransactionTo(1);
-        $exchange->update(['accepted' => true]); 
-        $exchange = $this->randomTransactionBy(1);
-        $exchange->update(['accepted' => true, 'completed' => true]);
-        $exchange = $this->randomTransactionTo(1);
-        $exchange->update(['accepted' => false]);
-        $exchange = $this->randomTransactionTo(1);
-        $exchange->update(['accepted' => true, 'completed' => true]);
-        $exchange = $this->randomTransactionBy(1);
-        $exchange->update(['accepted' => true]); 
+        $u = \Caravel\User::find(1);
+        $t = $this->randomTransactionTo($u->id);
+        $t = $this->randomTransactionBy($u->id);
+        $t = $this->randomTransactionBy($u->id);
+        $u->rejectTransaction($t); 
+        $t = $this->randomTransactionTo($u->id);
+        $u->acceptTransaction($t); 
+        $t = $this->randomTransactionBy($u->id);
+        $t->update(['accepted' => true]);
+        $u->completeTransaction($t);
+        $t = $this->randomTransactionTo($u->id);
+        $u->rejectTransaction($t);
+        $t = $this->randomTransactionTo($u->id);
+        $t->update(['completed' => true]);
+        $u->acceptTransaction($t);
+        $t = $this->randomTransactionBy($u->id);
+        $t->update(['accepted' => true]);
+        $t->updateParent();
     }
 }

@@ -7,6 +7,24 @@ return [
     'subject' => 'Assunto',
     'date' => 'Data',
     'read' => 'Lida',
-    'unread' => 'Por ler'
-
+    'unread' => 'Por ler',
+    'latin_name' => 'Nome Latim',
+    'common_name' => 'Nome Comum',
+    'my_seeds' => 'As Minhas Sementes',
+    'pending_exchanges' => 'Trocas Pendentes',
+    'available' => 'Disponíveis',
+    'public' => 'Pública',
+    'date' => 'Data',
+    'location' => 'Localização',
+    'sent_requests' => 'Pedidos Enviados',
+    'received_requests' => 'Pedidos Recebidos',
+    'add_new_seed' => 'Adiciona uma nova semente',
+    'confirm' => 'Confirma',
+    'pending' => 'Pendente',
+    'accept_request' => 'Aceita Pedido',
+    'accepted' => 'Já foi aceite',
+    'cancelled' => 'Cancelada',
+    'cancel' => 'Cancela',
+    'confirmed' => 'Confirmado',
+    'message' => 'Mensagem'
 ];

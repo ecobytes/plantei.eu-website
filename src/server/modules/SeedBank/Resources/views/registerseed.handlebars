@@ -117,10 +117,10 @@
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label class="control-label"><h2>Características</h2></label>
+						<label class="control-label"><h2>{{messages.characteristics}}Características</h2></label>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Nome ciêntifico</label>
+						<label class="control-label">{{messages.latin_name}}Nome Latim</label>
 						<span class="cell">
 							<input type="text" class="form-control" placeholder="" name="latin_name" value="{{ latin_name }}">
 						</span>
@@ -178,7 +178,7 @@
 {{>scripts}}
 <script>
   $('#cancel_seed').on('click', function () {
-    window.open('/seedbank', '_self');
+    window.open('/seedbank/myseeds', '_self');
 	return false;
   });
 </script>

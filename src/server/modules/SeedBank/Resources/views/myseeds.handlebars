@@ -9,19 +9,19 @@
             <div class="panel-heading" role="tab" id="headingSent">
               <h4 class="panel-title">
                 <a style="color: black;" role="button" data-toggle="collapse" href="#transactionsSent" aria-expanded="true" aria-controls="collapseSent">
-                  Pedidos Enviados
+                  {{messages.sent_requests}}
                 </a>
               </h4>
             </div>
-			{{#if transactionsBy}}
+            {{#if transactionsBy}}
             <div id="transactionsSent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingSent">
               <div class="panel-body">
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>Nome comum</th>
-                          <th>Data</th>
-                          <th>Localização</th>
+                          <th>{{../messages.common_name}}</th>
+                          <th>{{../messages.date}}</th>
+                          <th>{{../messages.location}}</th>
                           <th></th>
                           <th></th>
                         </tr>
@@ -32,43 +32,43 @@
                           <td>{{common_name}}</td>
                           <td>{{updated_at}}</td>
                           <td>{{place_name}}</td>
-                          <td><button type="button" class="btn btn-sm btn-primary">Mensagem</button></td>
+                          <td><button type="button" class="btn btn-sm btn-primary">{{../messages.message}}</button></td>
                           <td>
-						    {{#if accepted.0}}
-						    <button type="button" class="btn btn-sm btn-danger">Cancelada</button>
-							{{/if}}
-						    {{#if accepted.1}}
-						    <button type="button" class="btn btn-sm btn-success">Confirma</button>
-							{{/if}}
-						    {{#if accepted.2}}
-						    <button type="button" class="btn btn-sm btn-warning">Pendente</button>
-							{{/if}}
-						  </td>
+                          {{#if accepted.0}}
+                            <button type="button" class="btn btn-sm btn-danger">{{../../messages.cancelled}}</button>
+                          {{/if}}
+                          {{#if accepted.1}}
+                            <button type="button" class="btn btn-sm btn-success">{{../../messages.confirm}}</button>
+                          {{/if}}
+                          {{#if accepted.2}}
+                            <button type="button" class="btn btn-sm btn-warning">{{../../messages.pending}}</button>
+                          {{/if}}
+                          </td>
                         </tr>
                       {{/each}}
                       </tbody>
                     </table>
               </div>
             </div>
-			{{/if}}
+            {{/if}}
           </div>
           <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingReceived">
               <h4 class="panel-title">
                 <a  style="color: black;" class="collapsed" role="button" data-toggle="collapse" href="#transactionsReceived" aria-expanded="false" aria-controls="transactionsReceived">
-        		  Pedidos Recebidos
+                  {{messages.received_requests}}
                 </a>
               </h4>
             </div>
-			{{#unless transactionsTo.empty}}
+            {{#unless transactionsTo.empty}}
             <div id="transactionsReceived" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingReceived">
               <div class="panel-body">
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>Nome comum</th>
-                          <th>Data</th>
-                          <th>Localização</th>
+                          <th>{{messages.common_name}}</th>
+                          <th>{{messages.date}}</th>
+                          <th>{{messages.location}}</th>
                           <th></th>
                           <th></th>
                         </tr>
@@ -79,33 +79,33 @@
                           <td>{{common_name}}</td>
                           <td>{{updated_at}}</td>
                           <td>{{place_name}}</td>
-                          <td><button type="button" class="btn btn-sm btn-primary">Mensagem</button></td>
+                          <td><button type="button" class="btn btn-sm btn-primary">{{../messages.message}}</button></td>
                           <td>
-						    {{#if accepted.0}}
-						    <button type="button" class="btn btn-sm btn-danger">Cancelada</button>
-							{{/if}}
-						    {{#if accepted.1}}
-						    <button type="button" class="btn btn-sm btn-success">Já foi aceite</button>
-							{{/if}}
-						    {{#if accepted.2}}
-						    <button type="button" class="btn btn-sm btn-warning">Aceita Pedido</button>
-							{{/if}}
-						  </td>
+                            {{#if accepted.0}}
+                            <button type="button" class="btn btn-sm btn-danger">{{../../messages.cancelled}}</button>
+                            {{/if}}
+                            {{#if accepted.1}}
+                            <button type="button" class="btn btn-sm btn-success">{{../../messages.accepted}}</button>
+                            {{/if}}
+                            {{#if accepted.2}}
+                            <button type="button" class="btn btn-sm btn-warning">{{../../messages.confirmed}}</button>
+                            {{/if}}
+                            </td>
                         </tr>
                       {{/each}}
                       </tbody>
                     </table>
               </div>
             </div>
-			{{/unless}}
+            {{/unless}}
           </div>
         </div>
-	  </div>
+      </div>
       <div class="col-md-6 text-center">
         <h1>As minhas sementes
         <span class="cell btn-group">
           <button type="button" class="btn btn-primary btn-md" id="new_seed">
-            Adicionar
+            {{messages.add_new_seed}}
           </button>
         </span></h1>
         <div class="btn-group">
@@ -115,10 +115,10 @@
             <table class="table" id="mySeeds">
               <thead>
                 <tr>
-                  <th>Nome comum</th>
-                  <th>Nome ciêntifico</th>
-                  <th>Disponível</th>
-                  <th>Pública</th>
+                  <th>{{messages.common_name}}</th>
+                  <th>{{messages.latin_name}}</th>
+                  <th>{{messages.available}}</th>
+                  <th>{{messages.public}}</th>
                 </tr>
               </thead>
               <tbody>

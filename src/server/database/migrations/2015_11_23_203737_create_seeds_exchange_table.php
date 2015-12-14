@@ -19,14 +19,18 @@ class CreateSeedsExchangeTable extends Migration
             $table->foreign('asked_by')->references('id')->on('users');
             $table->integer('asked_to')->unsigned();
             $table->foreign('asked_to')->references('id')->on('users');
-            $table->integer('seed_id')->unsigned();
+            $table->integer('seed_id')->unsigned()->nullable();
             $table->foreign('seed_id')->references('id')->on('seeds');
-            $table->index(['asked_by', 'asked_to', 'seed_id']);
+            // When an exchange includes more than one seed it will have a parent exchange,
+            // that has no seed associated, to keep them together. Accepted will have no meaning,
+            // and completed will only exist when all seeds exchanges have been completed
+            $table->integer('parent_id')->unsigned()->nullable();
+            $table->foreign('parent_id')->references('id')->on('seeds_exchanges');
 
             // Should only be accepted (true) or refused (false)  by asked_to
             $table->boolean('accepted')->nullable();
-            // Should only be completed by asked_by
-            $table->boolean('completed')->default(false);
+            // Should only be completed (true) or rejected (false) by asked_by
+            $table->boolean('completed')->nullable();
         });
     }
 
