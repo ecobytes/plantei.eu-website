@@ -19,7 +19,7 @@ class Seed extends Model
     public function syncMonths($months_new)
     {
       //TODO: create a dedicated function in \Caravel\Seed->syncMonths
-      if (! $months_new){
+      if ((! $months_new) && ($this->months->count())){
         $this->months->delete();
       } else {
         $this->months()->whereNotIn('month', $months_new)->delete();

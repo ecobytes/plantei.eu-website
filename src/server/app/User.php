@@ -110,20 +110,20 @@ class User extends Model implements AuthenticatableContract,
 	  $askedTo = $this->hasMany('Caravel\SeedsExchange', 'asked_to')
 		->whereNotNull('parent_id')
 		->where(function ($query) {
-		  $query->where('completed', false)->orWhere('completed', null);
+		  $query->where('completed', 1)->orWhere('completed', 0);
 		})
 		->join('users', 'users.id', '=', 'asked_by')
-		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id');
-		//->select('seeds_exchanges.*');
+		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
+		->select('seeds_exchanges.*', 'common_name', 'users.name', 'users.place_name', 'users.lat', 'users.lon');
 	  //Transactions started by self
 	  $askedBy = $this->hasMany('Caravel\SeedsExchange', 'asked_by')
 		->whereNotNull('parent_id')
 		->where( function ($query) {
-		  $query->where('completed', false)->orWhere('completed', null);
+		  $query->where('completed', 1)->orWhere('completed', 0);
 		})
 		->join('users', 'users.id', '=', 'asked_to')
-		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id');
-		//->select('seeds_exchanges.*', );
+		->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
+		->select('seeds_exchanges.*', 'common_name', 'users.name', 'users.place_name', 'users.lat', 'users.lon');
 	  if ($orderBy)
 	  { 
 		$askedTo = $askedTo->orderBy($orderBy, 'desc'); 
@@ -175,15 +175,23 @@ class User extends Model implements AuthenticatableContract,
 	  } else {
 		$parent = SeedsExchange::findOrFail($data['parent_id']);
 	  }
+	  $emptytransaction = true;
 	  foreach ($seed_ids as $seed_id)
 	  {
-        $data['seed_id'] = $seed_id;
-        $data['parent_id'] = $parent->id;
-		$transaction = SeedsExchange::create($data);
+		if ( ! SeedsExchange::where([
+		  'asked_by'=> $data['asked_by'], 
+		  'asked_to'=> $data['asked_to'], 
+		  'seed_id' => $seed_id])
+		  ->where('completed', '<', 2)->count() ) {
+		    $data['seed_id'] = $seed_id;
+			$data['parent_id'] = $parent->id;
+			$transaction = SeedsExchange::create($data);
+		    $emptytransaction = false;
+		}
 	  }
-      return $parent;
+	  // Todo: return the childs for transaction
+      if (! $emptytransaction ) { return $parent->childs(); } else {return [];}
 	}
-
 
     /**
      * Accept transaction.
@@ -200,12 +208,13 @@ class User extends Model implements AuthenticatableContract,
 	  {
 		foreach ($transaction->childs()->get() as $child)
 		{
-		  $child->update(['accepted' => true]);
+		  $child->update(['accepted' => 2]);
 		}
-		$transaction->update(['accepted' => true]);
+		$transaction->update(['accepted' => 2]);
 	  } else {
-		$transaction->update(['accepted' => true]);
+		$transaction->update(['accepted' => 2]);
 	  }
+	  $transaction->save();
 	  return $transaction->updateParent();
 	}
 
@@ -222,11 +231,11 @@ class User extends Model implements AuthenticatableContract,
 	    {
 	      foreach ($transaction->childs()->get() as $child)
 	      {
-	        $child->update(['accepted' => false]);
+	        $child->update(['accepted' => 1]);
 	      }
-	      $transaction->update(['accepted' => false]);
+	      $transaction->update(['accepted' => 1]);
 	    } else {
-	      $transaction->update(['accepted' => false]);
+	      $transaction->update(['accepted' => 1]);
 	    }
 	    return $transaction->updateParent();
 	  } 
@@ -236,11 +245,11 @@ class User extends Model implements AuthenticatableContract,
 	    {
 	      foreach ($transaction->childs()->get() as $child)
 	      {
-	        $child->update(['completed' => false]);
+	        $child->update(['completed' => 1]);
 	      }
-	      $transaction->update(['completed' => false]);
+	      $transaction->update(['completed' => 1]);
 	    } else {
-	      $transaction->update(['completed' => false]);
+	      $transaction->update(['completed' => 1]);
 	    }
 	    return $transaction->updateParent();
 	  }
@@ -263,11 +272,11 @@ class User extends Model implements AuthenticatableContract,
 	  {
 	    foreach ($transaction->childs()->get() as $child)
 	    {
-	      $child->update(['completed' => true]);
+	      $child->update(['completed' => 2]);
 	    }
-	    $transaction->update(['completed' => true]);
+	    $transaction->update(['completed' => 2]);
 	  } else {
-	    $transaction->update(['completed' => true]);
+	    $transaction->update(['completed' => 2]);
 	  }
 	  return $transaction->updateParent();
 	}

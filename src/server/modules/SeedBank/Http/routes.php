@@ -44,6 +44,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 		});
 		Route::post('/message/reply', 'SeedBankController@postMessageReply');
 		Route::post('/message/send', 'SeedBankController@postMessageSend');
+		Route::get('/exchanges', 'SeedBankController@getExchanges');
 		Route::get('/user_seeds/{id}', function ($id) {
 			$user = \Auth::user();
 			$seed_owner = \Caravel\User::findOrFail($id);
@@ -53,35 +54,29 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 				{
 					$join->on('seeds.id', '=', 'seed_id')
 						->where('asked_by', '=', $user->id)
-						->where('completed', '<>', true);
+						->where('completed', '<', 2)
+						->where('accepted', '<>', 1);
 				})
-				->select('seeds.id', 'seeds.common_name', 'seeds_exchanges.parent_id',
-					'seeds_exchanges.accepted', 'seeds_exchanges.completed',
-					'seeds_exchanges.id as exchange_id')->get();
-			return ["seeds" => $seeds,
-				"user" => $seed_owner];
+				->select('seeds_exchanges.*', 'seeds.id as id', 'seeds.common_name')->get();
+			return [
+				"seeds" => $seeds,
+				"user" => $seed_owner
+			];
 
 		});
-		// Start transaction for seed $id
-		// TODO: Accept multiple IDs
-		Route::get('/start_transaction/{id}', function (Request $request, $id) {
+		Route::post('/startexchange', function (Request $request) {
 			$user = \Auth::user();
-			$seed = \Caravel\Seed::findOrFail($id);
-			if ( $seed->user_id == $user->id ) { return false; }
-			if (($seed->available) && ($seed->public))
-			{
+			$seed_ids = $request->input('seed_ids');
+			$owner_id = $request->input('user_id');
+
+			if ((! $seed_ids) || (! $owner_id)) { return []; }
 				$data = [
-					'asked_to' => $seed->user_id, 
-					'seed_ids' => [$seed->id]
+					'asked_to' => $owner_id, 
+					'seed_ids' => $seed_ids
 				];
-				if ($request->input('parent_id'))
-				{
-					$data['parent_id'] = $request->input('parent_id');
-				} 
-			    return $user->startTransaction($data);
-			} else {
-				return false;
-			}
+			return $user->startTransaction($data)
+				->join('seeds', 'seed_id', '=', 'seeds.id')
+				->select('seeds_exchanges.*', 'seeds.common_name')->get();
 		});
 	});
 });

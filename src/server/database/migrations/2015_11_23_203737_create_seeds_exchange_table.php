@@ -27,10 +27,10 @@ class CreateSeedsExchangeTable extends Migration
             $table->integer('parent_id')->unsigned()->nullable();
             $table->foreign('parent_id')->references('id')->on('seeds_exchanges');
 
-            // Should only be accepted (true) or refused (false)  by asked_to
-            $table->boolean('accepted')->nullable();
-            // Should only be completed (true) or rejected (false) by asked_by
-            $table->boolean('completed')->nullable();
+            // Should only be accepted (2) or refused (1)  by asked_to
+            $table->integer('accepted')->unsigned()->default(0);
+            // Should only be completed (2) or rejected (1) by asked_by
+            $table->integer('completed')->unsigned()->default(0);
         });
     }
 

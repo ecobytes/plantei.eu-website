@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class SeedsExchange extends Model
 {
     //
-    protected $fillable = ['asked_to', 'asked_by', 'seed_id', 'parent_id'];
+    protected $fillable = ['asked_to', 'asked_by', 'seed_id', 'parent_id', 'accepted', 'completed'];
     //protected $touches = ['parent'];
 
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
-	 */
+     */
 	protected $table = 'seeds_exchanges';
 
 
@@ -22,7 +22,7 @@ class SeedsExchange extends Model
     {
         if ($this->parent_id)
         {
-            return $this->parent->childs;
+            return $this->parent->childs();
         }
         return $this->hasMany('Caravel\SeedsExchange', 'parent_id', 'id');
     }
@@ -43,17 +43,17 @@ class SeedsExchange extends Model
         $rejected = true;
 	    $cancelled = true;
 	    $completed = true;
-	    foreach ($this->childs() as $child)
+	    foreach ($this->childs as $child)
 	    {
-	      if (($child->accepted != true)) { $accepted = false; }
-	      if (($child->accepted != false)) { $rejected = false; }
-	      if (($child->completed != false)) { $cancelled = false; }
-	      if (($child->completed != true)) { $completed = false; }
+	      if (($child->accepted != 2)) { $accepted = false; }
+	      if (($child->accepted != 1)) { $rejected = false; }
+	      if (($child->completed != 1)) { $cancelled = false; }
+	      if (($child->completed != 2)) { $completed = false; }
 	    }
-	    if ($accepted) { $parent->update(['accepted' => true]); }
-	    if ($rejected) { $parent->update(['accepted' => false]); }
-	    if ($cancelled) { $parent->update(['completed' => false]); }
-	    if ($completed) { $parent->update(['completed' => true]); }
+	    if ($accepted) { $parent->update(['accepted' => 2]); }
+	    if ($rejected) { $parent->update(['accepted' => 1]); }
+	    if ($cancelled) { $parent->update(['completed' => 1]); }
+	    if ($completed) { $parent->update(['completed' => 2]); }
         return $parent;
     }
 }

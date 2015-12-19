@@ -62,11 +62,11 @@ class SeedBankController extends Controller {
       foreach($transactions['asked_by'] as &$tr){
         $ta = [];
         //pending
-        if ($tr['accepted'] === null){$ta[2]=true;}
+        if ($tr['accepted'] == 0){$ta[2]=true;}
         //canceled
-        elseif ($tr['accepted'] == false){$ta[0]=true;}
+        elseif ($tr['accepted'] == 1){$ta[0]=true;}
         //accepted
-        elseif ($tr['accepted']){$ta[1]=true;} 
+        elseif ($tr['accepted'] == 2){$ta[1]=true;} 
         $tr['accepted']=$ta;;
       }
     }
@@ -74,14 +74,15 @@ class SeedBankController extends Controller {
       foreach($transactions['asked_to'] as &$tr){
         $ta = [];
         //pending
-        if ($tr['accepted'] === null){$ta[2]=true;}
+        if ($tr['accepted'] == 0){$ta[2]=true;}
         //canceled
-        elseif ($tr['accepted'] == false){$ta[0]=true;}
+        elseif ($tr['accepted'] == 1){$ta[0]=true;}
         //accepted
-        elseif ($tr['accepted']){$ta[1]=true;} 
+        elseif ($tr['accepted'] == 2){$ta[1]=true;} 
         $tr['accepted'] = $ta;
       }
     }
+    //dd($transactions);
     return view('seedbank::myseeds')
       ->with('seeds', $t)
       ->with('transactionsBy', $transactions['asked_by']) 
@@ -108,19 +109,6 @@ class SeedBankController extends Controller {
       if ($m['sender_id'] == $user->id){
         $m['sent'] = true;
       }
-      
-      //foreach($mgroup as &$m){
-      /*  if (isset($m['pivot'])) {
-          $t = array();
-          if ($m['pivot']['read']){
-            $t[1] = true;
-            $m['pivot']['read'] = $t;
-          
-          } else {
-            $unreadmessages++;
-          }
-    }*/
-      //}
     }
     return view('seedbank::messages')
       ->with('usermessages', $userMessages)
@@ -129,6 +117,44 @@ class SeedBankController extends Controller {
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
       ->with('active', ['messages' => true]);
+  }
+
+  public function getExchanges()
+  {
+    $user = \Auth::user();
+
+    $transactions = $user->transactionsPending();
+    if ($transactions['asked_by']){
+      foreach($transactions['asked_by'] as &$tr){
+        $ta = [];
+        //pending
+        if ($tr['accepted'] == 0){$ta[2]=true;}
+        //canceled
+        elseif ($tr['accepted'] == 1){$ta[0]=true;}
+        //accepted
+        elseif ($tr['accepted'] == 2){$ta[1]=true;} 
+        $tr['accepted']=$ta;;
+      }
+    }
+    if ($transactions['asked_to']){
+      foreach($transactions['asked_to'] as &$tr){
+        $ta = [];
+        //pending
+        if ($tr['accepted'] == 0){$ta[2]=true;}
+        //canceled
+        elseif ($tr['accepted'] == 1){$ta[0]=true;}
+        //accepted
+        elseif ($tr['accepted'] == 2){$ta[1]=true;} 
+        $tr['accepted'] = $ta;
+      }
+    }
+    return view('seedbank::exchanges')
+      ->with('transactionsBy', $transactions['asked_by']) 
+      ->with('transactionsTo', $transactions['asked_to']) 
+      ->with('messages', \Lang::get('seedbank::messages'))
+      ->with('menu', \Lang::get('seedbank::menu'))
+      ->with('username', $user->name)
+      ->with('active', ['exchanges' => true]);
   }
 
   public function getRegister($id = null)
@@ -141,12 +167,6 @@ class SeedBankController extends Controller {
       if (Gate::denies('update-seed', $seed)){
         abort(403);
       }
-
-      /*foreach(['variety', 'family', 'species'] as $field){
-        $field_a = (array)\DB::table($field)->select('name')->find($oldInput[$field . '_id']);
-        $oldInput[$field] = $field_a['name'];
-      };*/
-
     }
     //$errors = \Session::get('errors');
     if(\Session::hasOldInput()){

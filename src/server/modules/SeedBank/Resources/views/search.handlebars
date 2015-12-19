@@ -30,7 +30,7 @@
 		<div class="row lmt">
 			{{> formErrors}}
 			<div class="col-md-12 text-center">
-				<h1>Pesquisa</h1>
+				<!-- <h1>Pesquisa</h1> -->
 				<form class="form-horizontal" role="form" method="POST" action="/seedbank/search">
 					<input type="hidden" name="_token" value="{{ csrfToken }}">
 					<div class="form-group">
@@ -64,12 +64,16 @@
 				</table>
 			  </div>
 			  <div class="col-md-8 results_detail">
-				<h3>Escolhe as sementes de <span class="label label-default">Maria</span></h3>
+				<h3>Escolhe as sementes de <span class="label label-default"></span></h3>
+				<button type="button" id="newsearch" class="btn btn-warning">{{messages.newsearch}}Nova Pesquisa</button>
+				<button type="button" id="startexchange" class="btn btn-success">{{messages.starttransaction}}Envia Pedido</button>
 				<table class="table">
 					<thead>
 						<tr>
+							<th>{{messages.mark}}</th>
 							<th>{{messages.common_name}}</th>
-							<th>{{messages.latin_name}}</th>
+							<th>{{messages.state}}Estado</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -109,23 +113,30 @@ var show_user_seeds = function(container, user_id) {
 			return false;
 		}
 		$('.results_detail tbody').empty();
-		$('.results_detail h3 span').text(data.user.name);
+		$('.results_detail h3 span').text(data.user.name).data('user_id', data.user.id);
 		$.each(data.seeds, function (i, info){
-			  console.log(info);
-			$('.results_detail tbody').append('<tr data-seed_id="' + info.id + '"><td>' + info.common_name + '</td></tr>');
-			if ( info.exchange_id) {
-			  if (( info.accepted == true) && (info.completed == null)) {
+			  //console.log(info);
+			$('.results_detail tbody').append('<tr>\
+			     <td><input name="seed_id" value="' + info.id + '" type="checkbox"/></td>\
+				 <td>' + info.common_name + '</td></tr>');
+			if ( info.parent_id) {
+		      $('.results_detail tbody tr:last input').attr('disabled', '');
+			  if (( info.accepted == 2) && (info.completed == 0)) {
 			      $('.results_detail tbody tr:last').append('<td>À espera de confirmação</td>');
-				} else if (( info.accepted == null) && (info.completed == null)){
+				} else if (( info.accepted == 0) && (info.completed == 0)){
 			      $('.results_detail tbody tr:last').append('<td>À espera de resposta</td>');
-				} else if ( info.accepted == false){
+				} else if ( info.accepted == 1){
 			      $('.results_detail tbody tr:last').append('<td>Recusada</td>');
-				} else if ( info.completed == false) {
+				} else if ( info.completed == 1) {
 			      $('.results_detail tbody tr:last').append('<td>Cancelada</td>');
 				}
 			} else {
 			  $('.results_detail tbody tr:last').append('<td></td>');
 			}
+			$('.results_detail tbody tr:last').append('<td>\
+			  <button type="button" data-seed_id="' + info.id + '" class="btn btn-primary btn-sm">\
+			    {{message.moreinfo}}mais informações\
+				</button></td>');
         });
 	},
 	'json');
@@ -136,8 +147,8 @@ $(".container form").on('submit', function(){
 	$('#results tbody').empty();
 	if ( $('#results').is(':visible')) {
 		$('#results').hide();
-		$('.search_autocomplete').show();
-		$('#search').text('Pesquisa');
+		$('#results').hide();
+		$('.container form').show();
 		return false;
 	};
     var formdata = $('form').serialize();
@@ -154,8 +165,7 @@ $(".container form").on('submit', function(){
 			   show_user_seeds($('.results_general tbody tr'), info.user_id);
 			   }
 			$('#results').show();
-			$('.search_autocomplete').hide();
-			$('#search').text('Nova Pesquisa');
+			$('.container form').hide();
 		});
 	},
 	'json');
@@ -166,7 +176,7 @@ $('.results_general').on('click', 'tbody tr', function () {
 	show_user_seeds(this, $(this).data('user_id'));
 });
 
-$('.results_detail').on('click', 'tbody tr', function () {
+$('.results_detail').on('click', 'tbody tr button', function () {
 	var seed_id = $(this).data('seed_id');
     $.get("/seedbank/seed/" + seed_id, function (data) {
 		if (! data){
@@ -179,9 +189,16 @@ $('.results_detail').on('click', 'tbody tr', function () {
 			<p><b>Espécie:</b> ' + data.species.name + '</p>' + '\n\
 			<p><b>Variedade:</b> ' + data.variety.name + '</p>' + '\n'
 			);
+    var element = $('.results_detail table input[value=' + seed_id + ']');
+	if (!! element.first().attr('disabled')) { 
 		$('#seed_info .modal-footer .footer-left')
-		    .html('<button class="btn btn-default col-md-12" style="height: 50px;">\
-			  {{messages.sendmessage}}Manda Mensagem</button>');
+		    .html('<div class="label label-warning col-md-12">\
+			  {{messages.alreadyrequested}}Já está pendente</div>');
+	} else { 
+		$('#seed_info .modal-footer .footer-left')
+		  .html('<button class="btn btn-sm btn-default col-sm-12">\
+			  {{messages.sendmessage}}Escolhe esta semente</button>');
+	}
 
 		$('#seed_info').modal('show');
 		},
@@ -192,8 +209,15 @@ $('.results_detail').on('click', 'tbody tr', function () {
 }).on('mouseout', 'tbody tr', function () {
     $(this).removeClass('active');
 });*/
+
 $('#seed_info .modal-footer .footer-left').on('click', 'button', function(){
-  $('#seed_info .modal-body .body-form').html('\
+
+	var seed_id = $('#seed_info .modal-title').data("seed_id");
+	
+    $('.results_detail table input[value=' + seed_id + ']').prop("checked", true);
+	$('#seed_info').modal('hide');
+
+/*  $('#seed_info .modal-body .body-form').html('\
     <form class="form-horizontal bootstrap-modal-form" method="POST" action="/seedbank/message/send">\
 	  <input type="hidden" name="seed_id" value="' + $(".modal-title").data('seed_id') + '"/>\
 	  <div class="form-group">\
@@ -217,10 +241,35 @@ $('#seed_info .modal-footer .footer-left').on('click', 'button', function(){
         </div>\
       </div>\
 	</form>');
-  $('.body-form').show();
+  $('.body-form').show();*/
+
   });
 $('.body-form').on('click', '#cancel', function(){
   $('.body-form').empty().hide();
   });
+$('.results_detail').on('click', '#newsearch', function(){
+  $(".container form").trigger('submit');
+});
+$('.results_detail').on('click', '#startexchange', function(){
+  var chosen = [];
+  var user_id = $('.results_detail h3 span').data('user_id');
+  $.each($(this).next('table').find('input:checked'), function(i, choice){
+    chosen.push($(choice).val());
+  });
+
+  console.log(chosen);
+  console.log(user_id);
+  $.post("/seedbank/startexchange", {"seed_ids": chosen, "user_id":user_id},  function (data) {
+        console.log(data.length);
+		if (! data.length){
+			alert('Empty Response');
+			return false;
+		}
+		alert(data);
+		console.log(data);
+		});
+  
+  
+});
 </script>
 {{>footer}}

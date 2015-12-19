@@ -29,7 +29,7 @@ class SeedBankTableSeeder extends Seeder
                 $exchange = $user->startTransaction([
                     'asked_to'=>$seed->user_id, 
                     'seed_ids'=> [$seed->id]
-                ])->childs->first();
+                ])->first();
             }
         }
         return $exchange;
@@ -57,7 +57,7 @@ class SeedBankTableSeeder extends Seeder
                 $exchange = $user->startTransaction([
                     'asked_to'=>$user_id,
                     'seed_ids'=>[$seed->id]
-                ])->childs->first();
+                ])->first();
             }
         }
         return $exchange;
@@ -152,15 +152,15 @@ class SeedBankTableSeeder extends Seeder
         $t = $this->randomTransactionTo($u->id);
         $u->acceptTransaction($t); 
         $t = $this->randomTransactionBy($u->id);
-        $t->update(['accepted' => true]);
+        $t->update(['accepted' => 2]);
         $u->completeTransaction($t);
         $t = $this->randomTransactionTo($u->id);
         $u->rejectTransaction($t);
         $t = $this->randomTransactionTo($u->id);
-        $t->update(['completed' => true]);
+        $t->update(['completed' => 2]);
         $u->acceptTransaction($t);
         $t = $this->randomTransactionBy($u->id);
-        $t->update(['accepted' => true]);
+        $t->update(['accepted' => 2]);
         $t->updateParent();
     }
 }
