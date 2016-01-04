@@ -4,3 +4,6 @@
 modules/TestModule
 public/css
 tmp
+.phpcomplete_extended
+dotdeb.gpg
+index_cache

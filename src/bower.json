@@ -4,7 +4,8 @@
   "dependencies": {
     "bootstrap": "~3.*",
     "jquery-ui": "*",
-    "laravel-bootstrap-modal-form": "jerseymilker/laravel-bootstrap-modal-form"
+    "laravel-bootstrap-modal-form": "jerseymilker/laravel-bootstrap-modal-form",
+    "blueimp-file-upload": "~9.11.2"
   },
   "private": true
 }

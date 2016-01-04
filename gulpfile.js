@@ -60,17 +60,21 @@ gulp.task('local', function() {
   gulp.src('src/assets/less/style.less')
     .pipe(less())
     .pipe(gulp.dest('src/server/public/css/'))
-    .pipe(reload({stream:true})); //Browser Sync
   gulp.src([
     'src/bower_components/bootstrap/dist/js/bootstrap.min.js',
     'src/bower_components/jquery/dist/jquery.min.js',
-    'src/bower_components/jquery-ui/jquery-ui.min.js'
+    'src/bower_components/jquery-ui/jquery-ui.min.js',
+    'src/bower_components/blueimp-file-upload/js/*.js'
     ])
   .pipe(gulp.dest('src/server/public/js/'));
   gulp.src([
     'src/bower_components/jquery-ui/themes/ui-lightness/jquery-ui.min.css',
     'src/bower_components/jquery-ui/themes/ui-lightness/images**/*'
     ], {base: 'src/bower_components/jquery-ui/themes/ui-lightness'})
+  .pipe(gulp.dest('src/server/public/css'));
+  gulp.src([
+    'src/bower_components/blueimp-file-upload/css/jquery.fileupload*',
+    ])
   .pipe(gulp.dest('src/server/public/css'));
 
 });

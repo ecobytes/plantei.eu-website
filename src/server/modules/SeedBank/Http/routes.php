@@ -2,6 +2,33 @@
 
 use Illuminate\Http\Request;
 
+function save_image($uploadedimage) {
+  $file_md5 = md5_file($uploadedimage);
+  $file_name = $file_md5;
+  $picture = \Caravel\Picture::where('md5sum', $file_md5)->first();
+  if (!$picture){
+    $picture_path = '/tmp/PITCTURES/PATH';
+    $uploadedimage->move($picture_path, $file_name);
+    $converted_image = new Imagick($picture_path . '/' . $file_md5);
+    $converted_image->setImageFormat('jpg');
+    $converted_image->scaleimage(800, 800, true);
+    if (filesize($picture_path . '/' . $file_name) > 200000) {
+      $converted_image->setOption('jpeg:extent', '100kb');
+    }
+    $status = $converted_image->writeimage();
+    if ($status) {
+	  $picture = \Caravel\Picture::create([
+	    'path' => $picture_path . '/' . $file_name,
+	    'url' => '/seedbank/pictures/' . $file_md5,
+	    'md5sum' => $file_md5
+	  ]);
+	} else {
+	  return [ "error" => "File not saved"];
+    }
+  }
+  return [ "picture" => $picture];
+};
+
 Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
 	Route::group(['middleware' => 'auth'], function(){
@@ -77,6 +104,61 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 			return $user->startTransaction($data)
 				->join('seeds', 'seed_id', '=', 'seeds.id')
 				->select('seeds_exchanges.*', 'seeds.common_name')->get();
+		});
+		Route::get('/seeds', function () {
+			$user = \Auth::user();
+			return $user->seeds()->paginate(5);
+		});
+		Route::post('/add-pictures', function (Request $request) {
+			// TODO: Limit number of picture by seed?
+			$user = \Auth::user();
+			if ($request->has('seed_id')){
+				$seed = \Caravel\Seed::findOrFail($request->input('seed_id'));
+			} else {
+				$seed = false;
+			}
+			if ($request->hasFile('pictures')) {
+				$picture = $request->file('pictures')[0];
+				$status = save_image($picture);
+				if (isset($status['error'])) {
+					return [ 'files' => [ ['error' => $status['error']]]];
+				} else {
+					if ($seed) {
+						if (!$seed->user_id == $user->id){
+					      return [ 'files' => [ ['error' => 'File is owned by other user']]];
+						} else {
+							$seed->pictures()->save($status['picture']);
+						}
+					}
+					return [ 'files' => [ ['md5sum' => $status['picture']->md5sum, 
+						                   'id' => $status['picture']->id,
+										   'url' => $status['picture']->url,
+										   'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
+									       'deleteType' => 'GET'  ]
+									   ]];
+				}
+			}
+			return [ 'files' => [['error' => 'No files sent']]];
+		});
+		Route::get('/pictures/delete/{id}', function ($id) {
+			$user = \Auth::user();
+			$picture = \Caravel\Picture::findOrFail($id);
+			if ($picture->seed){
+				if (!$picture->seed->user_id == $user->id) { return [ "files" => [[ $picture->md5sum => false]] ]; }
+			}
+			$deleted = \File::delete($picture->path);
+			// TODO: Might not be able to delete for some reason (permissions?)
+			$picture->delete();
+			return [ "files" => [[ $picture->md5sum => true]] ];
+		});
+		Route::get('/pictures/{md5sum}', function ($md5sum) {
+			// TODO: Pass this work to nginx?
+			$user = \Auth::user();
+			$picture = \Caravel\Picture::where('md5sum', $md5sum)->firstOrFail();
+            $file = \File::get($picture->path);
+			$response = \Response::make($file,200);
+			$response->header('Content-Type', 'image/jpg');
+			return $response;
 		});
 	});
 });

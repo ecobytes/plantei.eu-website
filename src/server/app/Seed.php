@@ -11,6 +11,11 @@ class Seed extends Model
         'common_name', 'latin_name', 'species_id', 'variety_id', 'family_id',
         'polinization', 'direct'
     ];
+    protected $casts = [
+        'public' => 'boolean',
+        'available' => 'boolean',
+        'user_id' => 'integer'
+    ];
     //
     public function months()
     {
@@ -30,6 +35,10 @@ class Seed extends Model
           }
         }
       }
+    }
+    public function pictures()
+    {
+        return $this->hasMany('Caravel\Picture');
     }
     public function cookings()
     {
@@ -125,6 +134,17 @@ class SeedMedicine extends Model
     //
     protected $touches = ['seed'];
 	protected $table = 'seeds_medicine';
+    public function seed()
+    {
+        return $this->belongsTo('Caravel\Seed');
+    }
+}
+
+class Picture extends Model
+{
+	protected $fillable = ['label', 'path', 'md5sum', 'url'];
+    protected $touches = ['seed'];
+	protected $table = 'pictures';
     public function seed()
     {
         return $this->belongsTo('Caravel\Seed');

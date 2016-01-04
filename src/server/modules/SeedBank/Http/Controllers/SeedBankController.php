@@ -44,8 +44,10 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
     //dd($user->id);
     //$user = \Caravel\User::where('id', 1)->first();
-    $seeds = $user->seeds->all();
-    $t = [];
+    //$seeds = $user->seeds->toArray();
+    $seeds = $user->seeds()->paginate(5)->setPath('/seedbank/seeds');
+    $t = $seeds;
+    /* $t = [];
     foreach($seeds as $seed){
       $tseed = $seed->toArray();
       foreach(['origin', 'polinization', 'direct', 'public', 'available'] as $key){
@@ -54,7 +56,7 @@ class SeedBankController extends Controller {
         }
       }
       $t[] = $tseed;
-    }
+    }*/
     //dd($t);
     $transactions = $user->transactionsPending();
     //dd($transactions);
@@ -195,6 +197,7 @@ class SeedBankController extends Controller {
        $seed->variety;
        $seed->family;
        $seed->species;
+       $seed->pictures;
        $oldInput = $seed->toArray();
        $oldInput['months'] = $seed->months()->lists('month')->toArray();
       } else {
@@ -204,7 +207,7 @@ class SeedBankController extends Controller {
       $update = true;
     }
     //$t = [];
-    foreach(['origin', 'polinization', 'direct', 'public', 'available'] as $key){
+    foreach(['origin', 'polinization', 'direct'] as $key){
       if(isset($oldInput[$key])){
         $oldInput[$key] = [$oldInput[$key] => true];
       }
@@ -236,33 +239,67 @@ class SeedBankController extends Controller {
       'common_name' => 'required',
       //'origin' => 'required',
     ]);
+
+    if (!($request->input('confirmed') == "1")){
+	  $farming = false;
+	  $pictures = true;
+	  $taxonomy = false;
+      $formInput = $request->input();
+      if (isset($formInput['months'])) {
+          $farming = true;
+	      $months = array();
+	      foreach (range(1, 12) as $i) {
+	          if (in_array($i, $formInput['months'])) { 
+	        	  $months[$i] = ['month' => true];
+	          } else { 
+	        	  $months[$i] = ['month' => false];
+	          }
+          }
+      } else { $months = false; }
+
+
+
+	  if (($formInput['variety']) || ($formInput['species']) || ($formInput['family']) || ($formInput['latin_name'])){
+	    $taxonomy = true;
+	  }
+
+      return view('testmodule::snippet')
+        ->with('title', 'some nice title')
+        ->with('months', $months)
+		->with('seed', $formInput)
+		->with('pictures', $pictures)
+		->with('farming', $farming)
+        ->with('taxonomy', $taxonomy);
+    }
     $seed_keys = ['quantity','year', 'local', 'description', 'public', 'available', 'description',
       'latin_name','common_name','polinization','direct',
     ];
     $seed_taxonomy = ['species', 'variety','family'];
     $seed_new = [];
     $months_new = [];
+    
     foreach ( $request->input() as $key =>  $value ){
       if (in_array($key, $seed_keys)){
         $seed_new[$key] = $value;
       }
       if (in_array($key, $seed_taxonomy)){
         // TODO: Should do a special function to work this out
-        $t = (array)\DB::table($key)->where('name', $value)->first();
-        if (! $t) {
-          $t['id'] = \DB::table($key)->insertGetId(['name' => $value]);
-        }
+        if ($value) { 
+          $t = (array)\DB::table($key)->where('name', $value)->first();
+          if (! $t) {
+            $t['id'] = \DB::table($key)->insertGetId(['name' => $value]);
+          }
 
-        $seed_new[$key . '_id'] = $t['id'];
-        //$seed_new[$key] = $t;
-        //unset($seed_new[$key]);
+          $seed_new[$key . '_id'] = $t['id'];
+          //$seed_new[$key] = $t;
+          //unset($seed_new[$key]);
+        }
       }
       if ($key == 'months'){
+        ///dd($value);
         $months_new = $value;
       }
-
     }
-    //dd($seed_new);
 
     if ($request->input('_id')){
       $seed_id = $request->input('_id');
@@ -277,6 +314,12 @@ class SeedBankController extends Controller {
       $seed = \Caravel\Seed::create($seed_new);
       foreach($months_new as $month){
         $seed->months()->save(new \Caravel\SeedMonth(['month'=> $month ]));
+      }
+      if ($request->input('pictures_id')){
+        foreach($request->input('pictures_id') as $picture_id){
+          $picture = \Caravel\Picture::findOrFail($picture_id);
+          $seed->pictures()->save($picture);
+        }
       }
       // maybe flash an 'Added new seed' message
     }

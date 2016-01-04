@@ -3,14 +3,14 @@
 <div class="pageWrap background-primary">
   <div class="container">
       <div class="col-md-12 text-center">
-        <h1>As minhas sementes
-        <span class="cell btn-group">
-          <button type="button" class="btn btn-primary btn-md" id="new_seed">
-            {{messages.add_new_seed}}
-          </button>
-        </span></h1>
-        <div class="btn-group">
-        </div>
+        <h1>
+		  As minhas sementes
+          <span class="cell btn-group">
+            <button type="button" class="btn btn-primary btn-md" id="new_seed">
+              {{messages.add_new_seed}}
+            </button>
+          </span>
+        </h1>
         <div class="row">
             <div class="col-md-12">
             <table class="table" id="mySeeds">
@@ -23,35 +23,81 @@
                 </tr>
               </thead>
               <tbody>
-              {{#each seeds}}
+              {{#each seeds.data}}
                 <tr data-seed_id="{{id}}">
                   <td>{{common_name}}</td>
                   <td>{{latin_name}}</td>
-                  <td style="text-align: center;">{{#if available.1}}X{{/if}}</td>
-                  <td style="text-align: center;">{{#if public.1}}X{{/if}}</td>
+                  <td style="text-align: center;">{{#if available}}X{{/if}}</td>
+                  <td style="text-align: center;">{{#if public}}X{{/if}}</td>
                 </tr>
               {{/each}}
               </tbody>
             </table>
           </div>
         </div>
+			<div class="row">
+            <nav>
+              <ul class="pager">
+			    {{#if seeds.next_page_url}}
+                <li class="next">
+                  <a type="button" data-url="{{seeds.next_page_url}}" class="btn btn-primary btn-md" id="next_seeds">
+                     {{messages.next_seeds}}CHANGME_NEXT_SEEDS
+                  </a>
+                </li>
+				{{/if}}
+              </ul>
+            </nav>
+			</div>
       </div>
   </div>
 </div>
 
 {{>scripts}}
 <script>
-  $('#mySeeds tbody tr').on('click', function () {
+  $('#mySeeds tbody').on('click', 'tr', function () {
   window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
     return false;
-    }).mouseover(function () {
+    }).on('mouseover', 'tr', function () {
     $(this).addClass('active');
-    }).mouseout(function () {
+    }).on('mouseout', 'tr', function () {
     $(this).removeClass('active');
   });
   $('#new_seed').on('click', function () {
     window.open('/seedbank/register', '_self');
   return false;
+  });
+  $('.pageWrap nav').on('click', 'a', function () {
+    console.log($(this).data('url'));
+    var url = $(this).data('url');
+    $.get(url, function(data){
+       console.log(data);
+       $('tbody').empty();
+       $.each(data.data, function(i, item){
+         var public = ''; var available = '';
+         if (item.public) { public = 'X' };
+         if (item.available) { available = 'X' };
+         $('tbody').append('<tr data-seed_id="' + item.id +'">\
+             <td>' + item.common_name + '</td>\
+             <td>' + item.latin_name + '</td>\
+             <td style="text-align: center;">' + available + '</td>\
+             <td style="text-align: center;">' + public + '</td>\
+           </tr>');
+       });
+	   var buttons = '';
+	   if (data.prev_page_url) {
+	     buttons += '<li class="previous"><a data-url="' + data.prev_page_url + '" class="btn btn-primary btn-md">\
+		    {{messages.prev_seeds}}CHANGME_PREV_SEEDS\
+                  </a></li>';
+	   }
+	   if (data.next_page_url) {
+	     buttons += '<li class="next"><a data-url="' + data.next_page_url + '" class="btn btn-primary btn-md">\
+		    {{messages.next_seeds}}CHANGME_NEXT_SEEDS\
+                  </a></li>';
+	   }
+       if (buttons != '') {
+	     $('.pageWrap nav ul').html(buttons);
+		 }
+    });
   });
 </script>
 {{>footer}}
