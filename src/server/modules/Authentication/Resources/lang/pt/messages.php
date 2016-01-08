@@ -20,7 +20,11 @@ return [
 	'whereareyou' => 'Onde estás?',
 	'latitude' => 'Latitude',
 	'longitude' => 'Longitude',
+	'saveLocation' => 'Guarda Localização',
+	'saveLocationHelp' => 'Para permitir a persquisa de sementes por proximidade, é necessário ter as coordenadas geográficas 
+                       que podem informar das localizações dos diferentes utilizadores.',
 	'register' => 'Registar',
+	'cancel' => 'Cancelar',
 	'registertitle' => 'Registar uma nova conta',
 	'login' => 'Iniciar Sessão',
 ];

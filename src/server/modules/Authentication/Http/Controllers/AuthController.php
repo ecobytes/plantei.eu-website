@@ -10,6 +10,8 @@ use Pingpong\Modules\Routing\Controller;
 
 use \Caravel\User;
 
+use GeoIp2\Database\Reader;
+
 class AuthController extends Controller {
 
 	/*
@@ -62,8 +64,8 @@ class AuthController extends Controller {
 			'name' => 'required|max:255|unique:users',
 			'email' => 'sometimes|required|email|max:255|unique:users',
 			'password' => 'required|confirmed|min:6',
-			'lon' => 'required_with:lat',
-			'lat' => 'required_with:lon',
+			'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/',
+			'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/',
 			'place_name' => 'max:255|required_with:lon,lat',
 		]);
 	}
@@ -76,8 +78,13 @@ class AuthController extends Controller {
 	 */
 	public function create(array $data)
 	{
+		if ($data['saveLocation'] == "0")  {
+			$data['place_name'] = false; $data['lon'] = false; $data['lat'] = false; 
+		}
+		unset($data['saveLocation']);
+
 		foreach ($data as $key => $value){
-			if ((!$value) || (!in_array($key, ['name', 'email', 'password', 'lon', 'lat', 'place_name']))){
+			if ((!$value) || (!in_array($key, ['name', 'email', 'password', 'place_name', 'lat', 'lon']))){
 				unset($data[$key]);
 			}
 		}
@@ -135,6 +142,7 @@ class AuthController extends Controller {
 	{
 		$errors = \Session::get('errors');
 		$oldInput = [];
+		$geoipinfo = [];
 		if(\Session::hasOldInput()){
 			$oldInput =  \Session::getOldInput();
 			if(isset($oldInput['subscribeNewsletter'])){
@@ -144,7 +152,25 @@ class AuthController extends Controller {
 			}else{
 				$oldInput['subscribeNewsletter'][1] = true;
 			}
+
+			if ($oldInput['saveLocation'] == "0") {
+				$oldInput['saveLocation'] = false;
+			} else {
+				$oldInput['saveLocation'] = true ;
+
+			}
+
+		} else {
+			$geoipreader = new Reader('/tmp/geoip.mmdb', array('pt', 'pt-BR', 'en'));
+			try {
+				$geoipdata = $geoipreader->city(request()->ip());
+				$oldInput = [ 'lat' => $geoipdata->location->latitude,
+					'lon' => $geoipdata->location->longitude,
+					'place_name' => $geoipdata->city->name ];
+			}
+			catch(\GeoIp2\Exception\AddressNotFoundException $e){ $oldInput = []; }
 		}
+
 		//Subscribe newsletter defaults to true
 		if(!isset($oldInput['subscribeNewsletter'])){
 			$oldInput['subscribeNewsletter'][1] = true;
@@ -188,8 +214,11 @@ class AuthController extends Controller {
 			$userId = \Caravel\Role::where('name', 'user')->first()->id;
 			$user->roles()->attach($userId);
 		}
-                */
+		 */
+
+
 		$user= $this->create($request->all());
+	//	dd($user);
 		$user->confirmed = true;
 		if(User::count() == 1){
 			$adminId = \Caravel\Role::where('name', 'admin')->first()->id;
@@ -200,7 +229,8 @@ class AuthController extends Controller {
 		}
 
 
-		$user->push();
+		$user->save();
+			//push();
 		// TODO: Cleanup messages
 		$message = \Caravel\Message::send([
 			'subject' => \Lang::get('auth::confirmationemail.title'), 
@@ -215,27 +245,25 @@ class AuthController extends Controller {
 
 		$faker = \Faker\Factory::create();
 		$seed_id =  random_int(1,10);
-		$seeds_bank_initial = \Caravel\SeedsBank::firstOrCreate([
+		$seed_initial = \Caravel\Seed::firstOrCreate([
 			'local' => 'teste-' . $faker->city,
-			'origin' => random_int(1,3),
 			'year' => random_int(2010,2015),
 			'description' => "Semente para testar plataforma:\n" . $faker->text(500),
 			'available' => true,
 			'public' => true,
-			'user_id' => $user->id,
-			'seed_id' => $seed_id
+			'user_id' => $user->id
 		]);
-		$seeds_bank = false;
-		while (!$seeds_bank){
-			$seeds_bank = \Caravel\SeedsBank::find(random_int(1,20));
-			if ($seeds_bank){
-				if ($seeds_bank->user_id == $user->id){ $seeds_bank = false;}
+		$seed = false;
+		while (!$seed){
+			$seed = \Caravel\Seed::find(random_int(1,20));
+			if ($seed){
+				if ($seed->user_id == $user->id){ $seed = false;}
 			}
 		}
 		
 		\Caravel\User::find(1)
-			->transactionStart(['asked_to'=>$user->id, 'seed_id'=>$seeds_bank_initial->seed_id]);
-		$user->transactionStart(['asked_to'=>$seeds_bank->user_id, 'seed_id'=>$seeds_bank->seed_id]);
+			->startTransaction(['asked_to'=>$user->id, 'seed_id'=>$seed_initial->id]);
+		$user->startTransaction(['asked_to'=>$seed->user_id, 'seed_id'=>$seed->id]);
 
 
 

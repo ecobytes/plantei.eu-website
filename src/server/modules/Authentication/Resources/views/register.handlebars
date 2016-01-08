@@ -27,20 +27,41 @@
             <label class="control-label">{{messages.confirmpassword}}</label>
               <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
           </div>
-          <div class="form-group">
-            <label class="control-label">{{messages.whereareyou}}</label>
-            <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ oldInput.place_name }}"></span>
+		  <div class="row">
+		    <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label">{{messages.whereareyou}}</label>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ oldInput.place_name }}"></span>
+              </div>
+            </div>
+			<div class="col-md-6 col-md-offset-2">
+              <div class="form-group">
+                <label class="control-label" rel="tooltip" data-placement="bottom" title="{{messages.saveLocationHelp }}">  {{ messages.saveLocation }}</label>
+                <span class="cell btn-group" data-toggle="buttons">
+                  <label class="btn btn-default {{#if oldInput.saveLocation}}active{{/if}}">
+                    <input type="radio" placeholder="" name="saveLocation" aria-describedby="saveLocationHelpBlock" value="1" {{#if oldInput.saveLocation }} checked {{/if}} /> {{ messages.yes }}
+                  </label>
+                  <label class="btn btn-default {{#unless oldInput.saveLocation}}active{{/unless}}">
+                    <input type="radio" name="saveLocation" {{#unless oldInput.saveLocation}}checked{{/unless}} value="0"/>{{ messages.no }}
+                  </label>
+                </span>
+              </div>
+            </div>
           </div>
-          <div class="form-group"><div class="row">
-            <div class="col-md-6">
-            <label class="control-label">{{messages.latitude}}</label>
-            <span class="cell"><input type="text" class="form-control" placeholder="" name="lat" value="{{ oldInput.lat }}"></span>
+		  <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label">{{messages.latitude}}</label>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="lat" value="{{ oldInput.lat }}"></span>
+              </div>
             </div>
-            <div class="col-md-6">
-            <label class="control-label">{{messages.longitude}}</label>
-            <span class="cell"><input type="text" class="form-control" placeholder="" name="lon" value="{{ oldInput.lon }}"></span>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label">{{messages.longitude}}</label>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="lon" value="{{ oldInput.lon }}"></span>
+              </div>
             </div>
-          </div></div>
+          </div>
           <!--
           <div class="form-group">
             <label class="control-label">{{messages.iwanttosubscribenewsletter}}</label>
@@ -54,11 +75,16 @@
               </span>
           </div>
           -->
-          <div class="form-group lmt">
-            <div class="col-md-12 text-center">
-              <button type="submit" class="btn btn-primary btn-lg">
-                {{messages.register}}
-              </button>
+          <div class="row">
+            <div class="form-group lmt">
+              <div class="col-md-12 text-center">
+                <a href="/{{ langString }}" class="btn btn-danger btn-lg">
+                  {{messages.cancel}}
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                  {{messages.register}}
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -67,4 +93,9 @@
   </div>
 </div>
 {{> scripts }}
+<script>
+$(function () {
+        $("[rel='tooltip']").tooltip();
+    });
+</script>
 {{> footer}}
