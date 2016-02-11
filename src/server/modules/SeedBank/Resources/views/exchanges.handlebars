@@ -94,26 +94,26 @@
                           <td>{{place_name}}</td>
                           <td>
                             {{#if accepted.0}}
-                            <button type="button" class="btn btn-sm btn-danger" data-button="accept">{{../../messages.accept}}accept</button>
-                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.reject}}reject</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="accept">{{../../messages.accept}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.reject}}</button>
 							{{!-- button to  reject --}}
                             {{/if}}
                           {{#if accepted.1}}
-                            <button type="button" class="btn btn-sm btn-danger" data-button="cancelled">{{../../messages.cancelled}}cancelled</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="cancelled">{{../../messages.cancelled}}</button>
                           {{/if}}
                           {{#if accepted.2}}
                           {{#if completed.0}}
-                            <button type="button" class="btn btn-sm btn-default" data-button="accepted">{{../../messages.accepted}}accepted</button>
-                            <button type="button" class="btn btn-sm btn-danger" data-button="pending">{{../../messages.pending}}pending</button>
+                            <button type="button" class="btn btn-sm btn-default" data-button="accepted">{{../../../messages.accepted}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="pending">{{../../../messages.pending}}</button>
                           {{/if}}
-                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.cancel}}cancel</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.cancel}}</button>
 							{{!-- button to  cancel --}}
                           {{/if}}
                           {{#if completed.1}}
-                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}cancelled</button>
+                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}</button>
                           {{/if}}
                           {{#if completed.2}}
-                            <button type="button" class="btn btn-sm btn-success" data-button="confirmed">{{../../messages.finished}}finished</button>
+                            <button type="button" class="btn btn-sm btn-success" data-button="confirmed">{{../../messages.finished}}</button>
                           {{/if}}
                             </td>
                         </tr>
@@ -131,39 +131,15 @@
 </div>
 
 {{>scripts}}
-<script src="/js/laravel-bootstrap-modal-form.js"></script>
+{{!-- <script src="/js/laravel-bootstrap-modal-form.js"></script> --}}
 <script>
   $('.table').on('click', 'tbody tr button', function () {
-    console.log($(this).parents('tr'));
 	var action = $(this).data('button'),
 	    exchange_id = $(this).parents('tr').data('exchange');
 	
-    alert(exchange_id);
-
     $.get("/seedbank/exchange/" + action + "/" + exchange_id, function (data) {
-	console.log(data);
-	alert(data);
-	});
-
-	return false;
-    $('.body-form').empty();
-	var message_id = $(this).data('message_id');
-    var can_reply = $(this).data('reply');
-    $.get("/seedbank/message/get/" + message_id, function (data) {
-		if (! data){
-			return false;
-		}
-		$('.modal-title').text(data.subject).data('message_id', data.id);
-		$('.body-read').html('<p>' + data.body + '</p>');
-		if ( can_reply == 1){
-		$('.modal-footer')
-		    .html('<button class="btn btn-default col-md-12" style="height: 50px;">\
-			  {{messages.replymessage}}XXResponderXX</button>');
-		  } else {
-		  }
-		$('.modal').modal('show');
-		$(this).css('font-weight', '');
-
+	  console.log(data);
+	  if (data == "ok") { window.open('/seedbank/exchanges', '_self'); }
 	});
 }).on('mouseover', 'tbody tr', function () {
 	$(this).addClass('active');

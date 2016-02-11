@@ -181,47 +181,41 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
 
     $transactions = $user->transactionsPending();
-    if ($transactions['asked_by']){
-      foreach($transactions['asked_by'] as &$tr){
-        $ta = [];
-        //pending
-        if ($tr['accepted'] == 0){$ta[0]=true;}
-        //canceled
-        elseif ($tr['accepted'] == 1){$ta[1]=true;}
-        //accepted
-        elseif ($tr['accepted'] == 2){$ta[2]=true;} 
-        $tr['accepted']=$ta;;
-        $tc = [];
-        //pending
-        if ($tr['completed'] == 0){$tc[0]=true;}
-        //canceled
-        elseif ($tr['completed'] == 1){$tc[1]=true;}
-        //confirmed
-        elseif ($tr['completed'] == 2){$tc[2]=true;} 
-        $tr['completed']=$tc;;
+    //oneday ago- P1D  on week ago- P7D
+    $oneweekago  = date_create()->sub(new \DateInterval('P1D'))->getTimeStamp();
+    //$oneweekago  = date_create()->sub(new \DateInterval('PT2M'))->getTimeStamp();
+    foreach(['asked_to', 'asked_by'] as $asked) {
+      if ($transactions[$asked]){
+        foreach($transactions[$asked] as $key => $value){
+          if (($transactions[$asked][$key]['completed'] == '1') || ($transactions[$asked][$key]['accepted'] == '1')) {
+            $v = $transactions[$asked][$key];
+            unset($transactions[$asked][$key]);
+            if (strtotime($v['updated_at']) > $oneweekago){
+              $transactions[$asked][$key] = $v;
+            }
+
+          }
+        }
+        foreach($transactions[$asked] as &$tr){
+          $ta = [];
+          //pending
+          if ($tr['accepted'] == 0){$ta[0]=true;}
+          //canceled
+          elseif ($tr['accepted'] == 1){$ta[1]=true;}
+          //accepted
+          elseif ($tr['accepted'] == 2){$ta[2]=true;} 
+          $tr['accepted']=$ta;;
+          $tc = [];
+          //pending
+          if ($tr['completed'] == 0){$tc[0]=true;}
+          //canceled
+          elseif ($tr['completed'] == 1){$tc[1]=true;}
+          //confirmed
+          elseif ($tr['completed'] == 2){$tc[2]=true;} 
+          $tr['completed']=$tc;;
+        }
       }
     }
-    if ($transactions['asked_to']){
-      foreach($transactions['asked_to'] as &$tr){
-        $ta = [];
-        //pending
-        if ($tr['accepted'] == 0){$ta[0]=true;}
-        //canceled
-        elseif ($tr['accepted'] == 1){$ta[1]=true;}
-        //accepted
-        elseif ($tr['accepted'] == 2){$ta[2]=true;} 
-        $tr['accepted'] = $ta;
-        $tc = [];
-        //pending
-        if ($tr['completed'] == 0){$tc[0]=true;}
-        //canceled
-        elseif ($tr['completed'] == 1){$tc[1]=true;}
-        //confirmed
-        elseif ($tr['completed'] == 2){$tc[2]=true;} 
-        $tr['completed']=$tc;;
-      }
-    }
-    //dd($transactions);
     return view('seedbank::exchanges')
       ->with('transactionsBy', $transactions['asked_by']) 
       ->with('transactionsTo', $transactions['asked_to']) 
@@ -406,21 +400,22 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
     $updatelocation = false;
     $location = false; 
-    $locale = $user->locale;
-	$geoipreader = new Reader(storage_path('app/geoip.mmdb'), array($locale, 'en'));
+    $locale = $user->locale ?: config('app.locale');
+	$geoipreader = new Reader(config('geoip.maxmind.database_path'), array($locale, 'en'));
 	try {
 		$geoipdata = $geoipreader->city(request()->ip());
 		$updatelocation = [ 'lat' => $geoipdata->location->latitude,
 			'lon' => $geoipdata->location->longitude,
-			'place_name' => $geoipdata->city->name ];
+			'place_name' => $geoipdata->city->name ?: \Lang::get("auth::messages.unknowncity")];
+        $location = true;
     }
     catch(\GeoIp2\Exception\AddressNotFoundException $e){
       if ($user->place_name){
          $location = true;
       } 
-	  $updatelocation = [ 'lat' => 12.2,
+	/*  $updatelocation = [ 'lat' => 12.2,
 	    'lon' => 121.1,
-	    'place_name' => 'Porto' ];
+        'place_name' => 'Porto' ];*/
     }
     return view('seedbank::preferences')
       ->with('messages', \Lang::get('authentication::messages'))

@@ -28,5 +28,6 @@ return [
 	'cancel' => 'Cancelar',
 	'registertitle' => 'Registar uma nova conta',
 	'login' => 'Iniciar Sessão',
-    'updateTo' => 'Actualiza'
+    'updateTo' => 'Actualiza',
+    'unknowncity' => 'Sítio sem nome'
 ];

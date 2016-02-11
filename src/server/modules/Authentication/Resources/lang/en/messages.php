@@ -28,5 +28,6 @@ return [
 	'cancel' => 'Cancel',
 	'registertitle' => 'Register a new account',
 	'login' => 'Login',
-    'updateTo' => 'Update to'
+    'updateTo' => 'Update to',
+    'unknowncity' => 'Place with no name'
 ];

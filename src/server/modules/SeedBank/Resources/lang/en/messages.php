@@ -28,6 +28,7 @@ return [
     'cancelled' => 'Cancelled',
     'cancel' => 'Cancel',
     'confirmed' => 'Confirmed',
+    'finished' => 'Finished',
     'message' => 'Message',
     'pictures' => 'Pictures',
     'taxonomy' => 'Taxonomy',

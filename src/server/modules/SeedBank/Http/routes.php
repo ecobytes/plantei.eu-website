@@ -174,7 +174,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 		        return 'false';
 			 }		
 			 $output = call_user_func_array(array($user, $action.'Transaction'),array($id));
-			 return $action;
+			 return "ok";
 		  }
 		  //return true || error;
           return (null);
