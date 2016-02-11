@@ -283,11 +283,11 @@ $('.results_detail').on('click', '#startexchange', function(){
   $.post("/seedbank/startexchange", {"seed_ids": chosen, "user_id":user_id},  function (data) {
     console.log(data.length);
     if (! data.length){
-      alert('Empty Response');
+      //alert('Empty Response');
       return false;
     }
-    console.log(data);
-    alert(data);
+    //console.log(data);
+    //alert(data);
 
     window.open('/seedbank/exchanges', '_self');
   });

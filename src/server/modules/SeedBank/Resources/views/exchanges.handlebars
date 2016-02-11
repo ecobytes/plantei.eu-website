@@ -35,26 +35,26 @@
                           <td>
                           {{#if accepted.0}}
                           {{#if completed.1}}
-                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}cancelled</button>
+                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../../messages.cancelled}}</button>
 							{{else}}
-                            <button type="button" class="btn btn-sm btn-warning" data-button="pending">{{../../messages.pending}}pending</button>
-                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.cancel}}cancel</button>
+                            <button type="button" class="btn btn-sm btn-warning" data-button="pending">{{../../../messages.pending}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../../messages.cancel}}</button>
                           {{/if}}
                           {{/if}}
                           {{#if accepted.1}}
-                            <button type="button" class="btn btn-sm btn-danger" data-button="cancelled">{{../../messages.refused}}refused</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="cancelled">{{../../messages.refused}}</button>
                           {{/if}}
                           {{#if accepted.2}}
                           {{#if completed.0}}
-                            <button type="button" class="btn btn-sm btn-default" data-button="complete">{{../../../messages.confirm}}confirm</button>
-                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../../messages.cancel}}cancel</button>
+                            <button type="button" class="btn btn-sm btn-default" data-button="complete">{{../../../messages.confirm}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../../messages.cancel}}</button>
 							{{!-- button to  cancel --}}
                           {{/if}}
                           {{#if completed.1}}
-                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}cancelled</button>
+                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}</button>
                           {{/if}}
                           {{#if completed.2}}
-                            <button type="button" class="btn btn-sm btn-success" data-button="confirmed">{{../../messages.finished}}finished</button>
+                            <button type="button" class="btn btn-sm btn-success" data-button="confirmed">{{../../messages.finished}}</button>
                           {{/if}}
                           {{/if}}
                           </td>
