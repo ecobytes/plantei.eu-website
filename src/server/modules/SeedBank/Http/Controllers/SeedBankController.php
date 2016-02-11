@@ -4,17 +4,72 @@ use Pingpong\Modules\Routing\Controller;
 use Illuminate\Http\Request;
 use Gate;
 
+
+use Validator;
+use GeoIp2\Database\Reader;
+
+
 class SeedBankController extends Controller {
+    public static function save_image($uploadedimage) {
+      $file_md5 = md5_file($uploadedimage);
+      $file_name = $file_md5;
+      $picture = \Caravel\Picture::where('md5sum', $file_md5)->first();
+      if (!$picture){
+        $picture_path = '/tmp/PITCTURES/PATH';
+        $uploadedimage->move($picture_path, $file_name);
+        $converted_image = new \Imagick($picture_path . '/' . $file_md5);
+        $converted_image->setImageFormat('jpg');
+        $converted_image->scaleimage(800, 800, true);
+        if (filesize($picture_path . '/' . $file_name) > 200000) {
+          $converted_image->setOption('jpeg:extent', '100kb');
+        }
+        $status = $converted_image->writeimage();
+        if ($status) {
+    	  $picture = \Caravel\Picture::create([
+    	    'path' => $picture_path . '/' . $file_name,
+    	    'url' => '/seedbank/pictures/' . $file_md5,
+    	    'md5sum' => $file_md5
+    	  ]);
+    	} else {
+    	  return [ "error" => "File not saved"];
+        }
+      }
+      return [ "picture" => $picture];
+    }
+
+
+	public function prefValidator(array $data)
+	{
+      $user = \Auth::user();
+        //dd($data);
+		if (!$data['email']){unset($data['email']);};
+        $rules = [
+			'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+			'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+			'place_name' => 'max:255|required_with:lon,lat',
+          ];
+      if (! $user->name == $data['name']){
+        $rules['name'] = 'required|max:255|unique:users';
+      }
+      if (! $user->email == $data['email']){
+        $rules['email'] = 'sometimes|required|email|max:255|unique:users';
+      }
+      if ($data['password']){
+        $rules['password'] = 'required|confirmed|min:6';
+      }
+	  return Validator::make($data, $rules);
+	}
   
   public function index()
   {
     $user = \Auth::user();
 
-    $seeds = \Caravel\Seed::where('public', true)
-      ->orWhere('user_id', $user->id)->orderBy('created_at', 'desc')
-      ->select('id', 'latin_name', 'common_name')
+    $seeds = \Caravel\Seed::join('users', 'users.id', '=', 'user_id' )->where('public', true)
+      ->orWhere('user_id', $user->id)->orderBy('seeds.updated_at', 'desc')
+      ->select('seeds.id', 'seeds.latin_name', 'seeds.common_name',
+        'users.name', 'users.email', 'user_id')
       ->get()
-      ->chunk(4)[0]
+      ->chunk(20)[0]
       ->toArray();
 
     $userMessages = $user->messages()->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
@@ -45,7 +100,7 @@ class SeedBankController extends Controller {
     //dd($user->id);
     //$user = \Caravel\User::where('id', 1)->first();
     //$seeds = $user->seeds->toArray();
-    $seeds = $user->seeds()->paginate(5)->setPath('/seedbank/seeds');
+    $seeds = $user->seeds()->orderBy('updated_at', 'desc')->paginate(5)->setPath('/seedbank/seeds');
     $t = $seeds;
     /* $t = [];
     foreach($seeds as $seed){
@@ -130,26 +185,43 @@ class SeedBankController extends Controller {
       foreach($transactions['asked_by'] as &$tr){
         $ta = [];
         //pending
-        if ($tr['accepted'] == 0){$ta[2]=true;}
+        if ($tr['accepted'] == 0){$ta[0]=true;}
         //canceled
-        elseif ($tr['accepted'] == 1){$ta[0]=true;}
+        elseif ($tr['accepted'] == 1){$ta[1]=true;}
         //accepted
-        elseif ($tr['accepted'] == 2){$ta[1]=true;} 
+        elseif ($tr['accepted'] == 2){$ta[2]=true;} 
         $tr['accepted']=$ta;;
+        $tc = [];
+        //pending
+        if ($tr['completed'] == 0){$tc[0]=true;}
+        //canceled
+        elseif ($tr['completed'] == 1){$tc[1]=true;}
+        //confirmed
+        elseif ($tr['completed'] == 2){$tc[2]=true;} 
+        $tr['completed']=$tc;;
       }
     }
     if ($transactions['asked_to']){
       foreach($transactions['asked_to'] as &$tr){
         $ta = [];
         //pending
-        if ($tr['accepted'] == 0){$ta[2]=true;}
+        if ($tr['accepted'] == 0){$ta[0]=true;}
         //canceled
-        elseif ($tr['accepted'] == 1){$ta[0]=true;}
+        elseif ($tr['accepted'] == 1){$ta[1]=true;}
         //accepted
-        elseif ($tr['accepted'] == 2){$ta[1]=true;} 
+        elseif ($tr['accepted'] == 2){$ta[2]=true;} 
         $tr['accepted'] = $ta;
+        $tc = [];
+        //pending
+        if ($tr['completed'] == 0){$tc[0]=true;}
+        //canceled
+        elseif ($tr['completed'] == 1){$tc[1]=true;}
+        //confirmed
+        elseif ($tr['completed'] == 2){$tc[2]=true;} 
+        $tr['completed']=$tc;;
       }
     }
+    //dd($transactions);
     return view('seedbank::exchanges')
       ->with('transactionsBy', $transactions['asked_by']) 
       ->with('transactionsTo', $transactions['asked_to']) 
@@ -158,6 +230,7 @@ class SeedBankController extends Controller {
       ->with('username', $user->name)
       ->with('active', ['exchanges' => true]);
   }
+
 
   public function getRegister($id = null)
   {
@@ -269,7 +342,9 @@ class SeedBankController extends Controller {
 		->with('seed', $formInput)
 		->with('pictures', $pictures)
 		->with('farming', $farming)
-        ->with('taxonomy', $taxonomy);
+        ->with('taxonomy', $taxonomy)
+        ->with('deletebutton', \Lang::get('seedbank::messages')['delete']);
+
     }
     $seed_keys = ['quantity','year', 'local', 'description', 'public', 'available', 'description',
       'latin_name','common_name','polinization','direct',
@@ -329,15 +404,53 @@ class SeedBankController extends Controller {
   public function getPreferences()
   {
     $user = \Auth::user();
+    $updatelocation = false;
+    $location = false; 
+    $locale = $user->locale;
+	$geoipreader = new Reader(storage_path('app/geoip.mmdb'), array($locale, 'en'));
+	try {
+		$geoipdata = $geoipreader->city(request()->ip());
+		$updatelocation = [ 'lat' => $geoipdata->location->latitude,
+			'lon' => $geoipdata->location->longitude,
+			'place_name' => $geoipdata->city->name ];
+    }
+    catch(\GeoIp2\Exception\AddressNotFoundException $e){
+      if ($user->place_name){
+         $location = true;
+      } 
+	  $updatelocation = [ 'lat' => 12.2,
+	    'lon' => 121.1,
+	    'place_name' => 'Porto' ];
+    }
     return view('seedbank::preferences')
-      ->with('messages', \Lang::get('seedbank::messages'))
+      ->with('messages', \Lang::get('authentication::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
+      ->with('user', $user)
       ->with('username', $user->name)
+      ->with('updatelocation', $updatelocation)
+      ->with('location', $location)
       ->with('active', ['profile' => true]);
   }
-  public function postPreferences()
+  public function postPreferences(Request  $request)
   {
-    //
+    $user = \Auth::user();
+	$validator = $this->prefValidator($request->all(), [],\Lang::get('auth::validation'));
+    
+	if($validator->fails())
+	{
+		$this->throwValidationException(
+			$request, $validator
+		);
+	}
+    if (!$request->input('password')){
+      unset($request['password']);
+    } else {
+      $request['password'] = bcrypt($request->password);
+    };
+
+    $user = $user->update($request->all());
+    //dd($user);
+	return redirect('/seedbank');
   }
   public function getSearch()
   {
@@ -467,4 +580,35 @@ class SeedBankController extends Controller {
     // maybe flash an 'Added new seed' message
     return redirect('/seedbank/search');
   }
+  public function postAddPicture (Request $request) {
+			// TODO: Limit number of picture by seed?
+			$user = \Auth::user();
+			if ($request->has('seed_id')){
+				$seed = \Caravel\Seed::findOrFail($request->input('seed_id'));
+			} else {
+				$seed = false;
+			}
+			if ($request->hasFile('pictures')) {
+				$picture = $request->file('pictures')[0];
+				$status = SeedBankController::save_image($picture);
+				if (isset($status['error'])) {
+					return [ 'files' => [ ['error' => $status['error']]]];
+				} else {
+					if ($seed) {
+						if (!$seed->user_id == $user->id){
+					      return [ 'files' => [ ['error' => 'File is owned by other user']]];
+						} else {
+							$seed->pictures()->save($status['picture']);
+						}
+					}
+					return [ 'files' => [ ['md5sum' => $status['picture']->md5sum, 
+						                   'id' => $status['picture']->id,
+										   'url' => $status['picture']->url,
+										   'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
+									       'deleteType' => 'GET'  ]
+									   ]];
+				}
+			}
+			return [ 'files' => [['error' => 'No files sent']]];
+		}
 }

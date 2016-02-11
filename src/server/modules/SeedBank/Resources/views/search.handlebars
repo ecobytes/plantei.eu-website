@@ -3,7 +3,7 @@
 <div class="modal fade" id="seed_info">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      {{!--<div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title"></h4>
       </div>
@@ -21,7 +21,7 @@
 		</div>
 	    <div class="col-md-8 footer-right">
 		</div>
-      </div>
+      </div>--}}
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
@@ -178,17 +178,38 @@ $('.results_general').on('click', 'tbody tr', function () {
 
 $('.results_detail').on('click', 'tbody tr button', function () {
 	var seed_id = $(this).data('seed_id');
-    $.get("/seedbank/seed/" + seed_id, function (data) {
+
+    $.get("/seedbank/seedm/" + seed_id, function (data) {
+		if (data.length == 0){
+			return false;
+		}
+		$('#seed_info .modal-content').empty();
+		$('#seed_info .modal-content').append(data);
+
+		$('#seed_info').modal('show');
+    var element = $('.results_detail table input[value=' + seed_id + ']');
+	if (!! element.first().attr('disabled')) { 
+		$('#seed_info .modal-footer .footer-left')
+		    .html('<div class="label label-warning col-md-12">\
+			  {{messages.alreadyrequested}}Já está pendente</div>');
+	} else { 
+		$('#seed_info .modal-footer .footer-left')
+		  .html('<button class="btn btn-sm btn-default col-sm-12">\
+			  {{messages.sendmessage}}Escolhe esta semente</button>');
+	}
+	});
+    /*$.get("/seedbank/seed/" + seed_id, function (data) {
 		if (! data){
 			return false;
 		}
 		$('#seed_info .modal-title').text('[' + data.id + '] ' + data.common_name).data("seed_id", data.id);
-		$('#seed_info .modal-body .body-read').html('<p><em>' + data.latin_name + '</em></p>\n<p>' + data.description + '</p>');
-		$('#seed_info .modal-footer .footer-right').html('<p><em>' + data.latin_name + '</em></p>\n\
-			<p><b>Família:</b> ' + data.family.name + '</p>' + '\n\
-			<p><b>Espécie:</b> ' + data.species.name + '</p>' + '\n\
-			<p><b>Variedade:</b> ' + data.variety.name + '</p>' + '\n'
-			);
+		$('#seed_info .modal-body .body-read').html('<p><em>' + data.latin_name + '</em></p>\n' + data.description);
+		var footer = $('#seed_info .modal-footer .footer-right');
+		footer.empty();
+		if (data.latin_name) {footer.append('<p><em>' + data.latin_name + '</em></p>\n')}
+		if (data.family) {footer.append('<p><b>Família:</b> ' + data.family.name + '</p>\n')}
+		if (data.species) {footer.append('<p><b>Espécie:</b> ' + data.species.name + '</p>\n')}
+		if (data.variety) {footer.append('<p><b>Variedade:</b> ' + data.variety.name + '</p>\n')}
     var element = $('.results_detail table input[value=' + seed_id + ']');
 	if (!! element.first().attr('disabled')) { 
 		$('#seed_info .modal-footer .footer-left')
@@ -202,7 +223,7 @@ $('.results_detail').on('click', 'tbody tr button', function () {
 
 		$('#seed_info').modal('show');
 		},
-		'json');
+		'json');*/
 });
 /*.on('mouseover', 'tbody tr', function () {
 	$(this).addClass('active');
@@ -210,7 +231,7 @@ $('.results_detail').on('click', 'tbody tr button', function () {
     $(this).removeClass('active');
 });*/
 
-$('#seed_info .modal-footer .footer-left').on('click', 'button', function(){
+$('#seed_info').on('click', '.modal-footer .footer-left button', function(){
 
 	var seed_id = $('#seed_info .modal-title').data("seed_id");
 	
@@ -260,14 +281,16 @@ $('.results_detail').on('click', '#startexchange', function(){
   console.log(chosen);
   console.log(user_id);
   $.post("/seedbank/startexchange", {"seed_ids": chosen, "user_id":user_id},  function (data) {
-        console.log(data.length);
-		if (! data.length){
-			alert('Empty Response');
-			return false;
-		}
-		alert(data);
-		console.log(data);
-		});
+    console.log(data.length);
+    if (! data.length){
+      alert('Empty Response');
+      return false;
+    }
+    console.log(data);
+    alert(data);
+
+    window.open('/seedbank/exchanges', '_self');
+  });
   
   
 });

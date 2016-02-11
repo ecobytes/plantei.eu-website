@@ -1,5 +1,11 @@
 {{> header}}
 {{> menu}}
+<div class="modal fade" id="seed_info">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <div class="pageWrap background-primary">
   <div class="container">
     <!-- <div class="row lmt"> -->
@@ -8,17 +14,21 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Nome comum{{messages.common_name}}</th>
-              <th>Nome latim{{messages.latin_name}}</th>
+              <th>{{messages.common_name}}</th>
+              <th>{{messages.latin_name}}</th>
+              <th>{{messages.email}}CHANGEME Email</th>
+              <th>{{messages.username}}CHANGEME Utilizador</th>
               <!-- <th>Disponível</th>
               <th>Pública</th> -->
             </tr>
           </thead>
           <tbody>
           {{#each seeds}}
-            <tr data-seed_id="{{id}}">
+            <tr data-user_id="{{user_id}}" data-seed_id="{{id}}">
               <td>{{common_name}}</td>
               <td>{{latin_name}}</td>
+              <td>{{email}}</td>
+              <td>{{name}}</td>
               <!-- <td style="text-align: center;">{{#if available.1}}X{{/if}}</td>
               <td style="text-align: center;">{{#if public.1}}X{{/if}}</td> -->
             </tr>
@@ -26,11 +36,12 @@
           </tbody>
         </table>
       </div>
+	  {{!--
       <div class="col-md-6">
         <h1>{{messages.latestMessages}}<span class="badge">
           {{unreadmessages}}
         </span></h1>
-        <table class="table">
+        <table class="table"
           <thead>
             <tr>
               <th>{{messages.subject}}</th>
@@ -53,21 +64,38 @@
           </tbody>
         </table>
       </div>
+	  --}}
     <!-- </div> -->
   </div>
 </div>
 
 {{>scripts}}
 <script>
-/*  $('tbody tr').on('click', function () {
-	window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
-    return false;
+$('tbody tr').on('click', function () {
+	//window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
+	var seed_id = $(this).data('seed_id');
+    $.get("/seedbank/seedm/" + seed_id, function (data) {
+		if (data.length == 0){
+			return false;
+		}
+		$('#seed_info .modal-content').empty();
+		$('#seed_info .modal-content').append(data);
+
+		$('#seed_info').modal('show');
+	});
     }).mouseover(function () {
     $(this).addClass('active');
     }).mouseout(function () {
     $(this).removeClass('active');
-  });
-  $('#new_seed').on('click', function () {
+});
+$('#seed_info').on('click', '.modal-footer .footer-left button', function(){
+
+	var seed_id = $('#seed_info .modal-title').data("seed_id");
+	
+    window.open('/seedbank/register/' + seed_id, '_self');
+});
+
+  /*$('#new_seed').on('click', function () {
     window.open('/seedbank/register', '_self');
 	return false;
   });

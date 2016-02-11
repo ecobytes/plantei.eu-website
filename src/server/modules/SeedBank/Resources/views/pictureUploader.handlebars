@@ -28,7 +28,8 @@ $(function () {
 	var confirmed = false;
 	$("form").on('submit', function () {
 	  if (confirmed) { return true };
-	  var formdata = $(this).serializeArray()
+	  tinymce.triggerSave();
+	  var formdata = $(this).serializeArray();
       $.post('/seedbank/register', formdata, function(data) {
 	    $("#seed-preview").html(data).show();
 		$.each($('#files').children('.col-md-3').not('.processing'), function (index, elem){
@@ -73,7 +74,7 @@ $(function () {
     var url = '/seedbank/add-pictures',
         deleteButton = $('<button/>')
             .addClass('btn btn-danger delete').prop('type', 'button')
-            .text('CHANGEME - DELETE')
+            .text('{{deletebutton}}')
             .on('click', function () {
                 var $this = $(this),
 				    file = $this.data().result.files[0];

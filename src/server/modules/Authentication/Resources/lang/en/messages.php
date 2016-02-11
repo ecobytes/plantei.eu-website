@@ -24,7 +24,9 @@ return [
 	'saveLocationHelp' => 'Para permitir a persquisa de sementes por proximidade, é necessário ter as coordenadas geográficas 
                        que podem informar das localizações dos diferentes utilizadores.',
 	'register' => 'Register',
+	'update' => 'Update',
 	'cancel' => 'Cancel',
 	'registertitle' => 'Register a new account',
 	'login' => 'Login',
+    'updateTo' => 'Update to'
 ];

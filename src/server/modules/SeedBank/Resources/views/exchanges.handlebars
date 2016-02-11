@@ -28,19 +28,34 @@
                       </thead>
                       <tbody>
                       {{#each transactionsBy}}
-                        <tr data-seed_id="{{id}}">
+                        <tr data-exchange="{{id}}">
                           <td>{{common_name}}</td>
                           <td>{{updated_at}}</td>
                           <td>{{place_name}}</td>
                           <td>
                           {{#if accepted.0}}
-                            <button type="button" class="btn btn-sm btn-danger">{{../../messages.cancelled}}</button>
+                          {{#if completed.1}}
+                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}cancelled</button>
+							{{else}}
+                            <button type="button" class="btn btn-sm btn-warning" data-button="pending">{{../../messages.pending}}pending</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.cancel}}cancel</button>
+                          {{/if}}
                           {{/if}}
                           {{#if accepted.1}}
-                            <button type="button" class="btn btn-sm btn-success">{{../../messages.confirm}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="cancelled">{{../../messages.refused}}refused</button>
                           {{/if}}
                           {{#if accepted.2}}
-                            <button type="button" class="btn btn-sm btn-warning">{{../../messages.pending}}</button>
+                          {{#if completed.0}}
+                            <button type="button" class="btn btn-sm btn-default" data-button="complete">{{../../../messages.confirm}}confirm</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../../messages.cancel}}cancel</button>
+							{{!-- button to  cancel --}}
+                          {{/if}}
+                          {{#if completed.1}}
+                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}cancelled</button>
+                          {{/if}}
+                          {{#if completed.2}}
+                            <button type="button" class="btn btn-sm btn-success" data-button="confirmed">{{../../messages.finished}}finished</button>
+                          {{/if}}
                           {{/if}}
                           </td>
                         </tr>
@@ -73,20 +88,33 @@
                       </thead>
                       <tbody>
                       {{#each transactionsTo}}
-                        <tr data-seed_id="{{id}}">
+                        <tr data-exchange="{{id}}">
                           <td>{{common_name}}</td>
                           <td>{{updated_at}}</td>
                           <td>{{place_name}}</td>
                           <td>
                             {{#if accepted.0}}
-                            <button type="button" class="btn btn-sm btn-danger">{{../../messages.cancelled}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="accept">{{../../messages.accept}}accept</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.reject}}reject</button>
+							{{!-- button to  reject --}}
                             {{/if}}
-                            {{#if accepted.1}}
-                            <button type="button" class="btn btn-sm btn-success">{{../../messages.accepted}}</button>
-                            {{/if}}
-                            {{#if accepted.2}}
-                            <button type="button" class="btn btn-sm btn-warning">{{../../messages.confirmed}}</button>
-                            {{/if}}
+                          {{#if accepted.1}}
+                            <button type="button" class="btn btn-sm btn-danger" data-button="cancelled">{{../../messages.cancelled}}cancelled</button>
+                          {{/if}}
+                          {{#if accepted.2}}
+                          {{#if completed.0}}
+                            <button type="button" class="btn btn-sm btn-default" data-button="accepted">{{../../messages.accepted}}accepted</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="pending">{{../../messages.pending}}pending</button>
+                          {{/if}}
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.cancel}}cancel</button>
+							{{!-- button to  cancel --}}
+                          {{/if}}
+                          {{#if completed.1}}
+                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}cancelled</button>
+                          {{/if}}
+                          {{#if completed.2}}
+                            <button type="button" class="btn btn-sm btn-success" data-button="confirmed">{{../../messages.finished}}finished</button>
+                          {{/if}}
                             </td>
                         </tr>
                       {{/each}}
@@ -106,8 +134,17 @@
 <script src="/js/laravel-bootstrap-modal-form.js"></script>
 <script>
   $('.table').on('click', 'tbody tr button', function () {
-    console.log($(this));
-    alert("ola");
+    console.log($(this).parents('tr'));
+	var action = $(this).data('button'),
+	    exchange_id = $(this).parents('tr').data('exchange');
+	
+    alert(exchange_id);
+
+    $.get("/seedbank/exchange/" + action + "/" + exchange_id, function (data) {
+	console.log(data);
+	alert(data);
+	});
+
 	return false;
     $('.body-form').empty();
 	var message_id = $(this).data('message_id');
@@ -133,55 +170,5 @@
 }).on('mouseout', 'tbody tr', function () {
     $(this).removeClass('active');
 });
-$('.body-form').on('click', '#cancel', function(){
-  $('.body-form').empty().hide();
-        $('.modal').modal('hide');
-});
-$('.modal-footer').on('click', 'button', function(){
-		$('.modal-body .body-form').html('\
-			<form class="form-horizontal bootstrap-modal-form" method="POST" action="/seedbank/message/reply">\
-				<input type="hidden" name="message_id" value="' + $('.modal-title').data('message_id') + '"/>\
-	  			<div class="form-group">\
-					<span class="cell">\
-						<input class="form-control" placeholder="Assunto" type="text" name="subject"/>\
-					</span>\
-	  			</div>\
-	  			<div class="form-group">\
-					<span class="cell">\
-						<textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="Escreve uma mensagem" name="body"></textarea>\
-					</span>\
-	  			</div>\
-				<div class="form-group lmt">\
-					<div class="col-md-12 text-center">\
-						<button type="button" class="btn btn-danger btn-md" id="cancel">\
-							Cancelar\
-						</button>\
-						<button type="submit" class="btn btn-primary btn-md">\
-							Enviar\
-						</button>\
-					</div>\
-				</div>\
-			</form>');
-			$('.body-form').show();
-  
-});
-/**
-
-**/
-/*
-$('#message-display').on('click', '#submit', function (e) {
-    var formdata = $('form').serialize();
-	console.log(formdata);
-    $.post("/seedbank/message/reply", formdata, function (data) {
-		if (! data){
-			return false;
-		} else {
-		    $('#message_display').modal('hide');
-		}
-
-
-	},
-	'json');
-});*/
 </script>
 {{>footer}}

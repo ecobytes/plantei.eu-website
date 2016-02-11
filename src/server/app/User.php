@@ -27,6 +27,11 @@ class User extends Model implements AuthenticatableContract,
 	 * @var array
 	 */
 	protected $fillable = ['name', 'email', 'password', 'lat', 'lon', 'place_name'];
+   
+	protected $casts = [
+        'lat' => 'float',
+        'lon' => 'float',
+    ];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -198,9 +203,10 @@ class User extends Model implements AuthenticatableContract,
      * 
      * @return void
      */
-    public function acceptTransaction(SeedsExchange $transaction)
+    public function acceptTransaction($id)
 	{
-	  if ( $transaction->asked_to != $this->id)
+	  $transaction = SeedsExchange::findOrFail($id);
+  	  if ( $transaction->asked_to != $this->id)
 	  {
 		return false;
 	  }
@@ -223,8 +229,9 @@ class User extends Model implements AuthenticatableContract,
      * 
      * @return void
      */
-    public function rejectTransaction(SeedsExchange $transaction)
+    public function rejectTransaction($id)
 	{
+	  $transaction = SeedsExchange::findOrFail($id);
 	  if ( $transaction->asked_to == $this->id)
 	  {
 	    if ( ! $transaction->parent_id )
@@ -262,8 +269,9 @@ class User extends Model implements AuthenticatableContract,
      *
      * @return void
      */
-    public function completeTransaction(SeedsExchange $transaction)
+    public function completeTransaction($id)
 	{
+	  $transaction = SeedsExchange::findOrFail($id);
 	  if ( $transaction->asked_by != $this->id )
 	  {
 		return false;

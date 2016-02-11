@@ -111,14 +111,16 @@ class AuthController extends Controller {
 	public function postLogin(Request $request)
 	{
 		$this->validate($request, [
-			'name' => 'required', 'password' => 'required',
+			'nameoremail' => 'required', 'password' => 'required',
 		]);
 
-		$credentials = $request->only('name', 'password');
-      		if(filter_var($credentials['name'], FILTER_VALIDATE_EMAIL)) {
-          		$credentials['email'] = $credentials['name'];
-		  	unset($credentials['name']);
-      		}
+		$credentials = $request->only('nameoremail', 'password');
+      		if(filter_var($credentials['nameoremail'], FILTER_VALIDATE_EMAIL)) {
+          		$credentials['email'] = $credentials['nameoremail'];
+			} else {
+				$credentials['name'] = $credentials['nameoremail'];
+			}
+		  	unset($credentials['nameoremail']);
 
 		$credentials['confirmed'] = 1;
 		if (\Auth::attempt($credentials, $request->has('remember')))
@@ -127,7 +129,7 @@ class AuthController extends Controller {
 		}
 
 		return redirect($this->loginPath())
-		  ->withInput($request->only('name', 'remember'))
+		  ->withInput($request->only('nameoremail', 'remember'))
 		  ->withErrors([
 		    'email' => 'These credentials do not match our records or account not active.',
 		  ]);
@@ -161,7 +163,7 @@ class AuthController extends Controller {
 			}
 
 		} else {
-			$geoipreader = new Reader('/tmp/geoip.mmdb', array('pt', 'pt-BR', 'en'));
+			$geoipreader = new Reader(storage_path('app/geoip.mmdb'), array('pt', 'pt-BR', 'en'));
 			try {
 				$geoipdata = $geoipreader->city(request()->ip());
 				$oldInput = [ 'lat' => $geoipdata->location->latitude,

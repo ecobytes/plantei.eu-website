@@ -151,7 +151,8 @@ return [
 		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
 		'Pingpong\Modules\ModulesServiceProvider',
-		'ProAI\Handlebars\HandlebarsServiceProvider'
+		'ProAI\Handlebars\HandlebarsServiceProvider',
+		'Torann\GeoIP\GeoIPServiceProvider',
 
 	],
 
@@ -206,6 +207,7 @@ return [
 		//'Debugbar' => 'Barryvdh\Debugbar\Facade',
 		'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
 		'Module' => 'Pingpong\Modules\Facades\Module',
+		'GeoIP' => 'Torann\GeoIP\GeoIPFacade'
 
 	],
 

@@ -5,7 +5,7 @@
 		<div class="row lmt">
 			{{> formErrors}}
 			<div class="col-md-12 text-center">
-				<h1>{{#if update}}Actualizar{{else}}Registar um nova{{/if}} semente</h1>
+				<h1>{{#if update}}{{messages.update}}{{else}}{{messages.registernew}}{{/if}} {{messages.seed}}</h1>
 			</div> 
 			<div id="seed-preview" class="col-md-8 col-md-offset-2" style="border: 5px solid red; background-color: #9ACD32; background-color: rgba(154,205,50,0.5); display:none;" ></div>
       <form class="form-horizontal" role="form" method="POST" action="/seedbank/register">
@@ -18,7 +18,7 @@
               <div class="panel-heading" role="tab" id="headingIdentification">
                 <h4 class="panel-title">
                   <a style="color: black;" role="button" data-toggle="collapse" href="#identification" aria-expanded="true" aria-controls="collapseIdentification">
-                    Identificação
+                    {{messages.identification}}
                   </a>
                 </h4>
               </div>
@@ -35,34 +35,34 @@
 				  <div class="row">
 				  <div class="col-md-6">
                   <div class="form-group">
-                    <label class="control-label">{{../messages.local}}Local da recolha</label>
+                    <label class="control-label">{{../messages.sitecollected}}</label>
                     <span class="cell"><input type="text" class="form-control" name="local" value="{{ local }}"></span>
                   </div>
                   </div>
 				  <div class="col-md-3">
                   <div class="form-group">
-                    <label class="control-label">Ano da recolha</label>
+                    <label class="control-label">{{../messages.yearcollected}}</label>
                     <span class="cell"><input type="text" class="form-control" name="year" value="{{ year }}"></span>
                   </div>
                   </div>
 				  <div class="col-md-3">
                   <div class="form-group">
-                    <label class="control-label">Público</label>
+                    <label class="control-label">{{../messages.public}}</label>
                     <span class="cell btn-group" data-toggle="buttons">
                       <label class="btn btn-default {{#if public}}active{{/if}}">
-                        <input type="radio" name="public" {{#if public}}checked{{/unless}} value="1" /> Sim
+                        <input type="radio" name="public" {{#if public}}checked{{/unless}} value="1" /> {{../messages.yes}}
                       </label>
                       <label class="btn btn-default {{#unless public}}active{{/unless}}">
-                        <input type="radio" name="public" {{#unless public}}checked{{/unless}} value="2" /> Não
+                        <input type="radio" name="public" {{#unless public}}checked{{/unless}} value="0" /> {{../messages.no}}
                       </label>
                     </span>
                   </div>
                   </div>
                   </div>
                   <div class="form-group">
-                    <!-- <label class="control-label">Descrição</label> -->
+                    <!-- <label class="control-label">{{../messages.description}}</label> -->
                     <span class="cell">
-                      <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="Descrição" name="description">{{description}}</textarea>
+                      <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{../messages.description}}" name="description">{{description}}</textarea>
                     </span>
                   </div>
                 </div>
@@ -72,7 +72,7 @@
               <div class="panel-heading" role="tab" id="headingPictures">
                 <h4 class="panel-title">
                   <a style="color: black;" role="button" data-toggle="collapse" href="#pictures" aria-expanded="true" aria-controls="collapsePictures">
-                    {{messages.pictures}}CHANGME Pictures
+                    {{../messages.pictures}}
                   </a>
                 </h4>
               </div>
@@ -95,7 +95,7 @@
 				    {{#each pictures}}
 					<div class="col-md-3" style="padding-bottom: 24px;">
 				        <img src="{{url}}" alt="{{label}}" data-file-id="{{id}}" class="img-responsive img-rounded">
-                        <button type="button" class="btn btn-danger delete" data-type="GET" data-md5sum="{{md5sum}}" data-delete-url="/seedbank/pictures/delete/{{id}}">CHANGEME - DELETE</button>
+                        <button type="button" class="btn btn-danger delete" data-type="GET" data-md5sum="{{md5sum}}" data-delete-url="/seedbank/pictures/delete/{{id}}">{{../../messages.delete}}</button>
 					</div>
 					{{/each}}
 				  </div>
@@ -106,7 +106,7 @@
               <div class="panel-heading" role="tab" id="headingFarming">
                 <h4 class="panel-title">
                   <a style="color: black;" role="button" data-toggle="collapse" href="#farming" aria-expanded="true" aria-controls="collapseFarming">
-                    {{messages.farming}}CHANGEME Cultivo
+                    {{../messages.farming}}
                   </a>
                 </h4>
               </div>
@@ -115,73 +115,73 @@
 				  <div class="row">
 				  <div class="col-md-3">
                   <div class="form-group">
-                    <label class="control-label">Sementeira Directa</label>
+                    <label class="control-label">{{../messages.directseeding}}</label>
                     <span class="cell btn-group" data-toggle="buttons">
                       <label class="btn btn-default {{#if direct.2}}active{{/if}}">
-                        <input type="radio" name="direct" value="2" /> Sim
+                        <input type="radio" name="direct" value="2" /> {{../messages.yes}}
                       </label>
                       <label class="btn btn-default {{#if direct.1}}active{{/if}}">
-                        <input type="radio" name="direct" value="1" /> Não
+                        <input type="radio" name="direct" value="1" /> {{../messages.no}}
                       </label>
                     </span>
                   </div>
 				  </div>
 				  <div class="col-md-3">
                   <div class="form-group">
-                    <label class="control-label">Polinização</label>
+                    <label class="control-label">{{../messages.polinization}}</label>
                     <span class="cell btn-group" data-toggle="buttons">
                       <label class="btn btn-default {{#if polinization.1}}active{{/if}}">
-                        <input type="radio" name="polinization" {{#if polinization.1}}checked{{/if}} value="1" /> Aberta
+                        <input type="radio" name="polinization" {{#if polinization.1}}checked{{/if}} value="1" /> {{../messages.polinizationopen}}
                       </label>
                       <label class="btn btn-default {{#if polinization.2}}active{{/if}}">
-                        <input type="radio" name="polinization" {{#if polinization.2}}checked{{/if}} value="2" /> Fechada
+                        <input type="radio" name="polinization" {{#if polinization.2}}checked{{/if}} value="2" /> {{../messages.polinizationclosed}}
                       </label>
                     </span>
                   </div>
                   </div>
 				  </div>
-                    <label class="control-label">Meses de cultivo</label>
+                    <label class="control-label">{{../messages.farmingmonths}}</label>
                   <div class="form-group">
                     <span class="cell btn-group"  data-toggle="buttons" >
                       <label class="btn btn-default {{#if months.1}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.1}}checked{{/if}} value="1" /> Jan
+                        <input type="checkbox" name="months[]" {{#if months.1}}checked{{/if}} value="1" /> {{../messages.monthjan}}C
                       </label>
                       <label class="btn btn-default {{#if months.2}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.2}}checked{{/if}} value="2" /> Fev
+                        <input type="checkbox" name="months[]" {{#if months.2}}checked{{/if}} value="2" /> {{../messages.monthfeb}}
                       </label>
                       <label class="btn btn-default {{#if months.3}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.3}}checked{{/if}} value="3" /> Mar
+                        <input type="checkbox" name="months[]" {{#if months.3}}checked{{/if}} value="3" /> {{../messages.monthmar}}
                       </label>
                       <label class="btn btn-default {{#if months.4}}active{{/if}}">
-                        <input type="checkbox" name="months[]"  {{#if months.4}}checked{{/if}}value="4" /> Abr
+                        <input type="checkbox" name="months[]"  {{#if months.4}}checked{{/if}}value="4" /> {{../messages.monthapr}}
                       </label>
                       <label class="btn btn-default {{#if months.5}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.5}}checked{{/if}} value="5" /> Mai
+                        <input type="checkbox" name="months[]" {{#if months.5}}checked{{/if}} value="5" /> {{../messages.monthmay}}
                       </label>
                       <label class="btn btn-default {{#if months.6}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.6}}checked{{/if}} value="6" /> Jun
+                        <input type="checkbox" name="months[]" {{#if months.6}}checked{{/if}} value="6" /> {{../messages.monthjun}}
                       </label>
                     </span>
                   </div>
                   <div class="form-group">
                     <span class="cell btn-group"  data-toggle="buttons">
                       <label class="btn btn-default {{#if months.7}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.7}}checked{{/if}} value="7" /> Jul
+                        <input type="checkbox" name="months[]" {{#if months.7}}checked{{/if}} value="7" /> {{../messages.monthjul}}
                       </label>
                       <label class="btn btn-default {{#if months.8}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.8}}checked{{/if}} value="8" /> Ago
+                        <input type="checkbox" name="months[]" {{#if months.8}}checked{{/if}} value="8" /> {{../messages.monthaug}}
                       </label>
                       <label class="btn btn-default {{#if months.9}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.9}}checked{{/if}} value="9" /> Set
+                        <input type="checkbox" name="months[]" {{#if months.9}}checked{{/if}} value="9" /> {{../messages.monthsep}}
                       </label>
                       <label class="btn btn-default {{#if months.10}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.10}}checked{{/if}} value="10" /> Out
+                        <input type="checkbox" name="months[]" {{#if months.10}}checked{{/if}} value="10" /> {{../messages.monthoct}}
                       </label>
                       <label class="btn btn-default {{#if months.11}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.11}}checked{{/if}} value="11" /> Nov
+                        <input type="checkbox" name="months[]" {{#if months.11}}checked{{/if}} value="11" /> {{../messages.monthnov}}
                       </label>
                       <label class="btn btn-default {{#if months.12}}active{{/if}}">
-                        <input type="checkbox" name="months[]" {{#if months.12}}checked{{/if}} value="12" /> Dez
+                        <input type="checkbox" name="months[]" {{#if months.12}}checked{{/if}} value="12" /> {{../messages.monthdec}}
                       </label>
                     </span>
                   </div>
@@ -192,41 +192,41 @@
               <div class="panel-heading" role="tab" id="headingCharacteristics">
                 <h4 class="panel-title">
                   <a style="color: black;" role="button" data-toggle="collapse" href="#characteristics" aria-expanded="true" aria-controls="collapseCharacteristics">
-                    {{messages.taxonomy}}CHANGME_TAXONOMY
+                    {{../messages.taxonomy}}
                   </a>
                 </h4>
               </div>
               <div id="characteristics" class="panel-collapse collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="headingCharacteristics">
                 <div class="panel-body">
                   <div class="form-group">
-                    <label class="control-label">{{messages.latin_name}}</label>
+                    <label class="control-label">{{../messages.latin_name}}</label>
                     <span class="cell">
                       <input type="text" class="form-control" placeholder="" name="latin_name" value="{{ latin_name }}">
                     </span>
                   </div>
                   <div class="form-group">
-                    <label class="control-label">{{messages.family}}</label>
+                    <label class="control-label">{{../messages.family}}</label>
                     <input type="hidden" name="family_id" value="{{ family.id }}">
                     <span class="cell"><input type="text" class="form-control" name="family" value="{{ family.name }}"></span>
                   </div>
                   <div class="form-group">
-                    <label class="control-label">{{messages.species}}</label>
+                    <label class="control-label">{{../messages.species}}</label>
                     <input type="hidden" name="species_id" value="{{ species.id }}">
                     <span class="cell"><input type="text" class="form-control" name="species" value="{{ species.name }}"></span>
                   </div>
                   <div class="form-group">
-                    <label class="control-label">{{messages.variety}}</label>
+                    <label class="control-label">{{../messages.variety}}</label>
                     <input type="hidden" name="variety_id" value="{{ variety.id }}">
                     <span class="cell"><input type="text" class="form-control" name="variety" value="{{ variety.name }}"></span>
                   </div>
                 </div>
               </div>
             </div><!-- END Accordion Characteristics -->
-            <div class="panel panel-default"><!-- Accordion Cooking -->
+            {{!--<div class="panel panel-default"><!-- Accordion Cooking -->
               <div class="panel-heading" role="tab" id="headingCooking">
                 <h4 class="panel-title">
                   <a style="color: black;" role="button" data-toggle="collapse" href="#cooking" aria-expanded="true" aria-controls="collapseCooking">
-                    {{messages.cooking}}CHANGME COOKING
+                    {{../messages.cooking}}
                   </a>
                 </h4>
               </div>
@@ -239,7 +239,7 @@
               <div class="panel-heading" role="tab" id="headingMedicine">
                 <h4 class="panel-title">
                   <a style="color: black;" role="button" data-toggle="collapse" href="#medicine" aria-expanded="true" aria-controls="collapseMedicine">
-                    {{messages.cooking}}CHANGME Medicine
+                    {{../messages.medicine}}
                   </a>
                 </h4>
               </div>
@@ -247,7 +247,7 @@
                 <div class="panel-body">
                 </div>
               </div>
-            </div><!-- END Accordion Medicine -->
+            </div><!-- END Accordion Medicine -->--}}
           </div>
         </div>
         {{/with}}
@@ -255,10 +255,10 @@
           <div class="form-group lmt">
             <div class="col-md-12 text-center">
               <button type="button" class="btn btn-danger btn-lg" id="cancel_seed">
-                Cancelar
+                {{messages.registercancel}}
               </button>
               <button type="submit" class="btn btn-primary btn-lg">
-                {{#if update}}Actualizar{{ else }}Registar{{/if}}
+                {{#if update}}{{messages.updateseed}}{{ else }}{{messages.registerseed}}{{/if}}
               </button>
             </div>
           </div>
@@ -268,6 +268,7 @@
 	</div>
 </div>
 {{>scripts}}
+<script src="/js/tinymce/tinymce.min.js"></script>
 <script>
   $('#cancel_seed').on('click', function () {
     window.open('/seedbank/myseeds', '_self');
@@ -284,6 +285,31 @@
 	  }
     
   });
+tinymce.init({
+  selector: 'textarea',
+  inline: false,
+  menubar: 'tools',
+  width: '100%',
+  plugins: [ "placeholder" ],
+  setup : function(ed)
+  {
+    ed.on('init', function() 
+        {
+          this.getDoc().body.style.fontSize = '18px';
+          $('.mce-toolbar-grp').hide();
+          $('.mce-statusbar').hide();
+          $(this.getBody()).on('blur', function() {
+              $('.mce-toolbar-grp').hide();
+              $('.mce-statusbar').hide();
+          });
+          $(this.getBody()).on('focus', function() {
+              $('.mce-toolbar-grp').show();
+              $('.mce-statusbar').show();
+          });
+        });
+  }
+});
+  
 </script>
 {{>pictureUploader}}
 {{>footer}}

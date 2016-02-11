@@ -44,6 +44,16 @@ class Authenticate {
 			}
 		}
 
+		if (isset($this->auth->user()->locale)){
+			$locale = $this->auth->user()->locale | config('app.locale');
+			//$locale="en";
+		} else {
+			$locale = config('app.locale');
+		}
+	    \App::setLocale($locale);
+        \View::share('lang', [$locale => true]);
+        \View::share('langString', $locale);
+
 		return $next($request);
 	}
 

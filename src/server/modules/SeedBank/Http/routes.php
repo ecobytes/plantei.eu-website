@@ -2,32 +2,6 @@
 
 use Illuminate\Http\Request;
 
-function save_image($uploadedimage) {
-  $file_md5 = md5_file($uploadedimage);
-  $file_name = $file_md5;
-  $picture = \Caravel\Picture::where('md5sum', $file_md5)->first();
-  if (!$picture){
-    $picture_path = '/tmp/PITCTURES/PATH';
-    $uploadedimage->move($picture_path, $file_name);
-    $converted_image = new Imagick($picture_path . '/' . $file_md5);
-    $converted_image->setImageFormat('jpg');
-    $converted_image->scaleimage(800, 800, true);
-    if (filesize($picture_path . '/' . $file_name) > 200000) {
-      $converted_image->setOption('jpeg:extent', '100kb');
-    }
-    $status = $converted_image->writeimage();
-    if ($status) {
-	  $picture = \Caravel\Picture::create([
-	    'path' => $picture_path . '/' . $file_name,
-	    'url' => '/seedbank/pictures/' . $file_md5,
-	    'md5sum' => $file_md5
-	  ]);
-	} else {
-	  return [ "error" => "File not saved"];
-    }
-  }
-  return [ "picture" => $picture];
-};
 
 Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
@@ -41,6 +15,8 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 		Route::post('/search', 'SeedBankController@postSearch');
 		Route::post('/autocomplete', 'SeedBankController@postAutocomplete');
 		Route::get('/preferences', 'SeedBankController@getPreferences');
+		Route::post('/preferences', 'SeedBankController@postPreferences');
+		Route::post('/add-pictures', 'SeedBankController@postAddPicture');
 		//Route::post('/seed/{id}', 'SeedBankController@postSeed');
 		Route::get('/seed/{id}', function ($id) {
 			$user = \Auth::user();
@@ -54,6 +30,37 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 				$seed->medicines();
 
 				return $seed;
+			}
+			return [];
+		});
+		Route::get('/seedm/{id}', function ($id) {
+			$user = \Auth::user();
+			$seed = \Caravel\Seed::findOrFail($id);
+			$update_seed = ($seed->user_id == $user->id);
+			if (($seed->public) || ($update_seed))
+			{
+				$seed->variety;
+				$seed->species;
+				$seed->family;
+				$seed->cookings();
+				$seed->medicines();
+				if ($seed->pictures->count()){
+				  $picture = $seed->pictures->first();
+				} else {
+				  $picture = false;
+				}
+				//dd($seed);
+
+				return view('seedbank::seed_modal')
+				  ->with('seed', $seed)
+				  ->with('picture', $picture)
+				  ->with('update_seed', $update_seed);
+      /*->with('usermessages', $userMessages)
+      ->with('unreadmessages', $unreadmessages)
+      ->with('messages', \Lang::get('seedbank::messages'))
+      ->with('menu', \Lang::get('seedbank::menu'))
+      ->with('username', $user->name)
+	  ->with('active', ['home' => true]);*/
 			}
 			return [];
 		});
@@ -109,7 +116,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 			$user = \Auth::user();
 			return $user->seeds()->paginate(5);
 		});
-		Route::post('/add-pictures', function (Request $request) {
+		/*Route::post('/add-pictures', function (Request $request) {
 			// TODO: Limit number of picture by seed?
 			$user = \Auth::user();
 			if ($request->has('seed_id')){
@@ -139,7 +146,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 				}
 			}
 			return [ 'files' => [['error' => 'No files sent']]];
-		});
+		});*/
 		Route::get('/pictures/delete/{id}', function ($id) {
 			$user = \Auth::user();
 			$picture = \Caravel\Picture::findOrFail($id);
@@ -159,6 +166,18 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 			$response = \Response::make($file,200);
 			$response->header('Content-Type', 'image/jpg');
 			return $response;
+		});
+		Route::get('/exchange/{action}/{id}', function ($action, $id) {
+		  $user = \Auth::user();
+		  if (in_array($action, ['accept', 'reject', 'complete'])) {
+		     if (!method_exists($user,$action.'Transaction')){
+		        return 'false';
+			 }		
+			 $output = call_user_func_array(array($user, $action.'Transaction'),array($id));
+			 return $action;
+		  }
+		  //return true || error;
+          return (null);
 		});
 	});
 });

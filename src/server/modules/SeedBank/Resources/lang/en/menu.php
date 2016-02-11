@@ -5,5 +5,6 @@ return [
   'myseeds' => 'My Seed Bank',
   'search' => 'Search',
   'messages' => 'Messages',
+  'exchanges' => 'Exchanges',
   'logout' => 'Logout'
 ];
