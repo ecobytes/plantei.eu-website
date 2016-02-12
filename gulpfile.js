@@ -64,7 +64,12 @@ gulp.task('local', function() {
     'src/bower_components/bootstrap/dist/js/bootstrap.min.js',
     'src/bower_components/jquery/dist/jquery.min.js',
     'src/bower_components/jquery-ui/jquery-ui.min.js',
-    'src/bower_components/blueimp-file-upload/js/*.js'
+    'src/bower_components/blueimp-file-upload/js/*.js',
+    'src/bower_components/blueimp-file-upload/js/vendor**/*.js',
+    'src/bower_components/blueimp-load-image/js/load-image.all.min.js',
+    'src/bower_components/tinymce**/**',
+    'src/assets/tinymce**/**/**'
+
     ])
   .pipe(gulp.dest('src/server/public/js/'));
   gulp.src([

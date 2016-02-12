@@ -330,7 +330,7 @@ class SeedBankController extends Controller {
 	    $taxonomy = true;
 	  }
 
-      return view('testmodule::snippet')
+      return view('seedbank::snippet')
         ->with('title', 'some nice title')
         ->with('months', $months)
 		->with('seed', $formInput)

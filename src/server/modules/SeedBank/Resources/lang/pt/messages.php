@@ -68,4 +68,6 @@ return [
     'updateseed' => 'Actualizar',
     'registerseed' => 'Registar',
     'registercancel' => 'Cancelar',
+    'email' => 'Email',
+    'username' => 'Utilizador',
 ];

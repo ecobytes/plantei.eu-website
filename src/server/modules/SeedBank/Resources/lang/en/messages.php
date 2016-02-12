@@ -8,8 +8,8 @@ return [
     'date' => 'Date',
     'read' => 'Read',
     'unread' => 'Unread',
-    'latin_name' => 'latin_name',
-    'common_name' => 'common_name',
+    'latin_name' => 'Latin name',
+    'common_name' => 'Common name',
     'my_seeds' => 'My Seeds',
     'pending_exchanges' => 'Pending Exchanges',
     'available' => 'Available',
@@ -68,4 +68,6 @@ return [
     'updateseed' => 'Update',
     'registerseed' => 'Register',
     'registercancel' => 'Cancel',
+    'email' => 'Email',
+    'username' => 'User',
 ];
