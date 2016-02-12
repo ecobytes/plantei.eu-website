@@ -163,7 +163,8 @@ class AuthController extends Controller {
 			}
 
 		} else {
-			$geoipreader = new Reader(storage_path('app/geoip.mmdb'), array('pt', 'pt-BR', 'en'));
+			$locale = 'pt';
+		    $geoipreader = new Reader(config('geoip.maxmind.database_path'), array($locale, 'en'));
 			try {
 				$geoipdata = $geoipreader->city(request()->ip());
 				$oldInput = [ 'lat' => $geoipdata->location->latitude,
