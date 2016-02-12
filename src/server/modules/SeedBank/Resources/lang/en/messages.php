@@ -27,6 +27,7 @@ return [
     'mark' => 'Select',
     'chooseseedfrom' => 'Choose seeds from ',
     'confirm' => 'Confirm',
+    'change' => 'change',
     'reject' => 'Reject',
     'accept' => 'Accept',
     'pending' => 'Pending',

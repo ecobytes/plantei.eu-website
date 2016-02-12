@@ -27,6 +27,7 @@ return [
     'chooseseedfrom' => 'Escolhe sementes de',
     'add_new_seed' => 'Adiciona uma nova semente',
     'confirm' => 'Confirma',
+    'change' => 'Altera',
     'reject' => 'Rejeita',
     'accept' => 'Aceita',
     'pending' => 'Pendente',

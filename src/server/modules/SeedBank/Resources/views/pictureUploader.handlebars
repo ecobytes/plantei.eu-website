@@ -42,11 +42,9 @@ $(function () {
       });
       $("form").hide();
       $("#seed-preview").on('click', 'button.btn-danger', function(e) {
-        alert('pressed volver');
         $("form").show();
         $("#seed-preview").unbind().empty().hide();
       }).on('click', 'button.btn-primary', function(e) {
-        alert('pressed confirm');
         confirmed = true;
         $("form").append('<input type="hidden" name="confirmed" value="1"/>').submit();
       });

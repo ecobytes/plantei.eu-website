@@ -295,6 +295,7 @@ class SeedBankController extends Controller {
         ->with('pictures', $pictures)
         ->with('farming', $farming)
         ->with('taxonomy', $taxonomy)
+        ->with('messages', \Lang::get('seedbank::messages'))
         ->with('deletebutton', \Lang::get('seedbank::messages')['delete']);
     }
     $seed_keys = ['quantity','year', 'local', 'description', 'public', 'available', 'description',

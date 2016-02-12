@@ -12,7 +12,7 @@
   {{/if}}
   {{#if farming}}
   <div class="col-md-6">
-    <h2>{{messages.farming}}CHANGME FARMING</h2>
+    <h2>{{messages.farming}}</h2>
     {{#if months}}
 	<div class="col-md-6" style="padding-top: 24px">
       <table class="table table-bordered" style="border-color: black;">
@@ -36,18 +36,18 @@
   {{/if}}
   {{#if taxonomy}}
   <div class="col-md-6" style="padding-top: 24px">
-    <h2>CHANGEME TAXONOMY</h2>
+    <h2>{{messages.taxonomy}}</h2>
     {{#if seed.latin_name}}
-    <p>{{messages.latin_name}}CHANGEME LATIN_NAME: <strong> {{seed.latin_name}}</strong></p>
+    <p>{{../messages.latin_name}}: <strong> {{seed.latin_name}}</strong></p>
     {{/if}}
     {{#if seed.variety}}
-    <p>{{messages.variety}}CHANGEME VARIETY: <strong> {{seed.variety}}</strong></p>
+    <p>{{../messages.variety}}: <strong> {{seed.variety}}</strong></p>
     {{/if}}
     {{#if seed.species}}
-    <p>{{messages.species}}CHANGEME SPECIES: <strong> {{seed.species}}</strong></p>
+    <p>{{../messages.species}}: <strong> {{seed.species}}</strong></p>
     {{/if}}
     {{#if seed.family}}
-    <p>{{messages.family}}CHANGEME FAMILY: <strong> {{seed.family}}</strong></p>
+    <p>{{../messages.family}}: <strong> {{seed.family}}</strong></p>
     {{/if}}
   </div>
   {{/if}}
@@ -55,10 +55,10 @@
 <div class="row" style="padding-top: 24px;">
   <div class="col-md-6 col-md-offset-3">
     <button type="button" class="btn btn-danger btn-lg">
-      Alterar
+      {{messages.change}}
 	</button>
     <button type="button" class="btn btn-primary btn-lg">
-	  Confirmar
+	  {{messages.confirm}}
     </button>
   </div>
 </div>
