@@ -359,15 +359,27 @@ class SeedBankController extends Controller {
     $updatelocation = false;
     $location = false; 
     $locale = $user->locale ?: config('app.locale');
-  $geoipreader = new Reader(config('geoip.maxmind.database_path'), array($locale, 'en'));
-  try {
-    $geoipdata = $geoipreader->city(request()->ip());
-    $updatelocation = [ 'lat' => $geoipdata->location->latitude,
-      'lon' => $geoipdata->location->longitude,
-      'place_name' => $geoipdata->city->name ?: \Lang::get("auth::messages.unknowncity")];
-        $location = true;
+    if ($locale == 'pt'){
+      $preflocale = array('pt', 'pt-BR', 'en');
+    } else {
+      $preflocale = array($locale, 'en');
+    }
+    $geoipreader = new Reader(config('geoip.maxmind.database_path'), $preflocale);
+    try {
+      $geoipdata = $geoipreader->city(request()->ip());
+      $updatelocation = [ 'lat' => $geoipdata->location->latitude,
+        'lon' => $geoipdata->location->longitude,
+        'place_name' => $geoipdata->city->name ?: \Lang::get("auth::messages.unknowncity")];
+          $location = true;
     }
     catch(\GeoIp2\Exception\AddressNotFoundException $e){
+      // for testing
+      //$geoipdata = $geoipreader->city('81.193.130.25');
+      //$updatelocation = [ 'lat' => $geoipdata->location->latitude,
+      //  'lon' => $geoipdata->location->longitude,
+      //  'place_name' => $geoipdata->city->name ?: \Lang::get("auth::messages.unknowncity")];
+      //    $location = true;
+
       if ($user->place_name){
          $location = true;
       } 
