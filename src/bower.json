@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "dependencies": {
     "bootstrap": "~3.*",
-    "jquery-ui": "*"
+    "jquery-ui": "*",
+    "laravel-bootstrap-modal-form": "jerseymilker/laravel-bootstrap-modal-form",
+    "blueimp-file-upload": "~9.11.2",
+    "tinymce": "~4.3.3"
   },
   "private": true
 }

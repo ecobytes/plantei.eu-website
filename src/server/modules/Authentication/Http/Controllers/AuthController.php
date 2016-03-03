@@ -1,5 +1,6 @@
 <?php namespace Modules\Authentication\Http\Controllers;
 
+use Validator;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -8,6 +9,8 @@ use Illuminate\Http\Request;
 use Pingpong\Modules\Routing\Controller;
 
 use \Caravel\User;
+
+use GeoIp2\Database\Reader;
 
 class AuthController extends Controller {
 
@@ -30,12 +33,63 @@ class AuthController extends Controller {
 	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
 	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
 	 * @return void
-	 */
+	 *
 	public function __construct(Guard $auth, Registrar $registrar)
 	{
 		$this->auth = $auth;
 		$this->registrar = $registrar;
 		$this->middleware('guest', ['except' => ['getLogout', 'getSettings']]);
+	}
+	 */
+	/**
+	 * Create a new authentication controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		$this->middleware('guest', ['except' => ['getLogout', 'getSettings']]);
+	}
+
+	/**
+	 * Get a validator for an incoming registration request.
+	 *
+	 * @param  array  $data
+	 * @return \Illuminate\Contracts\Validation\Validator
+	 */
+	public function validator(array $data)
+	{
+		if (!$data['email']){unset($data['email']);};
+		return Validator::make($data, [
+			'name' => 'required|max:255|unique:users',
+			'email' => 'sometimes|required|email|max:255|unique:users',
+			'password' => 'required|confirmed|min:6',
+			'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/',
+			'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/',
+			'place_name' => 'max:255|required_with:lon,lat',
+		]);
+	}
+
+	/**
+	 * Create a new user instance after a valid registration.
+	 *
+	 * @param  array  $data
+	 * @return Caravel\User
+	 */
+	public function create(array $data)
+	{
+		if ($data['saveLocation'] == "0")  {
+			$data['place_name'] = false; $data['lon'] = false; $data['lat'] = false; 
+		}
+		unset($data['saveLocation']);
+
+		foreach ($data as $key => $value){
+			if ((!$value) || (!in_array($key, ['name', 'email', 'password', 'place_name', 'lat', 'lon']))){
+				unset($data[$key]);
+			}
+		}
+		$data['password'] = bcrypt($data['password']);
+		return User::create($data);
 	}
 
 	public function getLogin()
@@ -57,37 +111,32 @@ class AuthController extends Controller {
 	public function postLogin(Request $request)
 	{
 		$this->validate($request, [
-			'name' => 'required', 'password' => 'required',
+			'nameoremail' => 'required', 'password' => 'required',
 		]);
 
-		$credentials = $request->only('name', 'password');
-      if(filter_var($credentials['name'], FILTER_VALIDATE_EMAIL)) {
-          $credentials['email'] = $credentials['name'];
-		  unset($credentials['name']);
-      }
-      /* else {
-          $credentials['name'] = $username;
-      }
-      if (Auth::once($credentials)) {
-          return Auth::user()->id;
-	  }*/
+		$credentials = $request->only('nameoremail', 'password');
+      		if(filter_var($credentials['nameoremail'], FILTER_VALIDATE_EMAIL)) {
+          		$credentials['email'] = $credentials['nameoremail'];
+			} else {
+				$credentials['name'] = $credentials['nameoremail'];
+			}
+		  	unset($credentials['nameoremail']);
 
 		$credentials['confirmed'] = 1;
-		if ($this->auth->attempt($credentials, $request->has('remember')))
+		if (\Auth::attempt($credentials, $request->has('remember')))
 		{
 			return redirect()->intended($this->redirectPath());
 		}
 
 		return redirect($this->loginPath())
-					->withInput($request->only('name', 'remember'))
-					->withErrors([
-						'email' => 'These credentials do not match our records or account not active.',
-					]);
-	}
+		  ->withInput($request->only('nameoremail', 'remember'))
+		  ->withErrors([
+		    'email' => 'These credentials do not match our records or account not active.',
+		  ]);
+	} 
 	public function getLogout()
 	{
-		//\Auth::logout();
-		$this->auth->logout();
+		\Auth::logout();
 		return redirect('/');
 	}
 
@@ -95,6 +144,7 @@ class AuthController extends Controller {
 	{
 		$errors = \Session::get('errors');
 		$oldInput = [];
+		$geoipinfo = [];
 		if(\Session::hasOldInput()){
 			$oldInput =  \Session::getOldInput();
 			if(isset($oldInput['subscribeNewsletter'])){
@@ -104,7 +154,29 @@ class AuthController extends Controller {
 			}else{
 				$oldInput['subscribeNewsletter'][1] = true;
 			}
+
+			if ($oldInput['saveLocation'] == "0") {
+				$oldInput['saveLocation'] = false;
+			} else {
+				$oldInput['saveLocation'] = true ;
+
+			}
+
+		} else {
+			$locale = 'pt';
+			if ($locale == 'pt'){
+				$preflocale = array('pt', 'pt-BR', 'en');
+			}
+		    $geoipreader = new Reader(config('geoip.maxmind.database_path'), $preflocale);
+			try {
+				$geoipdata = $geoipreader->city(request()->ip());
+				$oldInput = [ 'lat' => $geoipdata->location->latitude,
+					'lon' => $geoipdata->location->longitude,
+					'place_name' => $geoipdata->city->name ];
+			}
+			catch(\GeoIp2\Exception\AddressNotFoundException $e){ $oldInput = []; }
 		}
+
 		//Subscribe newsletter defaults to true
 		if(!isset($oldInput['subscribeNewsletter'])){
 			$oldInput['subscribeNewsletter'][1] = true;
@@ -121,14 +193,23 @@ class AuthController extends Controller {
 
 	public function postRegister(Request $request)
 	{
-		$validator = $this->registrar->validator($request->all(), [],\Lang::get('auth::validation'));
-
+		/*$this->validate($request, [
+			'name' => 'required', 
+                        'password' => 'required', 
+                        'password_confirmation' => 'required|same:password',
+			'email' => 'email'
+		]);*/
+		$validator = $this->validator($request->all(), [],\Lang::get('auth::validation'));
+		//dd($validator->fails());
+                /*
+		//$validator = $this->registrar->validator($request->all(), [],\Lang::get('auth::validation'));
+				 */
 		if($validator->fails())
 		{
 			$this->throwValidationException(
 				$request, $validator
 			);
-		}
+		}/*
 		$user = $this->registrar->create($request->all());
 		$user->confirmationString = substr(sha1(rand()), 0, 32);
 		$user->confirmed = true;
@@ -139,8 +220,59 @@ class AuthController extends Controller {
 			$userId = \Caravel\Role::where('name', 'user')->first()->id;
 			$user->roles()->attach($userId);
 		}
+		 */
 
-		$user->push();
+
+		$user= $this->create($request->all());
+	//	dd($user);
+		$user->confirmed = true;
+		if(User::count() == 1){
+			$adminId = \Caravel\Role::where('name', 'admin')->first()->id;
+			$user->roles()->attach($adminId);
+		}else{
+			$userId = \Caravel\Role::where('name', 'user')->first()->id;
+			$user->roles()->attach($userId);
+		}
+
+
+		$user->save();
+			//push();
+		// TODO: Cleanup messages
+		$message = \Caravel\Message::send([
+			'subject' => \Lang::get('auth::confirmationemail.title'), 
+			'body' => \Lang::get('auth::confirmationemail.text'), 
+			'user_id' => 1,
+			'recipients' => [$user->id]
+		]);
+		if (!$message){ dd("Error Creating Message");};
+
+		// DEBUG:TEST:TODO: Initiate transactions, to and from user
+		//                : Create one seed
+
+		$faker = \Faker\Factory::create();
+		$seed_id =  random_int(1,10);
+		$seed_initial = \Caravel\Seed::firstOrCreate([
+			'local' => 'teste-' . $faker->city,
+			'year' => random_int(2010,2015),
+			'description' => "Semente para testar plataforma:\n" . $faker->text(500),
+			'available' => true,
+			'public' => true,
+			'user_id' => $user->id
+		]);
+		$seed = false;
+		while (!$seed){
+			$seed = \Caravel\Seed::find(random_int(1,20));
+			if ($seed){
+				if ($seed->user_id == $user->id){ $seed = false;}
+			}
+		}
+		
+		\Caravel\User::find(1)
+			->startTransaction(['asked_to'=>$user->id, 'seed_id'=>$seed_initial->id]);
+		$user->startTransaction(['asked_to'=>$seed->user_id, 'seed_id'=>$seed->id]);
+
+
+
 /*
 		$verificationKey = $user->confirmationString;
 		\Mail::send('emails.transactional', [
@@ -159,9 +291,9 @@ class AuthController extends Controller {
 		});
  */
 		return View('auth::successful-registration')
-		->with('title', 'Registration Successful')
-		->with('message', \Lang::get('auth::messages.subscriptionSuccessfulMessage'))
-		->with('buttons', array(['label' => \Lang::get('newsletter::messages.homePage'), 'url' => '/']));
+		->with('title', \Lang::get("auth::messages.registrationSuccessfulTitle"))
+		//->with('message', \Lang::get("auth::messages.subscriptionSuccessfulMessage")
+		->with('buttons', array(['label' => \Lang::get("auth::messages.homePage"), 'url' => '/']));
 
 	}
 
@@ -184,12 +316,12 @@ class AuthController extends Controller {
 			$user->confirmed = true;
 			$user->save();
 			$success = true;
-			$title = \Lang::get('auth::messages.successConfirmingTitle');
-			$message =  \Lang::get('auth::messages.successConfirmingMessage');
+			$title = \Lang::get("auth::messages.successConfirmingTitle");
+			$message =  \Lang::get("auth::messages.successConfirmingMessage");
 		}else {
 			$success = false;
-			$title = \Lang::get('auth::messages.errorConfirmingTitle');
-			$message =  \Lang::get('auth::messages.errorConfirmingMessage');
+			$title = \Lang::get("auth::messages.errorConfirmingTitle");
+			$message =  \Lang::get("auth::messages.errorConfirmingMessage");
 
 		}
 

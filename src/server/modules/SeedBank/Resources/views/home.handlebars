@@ -1,0 +1,104 @@
+{{> header}}
+{{> menu}}
+<div class="modal fade" id="seed_info">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="pageWrap background-primary">
+  <div class="container">
+    <!-- <div class="row lmt"> -->
+      <div class="col-md-6 text-center">
+        <h1>{{messages.latestAdditions}}</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{messages.common_name}}</th>
+              <th>{{messages.latin_name}}</th>
+              <th>{{messages.email}}</th>
+              <th>{{messages.username}}</th>
+              <!-- <th>Disponível</th>
+              <th>Pública</th> -->
+            </tr>
+          </thead>
+          <tbody>
+          {{#each seeds}}
+            <tr data-user_id="{{user_id}}" data-seed_id="{{id}}">
+              <td>{{common_name}}</td>
+              <td>{{latin_name}}</td>
+              <td>{{email}}</td>
+              <td>{{name}}</td>
+              <!-- <td style="text-align: center;">{{#if available.1}}X{{/if}}</td>
+              <td style="text-align: center;">{{#if public.1}}X{{/if}}</td> -->
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+	  {{!--
+      <div class="col-md-6">
+        <h1>{{messages.latestMessages}}<span class="badge">
+          {{unreadmessages}}
+        </span></h1>
+        <table class="table"
+          <thead>
+            <tr>
+              <th>{{messages.subject}}</th>
+              <th>{{messages.date}}</th>
+              <th>{{messages.unread}}/{{messages.read}}</th>
+            </tr>
+          </thead>
+          <tbody>
+          {{#each usermessages}}
+            <tr data-message_id="{{id}}" {{#unless pivot.read.1}}style="font-weight: bold;"{{/unless}}>
+              <td>{{subject}}</td>
+              <td>({{id}}){{created_at}}</td>
+              <td style="text-align: center;">
+					{{#if pivot.read.1}} {{../../messages.read}} 
+						{{else}} {{../../messages.unread}} 
+					{{/if}}
+				</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+	  --}}
+    <!-- </div> -->
+  </div>
+</div>
+
+{{>scripts}}
+<script>
+$('tbody tr').on('click', function () {
+	//window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
+	var seed_id = $(this).data('seed_id');
+    $.get("/seedbank/seedm/" + seed_id, function (data) {
+		if (data.length == 0){
+			return false;
+		}
+		$('#seed_info .modal-content').empty();
+		$('#seed_info .modal-content').append(data);
+
+		$('#seed_info').modal('show');
+	});
+    }).mouseover(function () {
+    $(this).addClass('active');
+    }).mouseout(function () {
+    $(this).removeClass('active');
+});
+$('#seed_info').on('click', '.modal-footer .footer-left button', function(){
+
+	var seed_id = $('#seed_info .modal-title').data("seed_id");
+	
+    window.open('/seedbank/register/' + seed_id, '_self');
+});
+
+  /*$('#new_seed').on('click', function () {
+    window.open('/seedbank/register', '_self');
+	return false;
+  });
+  */
+</script>
+{{>footer}}
