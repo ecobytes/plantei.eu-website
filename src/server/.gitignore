@@ -7,3 +7,4 @@ tmp
 .phpcomplete_extended
 dotdeb.gpg
 index_cache
+geoip.mmdb
