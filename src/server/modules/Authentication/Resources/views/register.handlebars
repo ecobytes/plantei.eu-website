@@ -8,12 +8,12 @@
         <form class="form-horizontal" role="form" method="POST" action="/{{langString}}/auth/register">
           <input type="hidden" name="_token" value="{{ csrfToken }}">
 
-          <div class="form-group">
+          <div class="form-group" rel="tooltip" data-placement="bottom" title="{{messages.usernameHelp }}">
             <label class="control-label">{{messages.username}}</label>
               <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{ oldInput.name }}"></span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" rel="tooltip" data-placement="bottom" title="{{messages.emailHelp }}">
             <label class="control-label">{{messages.email}}</label>
 			<input type="text" style="display:none;">
               <span class="cell"><input type="email" class="form-control" name="email" value="{{ oldInput.email }}"></span>
@@ -30,7 +30,7 @@
               <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
           </div>
 		  {{#if oldInput.place_name}}
-		  <div class="row">
+		  <div class="row" rel="tooltip" data-placement="bottom" title="{{messages.saveLocationHelp }}">
 		    <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.whereareyou}}</label>
@@ -39,10 +39,10 @@
             </div>
 			<div class="col-md-6 col-md-offset-2">
               <div class="form-group">
-                <label class="control-label" rel="tooltip" data-placement="bottom" title="{{messages.saveLocationHelp }}">  {{ messages.saveLocation }}</label>
+                <label class="control-label">  {{ messages.saveLocation }}</label>
                 <span class="cell btn-group" data-toggle="buttons">
                   <label class="btn btn-default {{#if oldInput.saveLocation}}active{{/if}}">
-                    <input type="radio" placeholder="" name="saveLocation" aria-describedby="saveLocationHelpBlock" value="1" {{#if oldInput.saveLocation }} checked {{/if}} /> {{ messages.yes }}
+                    <input type="radio" placeholder="" name="saveLocation" value="1" {{#if oldInput.saveLocation }} checked {{/if}} /> {{ messages.yes }}
                   </label>
                   <label class="btn btn-default {{#unless oldInput.saveLocation}}active{{/unless}}">
                     <input type="radio" name="saveLocation" {{#unless oldInput.saveLocation}}checked{{/unless}} value="0"/>{{ messages.no }}
@@ -51,7 +51,7 @@
               </div>
             </div>
           </div>
-		  <div class="row">
+		  <div class="row" rel="tooltip" data-placement="bottom" title="{{ messages.saveLocationLatLonHelp }}">
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.latitude}}</label>

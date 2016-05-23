@@ -36,7 +36,7 @@
           </tbody>
         </table>
       </div>
-	  {{!--
+      {{!--
       <div class="col-md-6">
         <h1>{{messages.latestMessages}}<span class="badge">
           {{unreadmessages}}
@@ -55,16 +55,16 @@
               <td>{{subject}}</td>
               <td>({{id}}){{created_at}}</td>
               <td style="text-align: center;">
-					{{#if pivot.read.1}} {{../../messages.read}} 
-						{{else}} {{../../messages.unread}} 
-					{{/if}}
-				</td>
+                {{#if pivot.read.1}} {{../../messages.read}}
+                {{else}} {{../../messages.unread}}
+                {{/if}}
+              </td>
             </tr>
           {{/each}}
           </tbody>
         </table>
       </div>
-	  --}}
+      --}}
     <!-- </div> -->
   </div>
 </div>
@@ -72,33 +72,32 @@
 {{>scripts}}
 <script>
 $('tbody tr').on('click', function () {
-	//window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
-	var seed_id = $(this).data('seed_id');
-    $.get("/seedbank/seedm/" + seed_id, function (data) {
-		if (data.length == 0){
-			return false;
-		}
-		$('#seed_info .modal-content').empty();
-		$('#seed_info .modal-content').append(data);
+  //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
+  var seed_id = $(this).data('seed_id');
+  $.get("/seedbank/seedm/" + seed_id, function (data) {
+    if (data.length == 0){
+      return false;
+    }
+    $('#seed_info .modal-content').empty();
+    $('#seed_info .modal-content').append(data);
 
-		$('#seed_info').modal('show');
-	});
-    }).mouseover(function () {
-    $(this).addClass('active');
-    }).mouseout(function () {
-    $(this).removeClass('active');
-});
-$('#seed_info').on('click', '.modal-footer .footer-left button', function(){
-
-	var seed_id = $('#seed_info .modal-title').data("seed_id");
-	
-    window.open('/seedbank/register/' + seed_id, '_self');
-});
-
-  /*$('#new_seed').on('click', function () {
-    window.open('/seedbank/register', '_self');
-	return false;
+    $('#seed_info').modal('show');
   });
-  */
+}).mouseover(function () {
+  $(this).addClass('active');
+}).mouseout(function () {
+  $(this).removeClass('active');
+});
+
+$('#seed_info').on('click', '.modal-footer .footer-left button', function(){
+  var seed_id = $('#seed_info .modal-title').data("seed_id");
+  window.open('/seedbank/register/' + seed_id, '_self');
+});
+
+/*$('#new_seed').on('click', function () {
+  window.open('/seedbank/register', '_self');
+  return false;
+});
+*/
 </script>
 {{>footer}}

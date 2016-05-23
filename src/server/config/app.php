@@ -135,7 +135,7 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
-                'Illuminate\Broadcasting\BroadcastServiceProvider',
+		'Illuminate\Broadcasting\BroadcastServiceProvider',
 
 		/*
 		 * Application Service Providers...
@@ -153,6 +153,8 @@ return [
 		'Pingpong\Modules\ModulesServiceProvider',
 		'ProAI\Handlebars\HandlebarsServiceProvider',
 		'Torann\GeoIP\GeoIPServiceProvider',
+		'Riari\Forum\ForumServiceProvider',
+		'Riari\Forum\Frontend\ForumFrontendServiceProvider',
 
 	],
 

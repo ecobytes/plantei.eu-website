@@ -22,7 +22,7 @@ class SeedBankController extends Controller {
       $converted_image->scaleimage(800, 800, true);
       if (filesize($picture_path . '/' . $file_name) > 200000) {
         $converted_image->setOption('jpeg:extent', '100kb');
-      }
+    }
       $status = $converted_image->writeimage();
       if ($status) {
       $picture = \Caravel\Picture::create([
@@ -113,8 +113,8 @@ class SeedBankController extends Controller {
     }
     return view('seedbank::myseeds')
       ->with('seeds', $t)
-      ->with('transactionsBy', $transactions['asked_by']) 
-      ->with('transactionsTo', $transactions['asked_to']) 
+      ->with('transactionsBy', $transactions['asked_by'])
+      ->with('transactionsTo', $transactions['asked_to'])
       ->with('messages', \Lang::get('seedbank::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
@@ -178,8 +178,8 @@ class SeedBankController extends Controller {
       }
     }
     return view('seedbank::exchanges')
-      ->with('transactionsBy', $transactions['asked_by']) 
-      ->with('transactionsTo', $transactions['asked_to']) 
+      ->with('transactionsBy', $transactions['asked_by'])
+      ->with('transactionsTo', $transactions['asked_to'])
       ->with('messages', \Lang::get('seedbank::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
@@ -219,7 +219,7 @@ class SeedBankController extends Controller {
           }
         }
       };
-    } 
+    }
     if ($id){
       if (! isset($oldInput)) {
        $seed->variety;
@@ -256,7 +256,7 @@ class SeedBankController extends Controller {
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
       ->with('active', ['myseeds' => true])
-      ->with('oldInput', $oldInput); 
+      ->with('oldInput', $oldInput);
   }
 
   public function postRegister(Request $request)
@@ -277,9 +277,9 @@ class SeedBankController extends Controller {
         $farming = true;
         $months = array();
         foreach (range(1, 12) as $i) {
-          if (in_array($i, $formInput['months'])) { 
+          if (in_array($i, $formInput['months'])) {
             $months[$i] = ['month' => true];
-          } else { 
+          } else {
             $months[$i] = ['month' => false];
           }
         }
@@ -310,7 +310,7 @@ class SeedBankController extends Controller {
       }
       if (in_array($key, $seed_taxonomy)){
         // TODO: Should do a special function to work this out
-        if ($value) { 
+        if ($value) {
           $t = (array)\DB::table($key)->where('name', $value)->first();
           if (! $t) {
             $t['id'] = \DB::table($key)->insertGetId(['name' => $value]);
@@ -357,7 +357,7 @@ class SeedBankController extends Controller {
   {
     $user = \Auth::user();
     $updatelocation = false;
-    $location = false; 
+    $location = false;
     $locale = $user->locale ?: config('app.locale');
     if ($locale == 'pt'){
       $preflocale = array('pt', 'pt-BR', 'en');
@@ -382,7 +382,7 @@ class SeedBankController extends Controller {
 
       if ($user->place_name){
          $location = true;
-      } 
+      }
   /*  $updatelocation = [ 'lat' => 12.2,
       'lon' => 121.1,
         'place_name' => 'Porto' ];*/
@@ -563,8 +563,8 @@ class SeedBankController extends Controller {
             $seed->pictures()->save($status['picture']);
           }
         }
-        return [ 'files' => [ 
-          ['md5sum' => $status['picture']->md5sum, 
+        return [ 'files' => [
+          ['md5sum' => $status['picture']->md5sum,
            'id' => $status['picture']->id,
            'url' => $status['picture']->url,
            'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
@@ -574,5 +574,80 @@ class SeedBankController extends Controller {
       }
     }
     return [ 'files' => [['error' => 'No files sent']]];
+  }
+  public function getEvents () {
+    $user = \Auth::user();
+    return view('seedbank::events')
+      ->with('messages', \Lang::get('seedbank::messages'))
+      ->with('menu', \Lang::get('seedbank::menu'))
+      ->with('username', $user->name)
+      ->with('active', ['events' => true]);
+  }
+  public function postEvents (Request $request) {
+    // TODO: Limit number of picture by seed?
+    $user = \Auth::user();
+    if ($request->has('seed_id')){
+      $seed = \Caravel\Seed::findOrFail($request->input('seed_id'));
+    } else {
+      $seed = false;
+    }
+    if ($request->hasFile('pictures')) {
+      $picture = $request->file('pictures')[0];
+      $status = SeedBankController::save_image($picture);
+      if (isset($status['error'])) {
+        return [ 'files' => [ ['error' => $status['error']]]];
+      } else {
+        if ($seed) {
+          if (!$seed->user_id == $user->id){
+            return [ 'files' => [ ['error' => 'File is owned by other user']]];
+          } else {
+            $seed->pictures()->save($status['picture']);
+          }
+        }
+        return [ 'files' => [
+          ['md5sum' => $status['picture']->md5sum,
+           'id' => $status['picture']->id,
+           'url' => $status['picture']->url,
+           'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
+           'deleteType' => 'GET'
+          ]]
+        ];
+      }
+    }
+    return [ 'files' => [['error' => 'No files sent']]];
+  }
+  //	Route::post('/add', function (Request $request) {
+  public function postAddEvent (Request $request) {
+    $user = \Auth::user();
+    //TODO: Check that user can add events
+    $this->validate($request, [
+      'startdate' => 'required',
+      'starttime' => 'required',
+      'enddate' => 'required',
+      'endtime' => 'required',
+      'title' => 'required',
+      'city' => 'required',
+      'category' => 'required',
+    ]);
+    $event_id = $request->input('event_id') ?: false;
+    if ( ! $event_id ) {
+      $new_event = [];
+      foreach(['category', 'location', 'title', 
+        'description', 'address'] as $key){
+      /*foreach(['category', 'location', 'start', 'end', 'title', 
+      'description', 'address', 'image'] as $key){*/
+        $new_event[$key] = $request->input($key) ?: "";
+      };
+
+      $start = \Carbon\Carbon::parse($request->input('startdate') . ' ' . $request->input('starttime'));
+      $end = \Carbon\Carbon::parse($request->input('enddate') . ' ' . $request->input('endtime'));
+      $new_event["start"] = $start;
+      $new_event["end"] = $end;
+      $new_event["user_id"] = $user->id;
+
+      $event = \Caravel\Calendar::create($new_event);
+    }
+      //return redirect('/events');
+      return '';
   }
 }

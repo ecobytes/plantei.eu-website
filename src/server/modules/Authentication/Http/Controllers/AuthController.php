@@ -175,6 +175,11 @@ class AuthController extends Controller {
 					'place_name' => $geoipdata->city->name ];
 			}
 			catch(\GeoIp2\Exception\AddressNotFoundException $e){ $oldInput = []; }
+			if ( config('app.debug') ) {
+				$oldInput = [ 'lat' => "123.21",
+					'lon' => "33.3",
+					'place_name' => "LISABON" ];
+			}
 		}
 
 		//Subscribe newsletter defaults to true

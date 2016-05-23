@@ -36,21 +36,16 @@ class CreateSeedBankTable extends Migration
             // Direct planting (0) (1)false (2)true
             $table->smallInteger('direct')->default(0)->unsigned();
         });
-        Schema::create('seeds_cooking', function (Blueprint $table) {
+        Schema::create('seeds_ends', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->integer('seed_id')->unsigned();
             $table->foreign('seed_id')->references('id')
                 ->on('seeds')->onDelete('cascade');
-            $table->text('recipe');
-        });
-        Schema::create('seeds_medicine', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-            $table->integer('seed_id')->unsigned();
-            $table->foreign('seed_id')->references('id')
-                ->on('seeds')->onDelete('cascade');
-            $table->text('uses');
+            $table->text('article');
+            // medicinal, textil, cooking, other, dangers?
+            $table->string('category');
+
         });
     }
 
@@ -61,7 +56,7 @@ class CreateSeedBankTable extends Migration
      */
     public function down()
     {
-        Schema::drop('seeds_cooking');
+        Schema::drop('seeds_ends');
         Schema::drop('seeds');
     }
 }

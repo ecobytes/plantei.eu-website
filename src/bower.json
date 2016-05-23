@@ -6,7 +6,9 @@
     "jquery-ui": "*",
     "laravel-bootstrap-modal-form": "jerseymilker/laravel-bootstrap-modal-form",
     "blueimp-file-upload": "~9.11.2",
-    "tinymce": "~4.3.3"
+    "tinymce": "~4.3.3",
+    "fullcalendar": "~2.7.1",
+    "jt.timepicker": "timepicker#^1.10.0"
   },
   "private": true
 }

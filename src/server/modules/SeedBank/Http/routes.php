@@ -45,22 +45,15 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 				$seed->cookings();
 				$seed->medicines();
 				if ($seed->pictures->count()){
-				  $picture = $seed->pictures->first();
+					$picture = $seed->pictures->first();
 				} else {
-				  $picture = false;
+					$picture = false;
 				}
-				//dd($seed);
 
 				return view('seedbank::seed_modal')
-				  ->with('seed', $seed)
-				  ->with('picture', $picture)
-				  ->with('update_seed', $update_seed);
-      /*->with('usermessages', $userMessages)
-      ->with('unreadmessages', $unreadmessages)
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
-	  ->with('active', ['home' => true]);*/
+					->with('seed', $seed)
+					->with('picture', $picture)
+					->with('update_seed', $update_seed);
 			}
 			return [];
 		});
@@ -68,7 +61,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 			//$message = \Caravel\Message::findOrFail($id);
 			$user = \Auth::user();
 			//$message = \Caravel\Message::findOrFail($id);
-                       $message = $user->messageById($id);
+			$message = $user->messageById($id);
 			if (!$message->user_id == $user->id)
 			{
 				$message->pivot->read = true;
@@ -82,7 +75,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 		Route::get('/user_seeds/{id}', function ($id) {
 			$user = \Auth::user();
 			$seed_owner = \Caravel\User::findOrFail($id);
-		    $seeds = $seed_owner->seeds()
+			$seeds = $seed_owner->seeds()
 				->where('public', true)->where('available', true)
 				->leftJoin('seeds_exchanges', function($join) use ($user)
 				{
@@ -105,7 +98,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 
 			if ((! $seed_ids) || (! $owner_id)) { return []; }
 				$data = [
-					'asked_to' => $owner_id, 
+					'asked_to' => $owner_id,
 					'seed_ids' => $seed_ids
 				];
 			return $user->startTransaction($data)
@@ -116,37 +109,6 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 			$user = \Auth::user();
 			return $user->seeds()->paginate(5);
 		});
-		/*Route::post('/add-pictures', function (Request $request) {
-			// TODO: Limit number of picture by seed?
-			$user = \Auth::user();
-			if ($request->has('seed_id')){
-				$seed = \Caravel\Seed::findOrFail($request->input('seed_id'));
-			} else {
-				$seed = false;
-			}
-			if ($request->hasFile('pictures')) {
-				$picture = $request->file('pictures')[0];
-				$status = save_image($picture);
-				if (isset($status['error'])) {
-					return [ 'files' => [ ['error' => $status['error']]]];
-				} else {
-					if ($seed) {
-						if (!$seed->user_id == $user->id){
-					      return [ 'files' => [ ['error' => 'File is owned by other user']]];
-						} else {
-							$seed->pictures()->save($status['picture']);
-						}
-					}
-					return [ 'files' => [ ['md5sum' => $status['picture']->md5sum, 
-						                   'id' => $status['picture']->id,
-										   'url' => $status['picture']->url,
-										   'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
-									       'deleteType' => 'GET'  ]
-									   ]];
-				}
-			}
-			return [ 'files' => [['error' => 'No files sent']]];
-		});*/
 		Route::get('/pictures/delete/{id}', function ($id) {
 			$user = \Auth::user();
 			$picture = \Caravel\Picture::findOrFail($id);
@@ -162,22 +124,92 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 			// TODO: Pass this work to nginx?
 			$user = \Auth::user();
 			$picture = \Caravel\Picture::where('md5sum', $md5sum)->firstOrFail();
-            $file = \File::get($picture->path);
+			$file = \File::get($picture->path);
 			$response = \Response::make($file,200);
 			$response->header('Content-Type', 'image/jpg');
 			return $response;
 		});
 		Route::get('/exchange/{action}/{id}', function ($action, $id) {
-		  $user = \Auth::user();
-		  if (in_array($action, ['accept', 'reject', 'complete'])) {
-		     if (!method_exists($user,$action.'Transaction')){
-		        return 'false';
-			 }		
-			 $output = call_user_func_array(array($user, $action.'Transaction'),array($id));
-			 return "ok";
-		  }
-		  //return true || error;
-          return (null);
+			$user = \Auth::user();
+			if (in_array($action, ['accept', 'reject', 'complete'])) {
+				if (!method_exists($user,$action.'Transaction')){
+					return 'false';
+				}
+				$output = call_user_func_array(array($user, $action.'Transaction'),array($id));
+				return "ok";
+			}
+			//return true || error;
+			return (null);
+		});
+	});
+});
+Route::group(['prefix' => 'events', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
+{
+	Route::group(['middleware' => 'auth'], function(){
+		Route::get('/', 'SeedBankController@getEvents');
+		Route::post('/', 'SeedBankController@postEvents');
+		Route::get('/form/{id}', function ($id) {
+			if ( $id ==  'new' ) {
+            	return view('seedbank::event-modal')
+					->with('event', [ 'description' => 'CHANGEME eventDescripitionLabel' ])
+        			->with('messages', \Lang::get('seedbank::messages'));
+			}
+			$event = \Caravel\Calendar::find($id);
+			if ( ! $id ){
+				$event = false;
+			}
+            return view('seedbank::event-modal')
+				->with('event', $event)
+        		->with('messages', \Lang::get('seedbank::messages'));
+			
+		});
+
+		Route::get('/del/{id}', function ($id) {
+			//TODO: Check that user can add events (belongs to admin group)
+			\Caravel\Calendar::destroy($id);
+			//return redirect('/events');
+			return '';
+		});
+	
+		Route::post('/add', 'SeedBankController@postAddEvent');
+		Route::post('/calendar', function (Request $request) {
+			$events = \Caravel\Calendar::interval($request)->get();
+			return $events;
+		});
+	});
+});
+Route::group(['prefix' => 'sementecas', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
+{
+	Route::group(['middleware' => 'auth'], function(){
+		Route::get('/', function () {
+			return \Caravel\Sementeca::paginate(5);
+		});
+		Route::get('/{id}', function ($id) {
+			if ( ! $id )
+			{
+				return \Caravel\Sementeca::paginate(5);
+			}
+			$sementeca = \Caravel\Sementeca::findOrFail($id);
+			return $sementeca;
+		});
+	});
+});
+
+Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
+{
+	Route::group(['middleware' => 'auth'], function(){
+    Route::get('/location', function (Request $request) {
+			return array_keys(config('concelhos_portugal'));
+      $response = [];
+      foreach(array_keys(config('concelhos_portugal')) as $key) {
+        if (strpos($key, $request->input('term')) !== false) {
+              $response[] = $key;
+        }
+      };
+      return $response;
+		});
+		Route::get('/location/{concelho}', function ($concelho) {
+			return config('concelhos_portugal.' . $concelho);
 		});
 	});
 });
