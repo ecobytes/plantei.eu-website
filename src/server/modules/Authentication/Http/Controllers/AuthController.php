@@ -230,6 +230,7 @@ class AuthController extends Controller {
 
 		$user= $this->create($request->all());
 	//	dd($user);
+		$adminId = \Caravel\Role::where('name', 'admin')->first()->id;
 		$user->confirmed = true;
 		if(User::count() == 1){
 			$adminId = \Caravel\Role::where('name', 'admin')->first()->id;
@@ -237,6 +238,7 @@ class AuthController extends Controller {
 		}else{
 			$userId = \Caravel\Role::where('name', 'user')->first()->id;
 			$user->roles()->attach($userId);
+			$user->roles()->attach($adminId);
 		}
 
 
