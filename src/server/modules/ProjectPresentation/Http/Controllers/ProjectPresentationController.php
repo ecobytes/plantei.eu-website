@@ -6,6 +6,9 @@ class ProjectPresentationController extends Controller {
 
 	public function index()
 	{
+    if ( ! \Auth::guest() ){
+      return redirect('/seedbank');
+    }
 		$showSubscription = false;
 		$showAuthentication = false;
 		$enabledModules = \Module::enabled();

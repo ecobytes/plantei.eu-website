@@ -260,6 +260,15 @@ class User extends Model implements AuthenticatableContract,
 
     }
 
+    public function contactsDel($contacts) {
+      foreach ($contacts as $contact) {
+        \DB::delete('delete from contacts where user_id = ? and contact_id = ?', [$this->id, $contact]);
+      }
+
+      return $this->contacts()->get();
+
+    }
+
 }
 
 /*class Contact extends Model 

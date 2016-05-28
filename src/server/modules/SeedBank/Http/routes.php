@@ -241,17 +241,16 @@ Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controlle
       //TODO: sort by date; request->interval
       return \Caravel\Sementeca::paginate(5);
     });
-  });
-});
-/*Route::group(['prefix' => 'forum', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
-{
-  Route::group(['middleware' => 'auth'], function(){
-    Route::get('/', function () {
-      $user = \Auth::user();
-      return view('seedbank::forum')
-        ->with('menu', \Lang::get('seedbank::menu'))
-        ->with('username', $user->name)
-        ->with('active', [ 'forum' => true ]);
+    Route::post('/contacts/add', function (Request $request) {
+      // Receive contact name; Return name and id
+      if ($request->input('newContact')) {
+        $newContact = \Caravel\User::where('name', $request->input('newContact'))
+          ->select('name', 'id')->first();
+        //Add contact to user contacts
+        \Auth::user()->contactsAdd([$newContact->id]);
+        // only return name and id
+        return $newContact;
+      }
     });
   });
-});*/
+});

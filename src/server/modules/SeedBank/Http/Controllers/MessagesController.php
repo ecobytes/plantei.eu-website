@@ -31,8 +31,9 @@ class MessagesController extends Controller {
     $currentUserId = $user->id;
     // All threads that user is participating in
     $threads = Thread::forUser($currentUserId)->latest('updated_at')->get();
+    $contacts = $user->contacts;
 
-    return view('seedbank::messenger', compact('threads'))
+    return view('seedbank::messenger', compact('threads', 'contacts'))
       ->with('messages', \Lang::get('seedbank::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
