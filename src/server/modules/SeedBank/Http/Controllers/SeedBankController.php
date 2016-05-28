@@ -50,9 +50,9 @@ class SeedBankController extends Controller {
       if (! $user->name == $data['name']){
         $rules['name'] = 'required|max:255|unique:users';
       }
-      if (! $user->email == $data['email']){
+      //if (! $user->email == $data['email']){
         $rules['email'] = 'sometimes|required|email|max:255|unique:users';
-      }
+      //}
       if ($data['password']){
         $rules['password'] = 'required|confirmed|min:6';
       }
