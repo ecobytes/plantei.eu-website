@@ -255,11 +255,12 @@ class AuthController extends Controller {
 			'body' => \Lang::get('auth::confirmationemail.text'), 
 			'user_id' => 1,
     ]);
-    \Cmgmyr\Messenger\Models\Participant::create([
+    $thread->addParticipants([1, $user->id]);
+    /*\Cmgmyr\Messenger\Models\Participant::create([
       'thread_id' => $thread->id,
       'user_id'   => $user->id,
       'last_read' => new \Carbon\Carbon,
-    ]);
+    ]);*/
 
 		if (!$thread){ dd("Error Creating Message");};
 
