@@ -28,7 +28,7 @@
                   <div class="form-group">
                     <label class="control-label">{{../messages.common_name}}*</label>
                     <span class="cell">
-                      <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="common_name" value="{{common_name }}">
+                      <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="common_name" value="{{common_name }} autocomplete="off"">
                       <span class="help-block"></span>
                     </span>
                   </div>
@@ -36,13 +36,13 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="control-label">{{../messages.sitecollected}}</label>
-                        <span class="cell"><input type="text" class="form-control" name="local" value="{{ local }}"></span>
+                        <span class="cell"><input type="text" class="form-control" name="local" value="{{ local }}" autocomplete="off"></span>
                       </div>
                     </div>
                     <div class="col-md-3">
                       <div class="form-group">
                         <label class="control-label">{{../messages.yearcollected}}</label>
-                        <span class="cell"><input type="text" class="form-control" name="year" value="{{ year }}"></span>
+                        <span class="cell"><input type="text" class="form-control" name="year" value="{{ year }}" autocomplete="off"></span>
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -201,23 +201,23 @@
                 <div class="form-group">
                   <label class="control-label">{{../messages.latin_name}}</label>
                   <span class="cell">
-                    <input type="text" class="form-control" placeholder="" name="latin_name" value="{{ latin_name }}">
+                    <input type="text" class="form-control" placeholder="" name="latin_name" value="{{ latin_name }} autocomplete="off"">
                   </span>
                 </div>
                 <div class="form-group">
                   <label class="control-label">{{../messages.family}}</label>
                   <input type="hidden" name="family_id" value="{{ family.id }}">
-                  <span class="cell"><input type="text" class="form-control" name="family" value="{{ family.name }}"></span>
+                  <span class="cell"><input type="text" class="form-control" name="family" value="{{ family.name }}" autocomplete="off"></span>
                 </div>
                 <div class="form-group">
                   <label class="control-label">{{../messages.species}}</label>
                   <input type="hidden" name="species_id" value="{{ species.id }}">
-                  <span class="cell"><input type="text" class="form-control" name="species" value="{{ species.name }}"></span>
+                  <span class="cell"><input type="text" class="form-control" name="species" value="{{ species.name }}" autocomplete="off"></span>
                 </div>
                 <div class="form-group">
                   <label class="control-label">{{../messages.variety}}</label>
                   <input type="hidden" name="variety_id" value="{{ variety.id }}">
-                  <span class="cell"><input type="text" class="form-control" name="variety" value="{{ variety.name }}"></span>
+                  <span class="cell"><input type="text" class="form-control" name="variety" value="{{ variety.name }} autocomplete="off""></span>
                 </div>
               </div>
             </div>

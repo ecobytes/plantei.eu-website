@@ -10,12 +10,12 @@
 
           <div class="form-group" rel="tooltip" data-placement="bottom" title="{{messages.usernameHelp }}">
             <label class="control-label">{{messages.username}}</label>
-              <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{ oldInput.name }}"></span>
+              <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{ oldInput.name }}" autocomplete="off"></span>
           </div>
 
           <div class="form-group" rel="tooltip" data-placement="bottom" title="{{messages.emailHelp }}">
             <label class="control-label">{{messages.email}}</label>
-			<input type="text" style="display:none;">
+			<input type="text" style="display:none;" autocomplete="off">
               <span class="cell"><input type="email" class="form-control" name="email" value="{{ oldInput.email }}"></span>
           </div>
 
@@ -34,7 +34,7 @@
 		    <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.whereareyou}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ oldInput.place_name }}"></span>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ oldInput.place_name }}" autocomplete="off"></span>
               </div>
             </div>
 			<div class="col-md-6 col-md-offset-2">
@@ -55,13 +55,13 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.latitude}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="lat" value="{{ oldInput.lat }}"></span>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="lat" value="{{ oldInput.lat }}" autocomplete="off"></span>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.longitude}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="lon" value="{{ oldInput.lon }}"></span>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="lon" value="{{ oldInput.lon }}" autocomplete="off"></span>
               </div>
             </div>
           </div>

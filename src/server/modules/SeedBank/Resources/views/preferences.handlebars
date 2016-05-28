@@ -12,7 +12,7 @@
 
           <div class="form-group">
             <label class="control-label">{{messages.username}}</label>
-              <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{user.name}}"></span>
+              <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{user.name}}" autocomplete="off"></span>
           </div>
 
           <div class="form-group">
@@ -36,7 +36,7 @@
 		    <div class="col-md-8">
               <div class="form-group">
                 <label class="control-label">{{messages.whereareyou}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ user.place_name }}"></span>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ user.place_name }}" autocomplete="off"></span>
               </div>
             </div>
 			{{#if updatelocation}}
@@ -56,13 +56,13 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.latitude}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="lat" value="{{ user.lat }}"></span>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="lat" value="{{ user.lat }}" autocomplete="off"></span>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.longitude}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="lon" value="{{ user.lon }}"></span>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="lon" value="{{ user.lon }}" autocomplete="off"></span>
               </div>
             </div>
           </div>

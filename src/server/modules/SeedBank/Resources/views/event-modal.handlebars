@@ -17,10 +17,10 @@
         </label>
       </div>
       <div class="col-md-3">
-        <input type="text" class="form-control date" name="startdate" value="{{ event.startdate }}">
+        <input type="text" class="form-control date" name="startdate" value="{{ event.startdate }}" autocomplete="off">
       </div>
       <div class="col-md-2">
-        <input type="text" class="form-control time" name="starttime" value="{{ event.starttime }}">
+        <input type="text" class="form-control time" name="starttime" value="{{ event.starttime }}" autocomplete="off">
       </div>
     </div>
     <div class="form-group row">
@@ -30,10 +30,10 @@
         </label>
       </div>
       <div class="col-md-3">
-        <input type="text" class="form-control date" name="enddate" value="{{ event.enddate }}">
+        <input type="text" class="form-control date" name="enddate" value="{{ event.enddate }}" autocomplete="off">
       </div>
       <div class="col-md-2">
-        <input type="text" class="form-control time" name="endtime" value="{{ event.endtime }}">
+        <input type="text" class="form-control time" name="endtime" value="{{ event.endtime }}" autocomplete="off">
       </div>
     </div>
 
@@ -42,7 +42,7 @@
         <label class="control-label">{{ messages.category }}</label>
       </div>
       <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="{{ messages.category }}" name="category" value="{{ event.category }}">
+        <input type="text" class="form-control" placeholder="{{ messages.category }}" name="category" value="{{ event.category }}" autocomplete="off">
       </div>
     </div>
 
@@ -51,7 +51,7 @@
         <label class="control-label">{{ messages.title }}</label>
       </div>
       <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="{{ messages.title }}" name="title" value="{{ event.title }}">
+        <input type="text" class="form-control" placeholder="{{ messages.title }}" name="title" value="{{ event.title }}" autocomplete="off">
       </div>
     </div>
 
@@ -60,7 +60,7 @@
         <label class="control-label">{{ messages.address }}</label>
       </div>
       <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="{{ messages.address }}" name="address" value="{{ event.address }}">
+        <input type="text" class="form-control" placeholder="{{ messages.address }}" name="address" value="{{ event.address }}" autocomplete="off">
       </div>
     </div>
 
@@ -72,10 +72,10 @@
       </div>
       <input type="hidden" name="location" value="{{ event.location }}">
       <div class="col-md-4 ui-front">
-        <input type="text" class="form-control district" placeholder="{{ messages.district }}" name="district" value="">
+        <input type="text" class="form-control district" placeholder="{{ messages.district }}" name="district" value="" autocomplete="off">
       </div>
       <div class="col-md-4 ui-front">
-        <input type="text" class="form-control city" placeholder="{{ messages.city }}" disabled name="city" value="">
+        <input type="text" class="form-control city" placeholder="{{ messages.city }}" disabled name="city" value="" autocomplete="off">
       </div>
     </div>
 
