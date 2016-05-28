@@ -244,19 +244,27 @@ class AuthController extends Controller {
 
 		$user->save();
 			//push();
-		// TODO: Cleanup messages
-		$message = \Caravel\Message::send([
-			'subject' => \Lang::get('auth::confirmationemail.title'), 
+    // TODO: Cleanup messages
+    $thread = \Cmgmyr\Messenger\Models\Thread::create([
+			'subject' => \Lang::get('auth::confirmationemail.title'),
+    ]);
+    \Cmgmyr\Messenger\Models\Message::create([
+      'thread_id' => $thread->id,
 			'body' => \Lang::get('auth::confirmationemail.text'), 
 			'user_id' => 1,
-			'recipients' => [$user->id]
-		]);
-		if (!$message){ dd("Error Creating Message");};
+    ]);
+    \Cmgmyr\Messenger\Models\Participant::create([
+      'thread_id' => $thread->id,
+      'user_id'   => $user->id,
+      'last_read' => new \Carbon\Carbon,
+    ]);
+
+		if (!$thread){ dd("Error Creating Message");};
 
 		// DEBUG:TEST:TODO: Initiate transactions, to and from user
 		//                : Create one seed
 
-		$faker = \Faker\Factory::create();
+		/*$faker = \Faker\Factory::create();
 		$seed_id =  random_int(1,10);
 		$seed_initial = \Caravel\Seed::firstOrCreate([
 			'local' => 'teste-' . $faker->city,
@@ -273,10 +281,10 @@ class AuthController extends Controller {
 				if ($seed->user_id == $user->id){ $seed = false;}
 			}
 		}
-		
 		\Caravel\User::find(1)
 			->startTransaction(['asked_to'=>$user->id, 'seed_id'=>$seed_initial->id]);
-		$user->startTransaction(['asked_to'=>$seed->user_id, 'seed_id'=>$seed->id]);
+    $user->startTransaction(['asked_to'=>$seed->user_id, 'seed_id'=>$seed->id]);
+     */
 
 
 
