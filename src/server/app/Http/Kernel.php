@@ -27,6 +27,7 @@ class Kernel extends HttpKernel {
 	 */
 	protected $routeMiddleware = [
 		'auth' => 'Caravel\Http\Middleware\Authenticate',
+		'admin' => 'Caravel\Http\Middleware\Administrator',
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
 		'guest' => '\Caravel\Http\Middleware\RedirectIfAuthenticated',
 		'csrf' => '\Caravel\Http\Middleware\VerifyCsrfToken',

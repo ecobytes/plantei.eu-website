@@ -14,7 +14,7 @@ class ForumPolicy extends Base
      */
     public function createCategories($user)
     {
-        return $user->name == 'Devel User';
+        return $user->roles()->where('name', 'admin')->count();
     }
 
     /**
@@ -25,7 +25,7 @@ class ForumPolicy extends Base
      */
     public function moveCategories($user)
     {
-        return $user->name == 'Devel User';
+        return $user->roles()->where('name', 'admin')->count();
     }
 
     /**
@@ -36,7 +36,7 @@ class ForumPolicy extends Base
      */
     public function renameCategories($user)
     {
-        return $user->name == 'Devel User';
+        return $user->roles()->where('name', 'admin')->count();
     }
 
     /**

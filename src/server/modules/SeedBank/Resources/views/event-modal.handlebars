@@ -6,7 +6,7 @@
   </button>
   <h1 class="modal-title">{{ modalTitle }}</h1>
 </div>
-<form class="form-horizontal" role="form" method="POST" action="/events/add">
+<form class="form-horizontal" role="form" method="POST" action="/admin/events/add">
   <div class="modal-body">
     <input type="hidden" name="_token" value="{{ csrfToken }}">
     <input type="hidden" name="event_id" value="{{ event.id }}">
@@ -72,18 +72,16 @@
       </div>
       <input type="hidden" name="location" value="{{ event.location }}">
       <div class="col-md-4 ui-front">
-        <input type="text" class="form-control district" placeholder="{{ messages.district }}Concelho" name="district" value="">
+        <input type="text" class="form-control district" placeholder="{{ messages.district }}" name="district" value="">
       </div>
       <div class="col-md-4 ui-front">
-        <input type="text" class="form-control city" placeholder="{{ messages.city }}Cidade" disabled name="city" value="">
+        <input type="text" class="form-control city" placeholder="{{ messages.city }}" disabled name="city" value="">
       </div>
     </div>
 
     <div class="form-group" rel="tooltip" data-placement="bottom" title="{{ messages.eventDescriptionHelp }}">
       <span class="cell">
-        <textarea style="resize:none; overflow:hidden;" class="form-control" rows="5" autocomplete="off" placeholder="{{messages.description}}" name="description">
-          {{ event.description }}
-        </textarea>
+        <textarea style="resize:none; overflow:hidden;" class="form-control" rows="5" autocomplete="off" placeholder="{{messages.description}}" name="description">{{ event.description }}</textarea>
       </span>
     </div>
   </div>
@@ -102,6 +100,7 @@
     </div>
   </div>
 </form>
+<script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="/js/event_scripts.js"></script>
 <script>
 /*$('form').on('submit', function(e) {

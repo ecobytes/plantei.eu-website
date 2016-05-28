@@ -41,7 +41,7 @@
 			    {{#if seeds.next_page_url}}
                 <li class="next">
                   <a type="button" data-url="{{seeds.next_page_url}}" class="btn btn-primary btn-md" id="next_seeds">
-                     {{messages.next_seeds}}CHANGME_NEXT_SEEDS
+                     {{messages.next_seeds}}
                   </a>
                 </li>
 				{{/if}}
@@ -86,12 +86,12 @@
 	   var buttons = '';
 	   if (data.prev_page_url) {
 	     buttons += '<li class="previous"><a data-url="' + data.prev_page_url + '" class="btn btn-primary btn-md">\
-		    {{messages.prev_seeds}}CHANGME_PREV_SEEDS\
+		    {{messages.prev_seeds}}\
                   </a></li>';
 	   }
 	   if (data.next_page_url) {
 	     buttons += '<li class="next"><a data-url="' + data.next_page_url + '" class="btn btn-primary btn-md">\
-		    {{messages.next_seeds}}CHANGME_NEXT_SEEDS\
+		    {{messages.next_seeds}}\
                   </a></li>';
 	   }
        if (buttons != '') {

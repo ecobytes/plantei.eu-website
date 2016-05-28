@@ -3,7 +3,7 @@
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
-class Authenticate {
+class Administrator {
 
 	/**
 	 * The Guard implementation.
@@ -43,6 +43,9 @@ class Authenticate {
 				return redirect()->guest('auth/login');
 			}
 		}
+    if ( ! $this->auth->user()->roles()->where('name', 'admin')->count() ){
+      return redirect('/seedbank');
+    }
 
 		if (isset($this->auth->user()->locale)){
 			$locale = $this->auth->user()->locale | config('app.locale');
@@ -50,11 +53,10 @@ class Authenticate {
 		} else {
 			$locale = config('app.locale');
 		}
-
-    \App::setLocale($locale);
-    \View::share('lang', [$locale => true]);
-    \View::share('langString', $locale);
-    \View::share('admin', $this->auth->user()->is_admin());
+	    \App::setLocale($locale);
+        \View::share('lang', [$locale => true]);
+        \View::share('langString', $locale);
+        \View::share('admin', true);
 
 		return $next($request);
 	}

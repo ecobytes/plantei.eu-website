@@ -155,7 +155,7 @@ return [
 		'Torann\GeoIP\GeoIPServiceProvider',
 		'Riari\Forum\ForumServiceProvider',
 		'Riari\Forum\Frontend\ForumFrontendServiceProvider',
-
+    Cmgmyr\Messenger\MessengerServiceProvider::class,
 	],
 
 	/*

@@ -42,6 +42,7 @@ return [
     |
     */
 
-    'middleware' => null
+    //'middleware' => null
+    'middleware' => 'auth'
 
 ];

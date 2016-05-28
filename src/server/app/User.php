@@ -7,12 +7,14 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Cmgmyr\Messenger\Traits\Messagable;
 
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
 									CanResetPasswordContract
 {
     use Authenticatable, Authorizable, CanResetPassword;
+    use Messagable;
 
 	/**
 	 * The database table used by the model.
@@ -27,7 +29,7 @@ class User extends Model implements AuthenticatableContract,
 	 * @var array
 	 */
 	protected $fillable = ['name', 'email', 'password', 'lat', 'lon', 'place_name'];
-   
+
 	protected $casts = [
         'lat' => 'float',
         'lon' => 'float',
@@ -46,30 +48,11 @@ class User extends Model implements AuthenticatableContract,
       return $this->belongsToMany('Caravel\Role');
     }
 
-	public function messages()
-  {
-	return $this->belongsToMany('Caravel\Message', 'message_user')
-	  //->sortByDesc('created_at')
-	  ->withPivot('read', 'replied');
-  }
-
-    public function messageById($id)
+    public function is_admin()
     {
-      if (! $id){
-        return false;
-      }
-	  $message = $this->messages()->where('id', $id)->first();
-	  if (!$message){
-		$message = \Caravel\Message::findOrFail($id);
-		if ($message->user_id != $this->id){
-		  abort(403);
-		} else {
-		  $message['read'] = true;
-		  $message['replied'] = true;
-		}
-	  }
-	  return $message;
+      return boolval($this->roles()->where('name', 'admin')->count());
     }
+
 	public function getIdAttribute($value) {
 			return (int) $value;
 	}
@@ -77,32 +60,6 @@ class User extends Model implements AuthenticatableContract,
 	public function seeds() {
 	  return $this->hasMany('Caravel\Seed', 'user_id');
 	}
-
-    /**
-     * Get all sent messages.
-     *
-     * @return Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function sentMessages()
-    {
-        return $this->hasMany('Caravel\Message', 'user_id');
-    }
-
-    /**
-     * Get last messages.
-     * @param integer
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public function lastMessages($limit=10)
-	{
-	  return Message::select(\DB::raw('*, messages.user_id as sender_id'))
-		->join('message_user', 'message_user.message_id', '=', 'messages.id')
-		->where('message_user.user_id', $this->id)
-		->orWhere('messages.user_id', $this->id)
-		->orderBy('created_at', 'desc')
-		->limit($limit)->get();
-    }
-
 
 	/**
      * Get pending transactions.
@@ -289,4 +246,36 @@ class User extends Model implements AuthenticatableContract,
 	  return $transaction->updateParent();
 	}
 
+    public function contacts() {
+      //return $this->hasManyThrough('\Caravel\Contact', '\Caravel\User', 'contact_id', 'user_id');
+      return $this->belongsToMany('\Caravel\User', 'contacts', 'user_id', 'contact_id');
+    }
+
+    public function contactsAdd($contacts) {
+      foreach ($contacts as $contact) {
+        \DB::insert('insert into contacts (user_id, contact_id) values (?, ?)', [$this->id, $contact]);
+      }
+
+      return $this->contacts()->get();
+
+    }
+
 }
+
+/*class Contact extends Model 
+{
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 * /*
+	protected $table = 'contacts';
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 * /*
+	protected $fillable = ['user_id', 'contact_id'];
+
+}*/

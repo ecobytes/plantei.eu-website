@@ -71,7 +71,8 @@ class SeedBankController extends Controller {
       ->chunk(20)[0]
       ->toArray();
 
-    $userMessages = $user->messages()->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
+    /*$userMessages = $user->messages()
+      ->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
     $unreadmessages = 0;
     foreach($userMessages as &$m) {
       $t = array();
@@ -81,11 +82,11 @@ class SeedBankController extends Controller {
       } else {
         $unreadmessages++;
       }
-    }
+    }*/
     return view('seedbank::home')
       ->with('seeds', $seeds)
-      ->with('usermessages', $userMessages)
-      ->with('unreadmessages', $unreadmessages)
+      //->with('usermessages', $userMessages)
+      //->with('unreadmessages', $unreadmessages)
       ->with('messages', \Lang::get('seedbank::messages'))
       ->with('menu', \Lang::get('seedbank::menu'))
       ->with('username', $user->name)
@@ -632,9 +633,9 @@ class SeedBankController extends Controller {
     $event_id = $request->input('event_id') ?: false;
     if ( ! $event_id ) {
       $new_event = [];
-      foreach(['category', 'location', 'title', 
+      foreach(['category', 'location', 'title',
         'description', 'address'] as $key){
-      /*foreach(['category', 'location', 'start', 'end', 'title', 
+      /*foreach(['category', 'location', 'start', 'end', 'title',
       'description', 'address', 'image'] as $key){*/
         $new_event[$key] = $request->input($key) ?: "";
       };

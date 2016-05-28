@@ -7,8 +7,10 @@
         <li role="presentation" {{#if active.exchanges}}class="active"{{/if}}><a href="/seedbank/exchanges">{{menu.exchanges}}</a></li>
         <li role="presentation" {{#if active.search}}class="active"{{/if}}><a href="/seedbank/search">{{menu.search}}</a></li>
         <li role="presentation" {{#if active.events}}class="active"{{/if}}><a href="/events">{{menu.events}}</a></li>
-        <li role="presentation"><a href="/forum" target="_blank">{{menu.forum}}</a></li>
+        <li role="presentation" {{#if active.messages}}class="active"{{/if}}><a href="/messages">{{menu.messages}}</a></li>
+        <li role="presentation" {{#if active.forum}}class="active"{{/if}}><a href="/forum">{{menu.forum}}</a></li>
         <li role="presentation" {{#if active.sementecas}}class="active"{{/if}}><a href="/sementecas">{{menu.seedshare}}</a></li>
+        {{#if admin}}
         <li class="dropdown{{#if active.admin}} active{{/if}}" role="presentation">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ menu.admin }}<span class="caret"></span></a>
           <ul class="dropdown-menu">
@@ -16,6 +18,7 @@
             <li role="presentation"><a href="/sementecas">{{menu.seedshare}}</a></li>
           </ul>
         </li>
+        {{/if}}
         <li class="dropdown{{#if active.profile}} active{{/if}}" role="presentation">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ username }}<span class="caret"></span></a>
           <ul class="dropdown-menu">

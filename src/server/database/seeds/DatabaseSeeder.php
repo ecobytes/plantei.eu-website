@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder {
 		$this->call('UsersTableSeeder');
 		$this->call('OauthClientsTableSeeder');
 		$this->call('SeedBankTableSeeder');
-		$this->call('MessageTableSeeder');
 	}
 
 }
