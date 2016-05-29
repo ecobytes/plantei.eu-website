@@ -12,6 +12,7 @@ class Calendar extends Model
     ];
 
     protected $table = 'calendar';
+    //protected $dateFormat = 'Y';
 
     /**
      * Get sementecas associated with event
@@ -32,6 +33,29 @@ class Calendar extends Model
     {
         return Calendar::where('start', '>=', $request->input('start'))
             ->where('end', '<', $request->input('end'));
+    }
+
+    /**
+     * Get calendar events happening now
+     *
+     * @return Collection
+     */
+    public static function now()
+    {
+      $now = \Carbon\Carbon::now();
+      return Calendar::where('start', '<=', $now)
+            ->where('end', '>', $now);
+    }
+
+    /**
+     * Get calendar events next 7 days
+     *
+     * @return Collection
+     */
+    public static function nextDays()
+    {
+      return Calendar::whereBetween('start', [\Carbon\Carbon::now(), \Carbon\Carbon::now()->addDays(8)])
+        ->orderBy('start');
     }
 
 }

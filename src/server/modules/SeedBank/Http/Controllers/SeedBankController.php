@@ -63,33 +63,21 @@ class SeedBankController extends Controller {
   {
     $user = \Auth::user();
 
-    $seeds = \Caravel\Seed::join('users', 'users.id', '=', 'user_id' )->where('public', true)
-      ->orWhere('user_id', $user->id)->orderBy('seeds.updated_at', 'desc')
+    $seeds = \Caravel\Seed::where('public', true)
+      ->orWhere('user_id', 1)
+      ->orderBy('seeds.updated_at', 'desc')
+      ->limit(10)->join('users', 'users.id', '=', 'user_id')
       ->select('seeds.id', 'seeds.latin_name', 'seeds.common_name',
         'users.name', 'users.email', 'user_id')
-      ->get()
-      ->chunk(20)[0]
-      ->toArray();
+      ->get();
 
-    /*$userMessages = $user->messages()
-      ->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
-    $unreadmessages = 0;
-    foreach($userMessages as &$m) {
-      $t = array();
-      if ($m['pivot']['read']){
-        $t[1] = true;
-        $m['pivot']['read'] = $t;
-      } else {
-        $unreadmessages++;
-      }
-    }*/
-    return view('seedbank::home')
+    $newMessagesCount = $user->newMessagesCount();
+    $threads = $user->threads()->orderBy('updated_at', 'DESC')->limit(10)->get();
+    $calendarNow = \Caravel\Calendar::now()->get();
+    $calendarNext = \Caravel\Calendar::nextDays()->get();
+
+    return view('seedbank::home', compact('threads', 'newMessagesCount', 'calendarNow', 'calendarNext'))
       ->with('seeds', $seeds)
-      //->with('usermessages', $userMessages)
-      //->with('unreadmessages', $unreadmessages)
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
       ->with('active', ['home' => true]);
   }
 
@@ -116,9 +104,6 @@ class SeedBankController extends Controller {
       ->with('seeds', $t)
       ->with('transactionsBy', $transactions['asked_by'])
       ->with('transactionsTo', $transactions['asked_to'])
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
       ->with('active', ['myseeds' => true]);
   }
 
@@ -142,9 +127,6 @@ class SeedBankController extends Controller {
     return view('seedbank::messages')
       ->with('usermessages', $userMessages)
       ->with('unreadmessages', $unreadmessages)
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
       ->with('active', ['messages' => true]);
   }
 
@@ -181,9 +163,6 @@ class SeedBankController extends Controller {
     return view('seedbank::exchanges')
       ->with('transactionsBy', $transactions['asked_by'])
       ->with('transactionsTo', $transactions['asked_to'])
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
       ->with('active', ['exchanges' => true]);
   }
 
@@ -253,9 +232,6 @@ class SeedBankController extends Controller {
       $oldInput = [];
     }
     return view('seedbank::registerseed', ['update' => $update])
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
       ->with('active', ['myseeds' => true])
       ->with('oldInput', $oldInput);
   }
@@ -390,9 +366,7 @@ class SeedBankController extends Controller {
     }
     return view('seedbank::preferences')
       ->with('messages', \Lang::get('authentication::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
       ->with('user', $user)
-      ->with('username', $user->name)
       ->with('updatelocation', $updatelocation)
       ->with('location', $location)
       ->with('active', ['profile' => true]);
@@ -423,9 +397,6 @@ class SeedBankController extends Controller {
   {
     $user = \Auth::user();
     return view('seedbank::search')
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
       ->with('active', ['search' => true]);
 
   }
@@ -579,10 +550,16 @@ class SeedBankController extends Controller {
   public function getEvents () {
     $user = \Auth::user();
     return view('seedbank::events')
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
       ->with('active', ['events' => true]);
+  }
+  public function getAdminEvents () {
+    return view('seedbank::admin-events')
+      ->with('active', ['events' => true]);
+  }
+  public function getEventById ($id) {
+    $event = \Caravel\Calendar::findOrFail($id);
+    return view('seedbank::event-modal')
+      ->with('event', $event);
   }
   public function postEvents (Request $request) {
     // TODO: Limit number of picture by seed?
@@ -639,6 +616,7 @@ class SeedBankController extends Controller {
       'description', 'address', 'image'] as $key){*/
         $new_event[$key] = $request->input($key) ?: "";
       };
+      $new_event['location'] = vsprintf("%s/%s", $request->only(['district', 'city']));
 
       $start = \Carbon\Carbon::parse($request->input('startdate') . ' ' . $request->input('starttime'));
       $end = \Carbon\Carbon::parse($request->input('enddate') . ' ' . $request->input('endtime'));

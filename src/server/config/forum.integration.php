@@ -15,9 +15,9 @@ return [
     'policies' => [
         'forum' => Caravel\Policies\ForumPolicy::class,
         'model' => [
-            Riari\Forum\Models\Category::class  => Riari\Forum\Policies\CategoryPolicy::class,
-            Riari\Forum\Models\Thread::class    => Riari\Forum\Policies\ThreadPolicy::class,
-            Riari\Forum\Models\Post::class      => Riari\Forum\Policies\PostPolicy::class
+            Riari\Forum\Models\Category::class  => Caravel\Policies\CategoryPolicy::class,
+            Riari\Forum\Models\Thread::class    => Caravel\Policies\ThreadPolicy::class,
+            Riari\Forum\Models\Post::class      => Caravel\Policies\PostPolicy::class
         ]
     ],
 

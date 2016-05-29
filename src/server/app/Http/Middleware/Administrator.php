@@ -47,16 +47,25 @@ class Administrator {
       return redirect('/seedbank');
     }
 
-		if (isset($this->auth->user()->locale)){
-			$locale = $this->auth->user()->locale | config('app.locale');
+    $user = $this->auth->user();
+
+		if (isset($user->locale)){
+			$locale = $user->locale | config('app.locale');
 			//$locale="en";
 		} else {
 			$locale = config('app.locale');
 		}
-	    \App::setLocale($locale);
-        \View::share('lang', [$locale => true]);
-        \View::share('langString', $locale);
-        \View::share('admin', true);
+
+    \App::setLocale($locale);
+    \View::share('lang', [$locale => true]);
+    \View::share('langString', $locale);
+    \View::share('admin', $user->is_admin());
+    \View::share('username', $user->name);
+    \View::share('menu', \Lang::get('seedbank::menu'));
+    \View::share('messages', \Lang::get('seedbank::messages'));
+    if ( $request->path() == "forum" ){
+      \View::share('active', [ "forum" => true ]);
+    }
 
 		return $next($request);
 	}

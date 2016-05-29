@@ -1,7 +1,7 @@
 <div class="panel panel-default" data-actions>
     <div class="panel-heading">
         <span class="glyphicon glyphicon-option-vertical"></span>
-        <a href="#" data-toggle="collapse" data-target=".collapse.category-options">{{ trans('forum::categories.actions') }}</a>
+        <a style="color: black;" href="#" data-toggle="collapse" data-target=".collapse.category-options">{{ trans('forum::categories.actions') }}</a>
     </div>
     <div class="collapse category-options">
         <div class="panel-body">

@@ -146,6 +146,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 Route::group(['prefix' => 'events', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
   Route::group(['middleware' => 'auth'], function(){
+    Route::get('/get/{id}', 'SeedBankController@getEventById');
     Route::get('/', 'SeedBankController@getEvents');
     Route::post('/', 'SeedBankController@postEvents');
   });
@@ -193,14 +194,14 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Modules\SeedBank\Http\Control
     Route::post('/events/add', 'SeedBankController@postAddEvent');
     Route::get('/events/form/{id}', function ($id) {
       if ( $id ==  'new' ) {
-        return view('seedbank::event-modal')
+        return view('seedbank::admin-event-modal')
           ->with('messages', \Lang::get('seedbank::messages'));
       }
       $event = \Caravel\Calendar::find($id);
       if ( ! $id ){
         $event = false;
       }
-      return view('seedbank::event-modal')
+      return view('seedbank::admin-event-modal')
         ->with('event', $event)
         ->with('messages', \Lang::get('seedbank::messages'));
     });
@@ -211,6 +212,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Modules\SeedBank\Http\Control
       //return redirect('/events');
       return '';
     });
+    Route::get('/events', 'SeedBankController@getAdminEvents');
   });
 });
 

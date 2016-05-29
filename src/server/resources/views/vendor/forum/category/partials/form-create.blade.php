@@ -4,7 +4,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <span class="glyphicon glyphicon-plus"></span>
-            <a href="#" data-toggle="collapse" data-target=".collapse.create-category">{{ trans('forum::categories.create') }}</a>
+            <a style="color: black;" href="#" data-toggle="collapse" data-target=".collapse.create-category">{{ trans('forum::categories.create') }}</a>
         </div>
         <div class="collapse create-category">
             <div class="panel-body">

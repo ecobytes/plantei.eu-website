@@ -36,19 +36,19 @@
           </div>
         </div>
 			<div class="row">
-            <nav>
-              <ul class="pager">
+        <nav>
+          <ul class="pager">
 			    {{#if seeds.next_page_url}}
-                <li class="next">
-                  <a type="button" data-url="{{seeds.next_page_url}}" class="btn btn-primary btn-md" id="next_seeds">
-                     {{messages.next_seeds}}
-                  </a>
-                </li>
-				{{/if}}
-              </ul>
-            </nav>
+            <li class="next">
+              <a style="color: black !important;" type="button" data-url="{{seeds.next_page_url}}" class="btn btn-primary btn-md" id="next_seeds">
+              {{messages.next_seeds}}
+              </a>
+            </li>
+			  	{{/if}}
+          </ul>
+        </nav>
 			</div>
-      </div>
+    </div>
   </div>
 </div>
 
@@ -85,12 +85,12 @@
        });
 	   var buttons = '';
 	   if (data.prev_page_url) {
-	     buttons += '<li class="previous"><a data-url="' + data.prev_page_url + '" class="btn btn-primary btn-md">\
+	     buttons += '<li class="previous"><a style="color: black !important;" data-url="' + data.prev_page_url + '" class="btn btn-primary btn-md">\
 		    {{messages.prev_seeds}}\
                   </a></li>';
 	   }
 	   if (data.next_page_url) {
-	     buttons += '<li class="next"><a data-url="' + data.next_page_url + '" class="btn btn-primary btn-md">\
+	     buttons += '<li class="next"><a style="color: black !important;" data-url="' + data.next_page_url + '" class="btn btn-primary btn-md">\
 		    {{messages.next_seeds}}\
                   </a></li>';
 	   }

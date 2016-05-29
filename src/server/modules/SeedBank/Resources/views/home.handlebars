@@ -1,6 +1,6 @@
 {{> header}}
 {{> menu}}
-<div class="modal fade" id="seed_info">
+<div class="modal fade" id="info_modal">
   <div class="modal-dialog">
     <div class="modal-content">
     </div><!-- /.modal-content -->
@@ -9,14 +9,37 @@
 <div class="pageWrap background-primary">
   <div class="container">
     <!-- <div class="row lmt"> -->
-      <div class="col-md-6 text-center">
+    <div class="col-md-4">
+      <h1>{{messages.calendarTitle}}Eventos</h1>
+      <div class="well" style="color: black !important">
+        {{#if calendarNow}}
+        <h3>{{ messages.eventsHappeningNow }} events now</h3>
+        <ul class="listEvents" style="color: black !important; list-style-type: none;">
+          {{#each calendarNow}}
+          <li data-id="{{id}}">{{title}} <span style="float: right;" class="badge">{{{formatDate end ../langString}}}</span></li>
+          {{/each}}
+        </ul>
+        {{else}}
+        <h3>{{ messages.noEventsHappeningNow }}no events now</h3>
+        {{/if}}
+        {{#if calendarNext}}
+        <h3>{{ messages.eventsNextWeek }} events next week</h3>
+        <ul class="listEvents" style="color: black !important; list-style-type: none;">
+          {{#each calendarNext}}
+          <li data-id="{{id}}">{{title}} <span style="float: right;" class="badge">{{{formatDate start ../langString}}}</span></li>
+          {{/each}}
+        </ul>
+        {{else}}
+        <h3>{{ messages.noEventsNextWeek }} no events next week</h3>
+        {{/if}}
+      </div>
+    </div>
+      <div class="col-md-4 text-center">
         <h1>{{messages.latestAdditions}}</h1>
         <table class="table">
           <thead>
             <tr>
               <th>{{messages.common_name}}</th>
-              <th>{{messages.latin_name}}</th>
-              <th>{{messages.email}}</th>
               <th>{{messages.username}}</th>
               <!-- <th>Disponível</th>
               <th>Pública</th> -->
@@ -26,45 +49,37 @@
           {{#each seeds}}
             <tr data-user_id="{{user_id}}" data-seed_id="{{id}}">
               <td>{{common_name}}</td>
-              <td>{{latin_name}}</td>
-              <td>{{email}}</td>
               <td>{{name}}</td>
-              <!-- <td style="text-align: center;">{{#if available.1}}X{{/if}}</td>
-              <td style="text-align: center;">{{#if public.1}}X{{/if}}</td> -->
             </tr>
           {{/each}}
           </tbody>
         </table>
       </div>
-      {{!--
-      <div class="col-md-6">
-        <h1>{{messages.latestMessages}}<span class="badge">
-          {{unreadmessages}}
-        </span></h1>
-        <table class="table"
+
+      <div class="col-md-4">
+        <h1>{{messages.latestMessages}}
+          {{#if newMessagesCount}}<span class="badge">
+          {{newMessagesCount}}
+          </span>{{/if}}
+        </h1>
+        <table class="table">
           <thead>
             <tr>
               <th>{{messages.subject}}</th>
               <th>{{messages.date}}</th>
-              <th>{{messages.unread}}/{{messages.read}}</th>
             </tr>
           </thead>
           <tbody>
-          {{#each usermessages}}
-            <tr data-message_id="{{id}}" {{#unless pivot.read.1}}style="font-weight: bold;"{{/unless}}>
+          {{#each threads}}
+            <tr data-message_id="{{id}}" {{#if unread}}style="font-weight: bold;"{{/if}}>
               <td>{{subject}}</td>
-              <td>({{id}}){{created_at}}</td>
-              <td style="text-align: center;">
-                {{#if pivot.read.1}} {{../../messages.read}}
-                {{else}} {{../../messages.unread}}
-                {{/if}}
-              </td>
+              <td>{{{formatDate updated_at ../langString}}}</td>
             </tr>
           {{/each}}
           </tbody>
         </table>
       </div>
-      --}}
+
     <!-- </div> -->
   </div>
 </div>
@@ -78,10 +93,10 @@ $('tbody tr').on('click', function () {
     if (data.length == 0){
       return false;
     }
-    $('#seed_info .modal-content').empty();
-    $('#seed_info .modal-content').append(data);
+    $('#info_modal .modal-content').empty();
+    $('#info_modal .modal-content').append(data);
 
-    $('#seed_info').modal('show');
+    $('#info_modal').modal('show');
   });
 }).mouseover(function () {
   $(this).addClass('active');
@@ -89,10 +104,19 @@ $('tbody tr').on('click', function () {
   $(this).removeClass('active');
 });
 
-$('#seed_info').on('click', '.modal-footer .footer-left button', function(){
+$('#info_modal').on('click', '.modal-footer .footer-left button', function(){
   var seed_id = $('#seed_info .modal-title').data("seed_id");
   window.open('/seedbank/register/' + seed_id, '_self');
 });
+
+$('.listEvents').on('click', 'li', function (e) {
+  $.get('/events/get/' + $(this).data('id'), function (data) {
+    if (! data ) { return false;}
+    $(".modal-content").html(data);
+    $('#info_modal').modal('show');
+  });
+});
+
 
 /*$('#new_seed').on('click', function () {
   window.open('/seedbank/register', '_self');

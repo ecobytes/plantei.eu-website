@@ -18,10 +18,6 @@
 <script type="text/javascript" src="/js/fullcalendar/lang/pt.js"></script>
 
 <script>
-var deleteEvent = function (evId) {
-  $.get('/admin/events/del/' + evId);
-  $("#mycalendar").fullCalendar( 'removeEvents' , evId );
-};
 $(document).ready(function() {
   var date = new Date();
   var d = date.getDate();
@@ -36,58 +32,18 @@ $(document).ready(function() {
     fixedWeekCount: false,
 	  lang: "pt",
 	  timeFormat: 'HH:mm',
-    dayClick: function(date, jsEvent, view) {
-      $.get("/admin/events/form/new", function (data) {
+    eventClick: function(calEvent, jsEvent, view) {
+      console.log(calEvent);
+      $.get("/events/get/" + calEvent.id, function (data) {
         if (data.length == 0){
           return false;
         }
         $('#event_info .modal-content').empty();
         $('#event_info .modal-content').append(data);
-        $('#event_info .modal-content input[name=startdate]').datepicker("setDate", date.format("YYYY-MM-DD"));
-        $('#event_info .modal-content input[name=enddate]').datepicker("setDate", date.format("YYYY-MM-DD"));
-        $('#event_info .modal-content input[name=starttime]').val("10:00");
-        $('#event_info .modal-content input[name=endtime]').val("18:00");
-
-        /*$('#event_info .modal-title').empty();
-        $('#event_info .modal-title').text(date.format("MMM Do YY"));*/
 
         $('#event_info').modal('show');
       });
     },
-    /*eventRender: function(event, element) {
-    	element.append( "<span class='closeon'>X</span>" );
-    	element.find(".closeon").click(function() {
-    		$.get('/admin/events/del/' + event._id);
-    	});
-    },*/
-    eventMouseover: function(calEvent, domEvent) {
-    	var layer = "<div id='events-layer' class='fc-transparent' style='position:absolute; width:100%; height:100%; top:-1px; text-align:right; z-index:100'> <span class='ui-icon ui-icon-trash' style='padding-right:5px; float:right;' onClick='deleteEvent("+calEvent.id+");'></span></div>";
-    	//var layer = "<div id='events-layer' class='fc-transparent' style='position:absolute; width:100%; height:100%; top:-1px; text-align:right; z-index:100'> <span class='ui-icon ui-icon-trash' style='padding-right:5px; float:right;' onClick='alert(\"ooo\");'></span></div>";
-    	$(this).append(layer);
-    },
-    eventMouseout: function(calEvent, domEvent) {
-    	$("#events-layer").remove();
-    },
-
-      /*eventMouseover: function (data, event, view) {
-        tooltip = '<div class="tooltiptopicevent" style="width:auto;height:auto;background:' + 
-          '#feb811;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;' +
-          'line-height: 200%;">' + 'title: ' + ': ' + data.title + '</br>' + 'start: ' + ': ' +
-          data.start + '</div>';
-        $("body").append(tooltip);
-        $(this).mouseover(function (e) {
-          $(this).css('z-index', 10000);
-          $('.tooltiptopicevent').fadeIn('500');
-          $('.tooltiptopicevent').fadeTo('10', 1.9);
-        }).mousemove(function (e) {
-          $('.tooltiptopicevent').css('top', e.pageY + 10);
-          $('.tooltiptopicevent').css('left', e.pageX + 20);
-        });
-      },
-      eventMouseout: function (data, event, view) {
-        $(this).css('z-index', 8);
-        $('.tooltiptopicevent').remove();
-      },*/
     eventSources: [
 	  {
 	    url: '/api/calendar',
