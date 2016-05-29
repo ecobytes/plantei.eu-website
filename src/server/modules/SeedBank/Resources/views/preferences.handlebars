@@ -12,47 +12,47 @@
 
           <div class="form-group">
             <label class="control-label">{{messages.username}}</label>
-              <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{user.name}}" autocomplete="off"></span>
+            <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{user.name}}" autocomplete="off"></span>
           </div>
 
           <div class="form-group">
             <label class="control-label">{{messages.email}}</label>
-			<input type="password" style="display:none;">
-			<input type="text" style="display:none;">
-              <span class="cell"><input autocomplete="off" type="email" class="form-control" name="email" value="{{user.email}}"></span>
+            <input type="password" style="display:none;">
+            <input type="text" style="display:none;">
+            <span class="cell"><input autocomplete="off" type="email" class="form-control" name="email" value="{{user.email}}"></span>
           </div>
 
           <div class="form-group">
             <label class="control-label">{{messages.password}}</label>
-              <span class="cell"><input type="password" class="form-control" name="password"></span>
+            <span class="cell"><input type="password" class="form-control" name="password"></span>
           </div>
 
           <div class="form-group">
             <label class="control-label">{{messages.confirmpassword}}</label>
-              <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
+            <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
           </div>
-		  {{#if location}}
-		  <div class="row">
-		    <div class="col-md-8">
+          {{#if location}}
+          <div class="row">
+            <div class="col-md-8">
               <div class="form-group">
                 <label class="control-label">{{messages.whereareyou}}</label>
                 <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ user.place_name }}" autocomplete="off"></span>
               </div>
             </div>
-			{{#if updatelocation}}
-			<div class="col-md-4">
+            {{#if updatelocation}}
+            <div class="col-md-4">
               <div class="form-group">
                 <button type="button" id="updatelocation" class="btn btn-primary btn-md">
                   {{messages.updateTo}}
                 </button>
-				<input type="hidden" id="sug_place_name" value="{{updatelocation.place_name}}"/>
-				<input type="hidden" id="sug_lat" value="{{updatelocation.lat}}"/>
-				<input type="hidden" id="sug_lon" value="{{updatelocation.lon}}"/>
+                <input type="hidden" id="sug_place_name" value="{{updatelocation.place_name}}"/>
+                <input type="hidden" id="sug_lat" value="{{updatelocation.lat}}"/>
+                <input type="hidden" id="sug_lon" value="{{updatelocation.lon}}"/>
               </div>
             </div>
-			{{/if}}
+            {{/if}}
           </div>
-		  <div class="row">
+          <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.latitude}}</label>
@@ -66,19 +66,19 @@
               </div>
             </div>
           </div>
-		  {{/if}}
+          {{/if}}
           <!--
-          <div class="form-group">
+            <div class="form-group">
             <label class="control-label">{{messages.iwanttosubscribenewsletter}}</label>
-              <span class="cell btn-group" data-toggle="buttons">
-                <label class="btn btn-default {{#if oldInput.subscribeNewsletter.1}}active{{/if}}">
-                  <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.1}}checked{{/if}} value="1" /> {{messages.yes}}
-                </label>
-                <label class="btn btn-default {{#if oldInput.subscribeNewsletter.0}}active{{/if}}">
-                  <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.0}}checked{{/if}} value="0" /> {{messages.no}}
-                </label>
-              </span>
-          </div>
+            <span class="cell btn-group" data-toggle="buttons">
+            <label class="btn btn-default {{#if oldInput.subscribeNewsletter.1}}active{{/if}}">
+            <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.1}}checked{{/if}} value="1" /> {{messages.yes}}
+            </label>
+            <label class="btn btn-default {{#if oldInput.subscribeNewsletter.0}}active{{/if}}">
+            <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.0}}checked{{/if}} value="0" /> {{messages.no}}
+            </label>
+            </span>
+            </div>
           -->
           <div class="row">
             <div class="form-group lmt">
@@ -100,13 +100,13 @@
 {{> scripts }}
 <script>
 $(function () {
-        $("[rel='tooltip']").tooltip();
-    });
+  $("[rel='tooltip']").tooltip();
+});
 $('#updatelocation').on('click', function() {
   $.each(['lat', 'lon', 'place_name'], function (i,f){
     $('input[name="'+f+'"]').val($('#sug_'+f).val());
-	});
-	$('#updatelocation').val('update');
+  });
+  $('#updatelocation').val('update');
 });
 </script>
 {{> footer}}

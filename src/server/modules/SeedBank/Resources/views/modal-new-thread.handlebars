@@ -55,40 +55,34 @@
 <script type="text/javascript" src="/js/bootstrap-tokenfield.min.js"></script>
 
 <script>
-/*$('form').on('submit', function(e) {
-	e.preventDefault();
-	//$.post($("form").attr('action'), data) ....
-	//$("#mycalendar").fullCalendar( 'addEventSource', source ) ...
-	return false();
-});*/
 var contacts = [
 {{#each contacts}} { value: {{ id }}, label: '{{ name }}',  type: 'g', id:{{ id }} }, {{/each}}
-               ];
+];
 
 $('.ac_token').tokenfield({
   autocomplete: {delay: 300, //minLength: 2,
     /*source: function (request, response) {
       var this_id = $(this.element).siblings('.ac_token').attr('id');
-      //console.log($(this.element).siblings('.ac_token').val());
-      var formdata = [
-        {name: "csrfmiddlewaretoken", value: "{{ csrf_token }}"},
-        {name: this_id , value: request.term},
-      ];
-      $.post("{% url 'autocomplete' %}", formdata, function (data) {
-              response(data);
-      }, 'json')
+    //console.log($(this.element).siblings('.ac_token').val());
+    var formdata = [
+    {name: "csrfmiddlewaretoken", value: "{{ csrf_token }}"},
+    {name: this_id , value: request.term},
+    ];
+    $.post("{% url 'autocomplete' %}", formdata, function (data) {
+    response(data);
+    }, 'json')
     },*/
     source: contacts,
     appendTo: "form",
     /*select: function (e, ui) {
       e.preventDefault();
-    },*/
+      },*/
     focus: function (e, ui) {
       e.preventDefault();
       $(e.relatedTarget).val(ui.item.label);
     },
   },
-    beautify: false,
+  beautify: false,
   delimiter: ';',
 }).on('tokenfield:createtoken', function (e) {
   if (!(e.attrs.id)) {
@@ -96,5 +90,4 @@ $('.ac_token').tokenfield({
     e.preventDefault();
   }
 });
-
 </script>

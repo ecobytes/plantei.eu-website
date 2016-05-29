@@ -34,9 +34,9 @@ class MessagesController extends Controller {
     $contacts = $user->contacts;
 
     return view('seedbank::messenger', compact('threads', 'contacts'))
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
+      //->with('messages', \Lang::get('seedbank::messages'))
+      //->with('menu', \Lang::get('seedbank::menu'))
+      //->with('username', $user->name)
       ->with('active', ['messages' => true]);
   }
 
@@ -49,10 +49,10 @@ class MessagesController extends Controller {
   public function show($id)
   {
     try {
-        $thread = Thread::findOrFail($id);
+      $thread = Thread::findOrFail($id);
     } catch (ModelNotFoundException $e) {
-        Session::flash('error_message', 'The thread with ID: ' . $id . ' was not found.');
-        return redirect('messages');
+      Session::flash('error_message', 'The thread with ID: ' . $id . ' was not found.');
+      return redirect('messages');
     }
     // show current user in list if not a current participant
     // $users = User::whereNotIn('id', $thread->participantsUserIds())->get();

@@ -34,51 +34,51 @@
         {{/if}}
       </div>
     </div>
-      <div class="col-md-4 text-center">
-        <h1>{{messages.latestAdditions}}</h1>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{messages.common_name}}</th>
-              <th>{{messages.username}}</th>
-              <!-- <th>Disponível</th>
+    <div class="col-md-4 text-center">
+      <h1>{{messages.latestAdditions}}</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{messages.common_name}}</th>
+            <th>{{messages.username}}</th>
+            <!-- <th>Disponível</th>
               <th>Pública</th> -->
-            </tr>
-          </thead>
-          <tbody>
+          </tr>
+        </thead>
+        <tbody>
           {{#each seeds}}
-            <tr data-user_id="{{user_id}}" data-seed_id="{{id}}">
-              <td>{{common_name}}</td>
-              <td>{{name}}</td>
-            </tr>
+          <tr data-user_id="{{user_id}}" data-seed_id="{{id}}">
+            <td>{{common_name}}</td>
+            <td>{{name}}</td>
+          </tr>
           {{/each}}
-          </tbody>
-        </table>
-      </div>
+        </tbody>
+      </table>
+    </div>
 
-      <div class="col-md-4">
-        <h1>{{messages.latestMessages}}
-          {{#if newMessagesCount}}<span class="badge">
+    <div class="col-md-4">
+      <h1>{{messages.latestMessages}}
+        {{#if newMessagesCount}}<span class="badge">
           {{newMessagesCount}}
-          </span>{{/if}}
-        </h1>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{messages.subject}}</th>
-              <th>{{messages.date}}</th>
-            </tr>
-          </thead>
-          <tbody>
+        </span>{{/if}}
+      </h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{messages.subject}}</th>
+            <th>{{messages.date}}</th>
+          </tr>
+        </thead>
+        <tbody>
           {{#each threads}}
-            <tr data-message_id="{{id}}" {{#if unread}}style="font-weight: bold;"{{/if}}>
-              <td>{{subject}}</td>
-              <td>{{{formatDate updated_at ../langString}}}</td>
-            </tr>
+          <tr data-message_id="{{id}}" {{#if unread}}style="font-weight: bold;"{{/if}}>
+            <td>{{subject}}</td>
+            <td>{{{formatDate updated_at ../langString}}}</td>
+          </tr>
           {{/each}}
-          </tbody>
-        </table>
-      </div>
+        </tbody>
+      </table>
+    </div>
 
     <!-- </div> -->
   </div>
@@ -121,7 +121,7 @@ $('.listEvents').on('click', 'li', function (e) {
 /*$('#new_seed').on('click', function () {
   window.open('/seedbank/register', '_self');
   return false;
-});
-*/
+  });
+ */
 </script>
 {{>footer}}

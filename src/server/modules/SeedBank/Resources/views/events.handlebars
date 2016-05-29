@@ -30,8 +30,8 @@ $(document).ready(function() {
     theme: true,
     contentHeight: 400,
     fixedWeekCount: false,
-	  lang: "pt",
-	  timeFormat: 'HH:mm',
+    lang: "pt",
+    timeFormat: 'HH:mm',
     eventClick: function(calEvent, jsEvent, view) {
       console.log(calEvent);
       $.get("/events/get/" + calEvent.id, function (data) {
@@ -45,13 +45,13 @@ $(document).ready(function() {
       });
     },
     eventSources: [
-	  {
-	    url: '/api/calendar',
-	    type: 'POST',
-	    color: 'yellow',
-	    textColor: 'black'
-	  }
-	  ],
+    {
+      url: '/api/calendar',
+      type: 'POST',
+      color: 'yellow',
+      textColor: 'black'
+    }
+    ],
   });
 });
 </script>

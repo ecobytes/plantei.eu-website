@@ -22,16 +22,16 @@ class SeedBankController extends Controller {
       $converted_image->scaleimage(800, 800, true);
       if (filesize($picture_path . '/' . $file_name) > 200000) {
         $converted_image->setOption('jpeg:extent', '100kb');
-    }
+      }
       $status = $converted_image->writeimage();
       if ($status) {
-      $picture = \Caravel\Picture::create([
-        'path' => $picture_path . '/' . $file_name,
-        'url' => '/seedbank/pictures/' . $file_md5,
-        'md5sum' => $file_md5
-      ]);
-    } else {
-      return [ "error" => "File not saved"];
+        $picture = \Caravel\Picture::create([
+          'path' => $picture_path . '/' . $file_name,
+          'url' => '/seedbank/pictures/' . $file_md5,
+          'md5sum' => $file_md5
+        ]);
+      } else {
+        return [ "error" => "File not saved"];
       }
     }
     return [ "picture" => $picture];
@@ -42,20 +42,20 @@ class SeedBankController extends Controller {
   {
     $user = \Auth::user();
     if (!$data['email']){unset($data['email']);};
-        $rules = [
+    $rules = [
       'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
       'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
       'place_name' => 'max:255|required_with:lon,lat',
-          ];
-      if (! $user->name == $data['name']){
-        $rules['name'] = 'required|max:255|unique:users';
-      }
-      //if (! $user->email == $data['email']){
-        $rules['email'] = 'sometimes|required|email|max:255|unique:users';
-      //}
-      if ($data['password']){
-        $rules['password'] = 'required|confirmed|min:6';
-      }
+    ];
+    if (! $user->name == $data['name']){
+      $rules['name'] = 'required|max:255|unique:users';
+    }
+    //if (! $user->email == $data['email']){
+    $rules['email'] = 'sometimes|required|email|max:255|unique:users';
+    //}
+    if ($data['password']){
+      $rules['password'] = 'required|confirmed|min:6';
+    }
     return Validator::make($data, $rules);
   }
 
@@ -69,7 +69,7 @@ class SeedBankController extends Controller {
       ->limit(10)->join('users', 'users.id', '=', 'user_id')
       ->select('seeds.id', 'seeds.latin_name', 'seeds.common_name',
         'users.name', 'users.email', 'user_id')
-      ->get();
+        ->get();
 
     $newMessagesCount = $user->newMessagesCount();
     $threads = $user->threads()->orderBy('updated_at', 'DESC')->limit(10)->get();
@@ -112,8 +112,8 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
 
     $userMessages = $user->lastMessages(10)->toArray();
-      //->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
-      //dd($userMessages);
+    //->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
+    //dd($userMessages);
     $unreadmessages = 0;
     foreach($userMessages as &$m) {
       if (($m['sender_id'] != $user->id) && ($m['read'])){
@@ -202,12 +202,12 @@ class SeedBankController extends Controller {
     }
     if ($id){
       if (! isset($oldInput)) {
-       $seed->variety;
-       $seed->family;
-       $seed->species;
-       $seed->pictures;
-       $oldInput = $seed->toArray();
-       $oldInput['months'] = $seed->months()->lists('month')->toArray();
+        $seed->variety;
+        $seed->family;
+        $seed->species;
+        $seed->pictures;
+        $oldInput = $seed->toArray();
+        $oldInput['months'] = $seed->months()->lists('month')->toArray();
       } else {
 
       }
@@ -347,7 +347,7 @@ class SeedBankController extends Controller {
       $updatelocation = [ 'lat' => $geoipdata->location->latitude,
         'lon' => $geoipdata->location->longitude,
         'place_name' => $geoipdata->city->name ?: \Lang::get("auth::messages.unknowncity")];
-          $location = true;
+      $location = true;
     }
     catch(\GeoIp2\Exception\AddressNotFoundException $e){
       // for testing
@@ -358,11 +358,11 @@ class SeedBankController extends Controller {
       //    $location = true;
 
       if ($user->place_name){
-         $location = true;
+        $location = true;
       }
   /*  $updatelocation = [ 'lat' => 12.2,
       'lon' => 121.1,
-        'place_name' => 'Porto' ];*/
+  'place_name' => 'Porto' ];*/
     }
     return view('seedbank::preferences')
       ->with('messages', \Lang::get('authentication::messages'))
@@ -503,10 +503,10 @@ class SeedBankController extends Controller {
     $message = \Caravel\Message::create(
       [
         'user_id' => $request->user()->id,
-          'subject' => $subject,
-          'body' => $body,
-        ]
-      );
+        'subject' => $subject,
+        'body' => $body,
+      ]
+    );
     $message->save();
     $message->root_message_id = $message->id;
     $request->user()->transactionStart(['asked_to'=>$user_id, 'seed_id'=>$seed_id]);
@@ -537,12 +537,12 @@ class SeedBankController extends Controller {
         }
         return [ 'files' => [
           ['md5sum' => $status['picture']->md5sum,
-           'id' => $status['picture']->id,
-           'url' => $status['picture']->url,
-           'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
-           'deleteType' => 'GET'
-          ]]
-        ];
+          'id' => $status['picture']->id,
+          'url' => $status['picture']->url,
+          'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
+          'deleteType' => 'GET'
+        ]]
+      ];
       }
     }
     return [ 'files' => [['error' => 'No files sent']]];
@@ -584,12 +584,12 @@ class SeedBankController extends Controller {
         }
         return [ 'files' => [
           ['md5sum' => $status['picture']->md5sum,
-           'id' => $status['picture']->id,
-           'url' => $status['picture']->url,
-           'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
-           'deleteType' => 'GET'
-          ]]
-        ];
+          'id' => $status['picture']->id,
+          'url' => $status['picture']->url,
+          'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
+          'deleteType' => 'GET'
+        ]]
+      ];
       }
     }
     return [ 'files' => [['error' => 'No files sent']]];
@@ -626,7 +626,7 @@ class SeedBankController extends Controller {
 
       $event = \Caravel\Calendar::create($new_event);
     }
-      //return redirect('/events');
-      return '';
+    //return redirect('/events');
+    return '';
   }
 }
