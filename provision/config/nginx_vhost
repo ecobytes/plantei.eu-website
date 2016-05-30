@@ -1,25 +1,25 @@
 server {
-    listen 80;
-    server_name localhost behat.localhost;
-     
-    root /var/www/src/server/public;
-    index index.html index.php;
-     
-    # Important for VirtualBox
-    sendfile off;
-     
-    location / {
-        try_files $uri $uri.html $uri/ $uri.html/ $uri/index.html /index.php?is_args$args;
-    }
-     
-    location ~ \.php {
-        include fastcgi_params;
-         
-        fastcgi_pass unix:/var/run/php5-fpm.sock;
-         
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_cache off;
-        fastcgi_index index.php;
-    }
+  listen 80;
+  server_name localhost behat.localhost;
+
+  root /var/www/plantei.eu/public;
+  index index.php;
+
+# Important for VirtualBox
+  sendfile off;
+
+  location / {
+    try_files $uri $uri/ /index.php$is_args$args;
+  }
+
+  location ~ \.php {
+    include fastcgi_params;
+
+    fastcgi_pass unix:/var/run/php5-fpm.sock;
+
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_cache off;
+    fastcgi_index index.php;
+  }
 }
 

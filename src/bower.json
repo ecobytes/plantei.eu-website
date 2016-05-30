@@ -8,8 +8,9 @@
     "blueimp-file-upload": "~9.11.2",
     "tinymce": "~4.3.3",
     "fullcalendar": "~2.7.1",
-    "jt.timepicker": "timepicker#^1.10.0",
-    "bootstrap-tokenfield": "0.12.1"
+    "bootstrap-tokenfield": "0.12.1",
+    "jquery-timepicker": "*",
+    "jt.timepicker": "^1.11.1"
   },
   "private": true
 }
