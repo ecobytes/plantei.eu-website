@@ -10,27 +10,27 @@
   <div class="container">
     <!-- <div class="row lmt"> -->
     <div class="col-md-4">
-      <h1>{{messages.calendarTitle}}Eventos</h1>
+      <h1>{{messages.calendarTitle}}</h1>
       <div class="well" style="color: black !important">
         {{#if calendarNow}}
-        <h3>{{ messages.eventsHappeningNow }} events now</h3>
+        <h4>{{ messages.eventsHappeningNow }}</h4>
         <ul class="listEvents" style="color: black !important; list-style-type: none;">
           {{#each calendarNow}}
           <li data-id="{{id}}">{{title}} <span style="float: right;" class="badge">{{{formatDate end ../langString}}}</span></li>
           {{/each}}
         </ul>
         {{else}}
-        <h3>{{ messages.noEventsHappeningNow }}no events now</h3>
+        <h4>{{ messages.noEventsHappeningNow }}</h4>
         {{/if}}
         {{#if calendarNext}}
-        <h3>{{ messages.eventsNextWeek }} events next week</h3>
+        <h4>{{ messages.eventsNextWeek }}</h4>
         <ul class="listEvents" style="color: black !important; list-style-type: none;">
           {{#each calendarNext}}
           <li data-id="{{id}}">{{title}} <span style="float: right;" class="badge">{{{formatDate start ../langString}}}</span></li>
           {{/each}}
         </ul>
         {{else}}
-        <h3>{{ messages.noEventsNextWeek }} no events next week</h3>
+        <h4>{{ messages.noEventsNextWeek }}</h4>
         {{/if}}
       </div>
     </div>

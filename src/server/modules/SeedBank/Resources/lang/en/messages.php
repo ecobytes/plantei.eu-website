@@ -105,4 +105,13 @@ return [
     'refused' => 'Refused',
     'next_seeds' => 'Next Seeds',
     'prev_seeds' => 'Previous Seeds',
+    'calendarTitle' => 'Events',
+    'eventsHappeningNow' => 'Events happening now',
+    'eventsNextWeek' => 'Events for next days',
+    'noEventsHappeningNow' => 'No events right now',
+    'noEventsNextWeek' => 'No events for the next days',
+    'addContact' => 'Add Contact',
+    'myContacts' => 'My contacts',
+    'next_seeds' => 'Next Seeds',
+    'prev_seeds' => 'Previous Seeds',
 ];

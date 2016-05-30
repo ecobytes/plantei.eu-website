@@ -34,9 +34,6 @@ class MessagesController extends Controller {
     $contacts = $user->contacts;
 
     return view('seedbank::messenger', compact('threads', 'contacts'))
-      //->with('messages', \Lang::get('seedbank::messages'))
-      //->with('menu', \Lang::get('seedbank::menu'))
-      //->with('username', $user->name)
       ->with('active', ['messages' => true]);
   }
 
@@ -67,7 +64,6 @@ class MessagesController extends Controller {
     $users = User::whereIn('id', $thread->participantsUserIds($userId))->get();
     $thread->markAsRead($userId);
     return view('seedbank::modal-show-thread', compact('thread', 'users'))
-      ->with('messages', \Lang::get('seedbank::messages'))
       ->with('tmessages', $messages);
   }
 
@@ -78,10 +74,8 @@ class MessagesController extends Controller {
    */
   public function create()
   {
-    //$users = User::where('id', '!=', Auth::id())->get();
     $contacts = \Auth::user()->contacts;
-    return view('seedbank::modal-new-thread', compact('contacts'))
-      ->with('messages', \Lang::get('seedbank::messages'));
+    return view('seedbank::modal-new-thread', compact('contacts'));
   }
 
   /**

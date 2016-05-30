@@ -105,4 +105,13 @@ return [
     'messageParticipating' => 'Participantes',
     'next_seeds' => 'Próximas Sementes',
     'prev_seeds' => 'Sementes Anteriores',
+    'calendarTitle' => 'Calendário',
+    'eventsHappeningNow' => 'Eventos a decorrer agora',
+    'eventsNextWeek' => 'Eventos nos próximos dias',
+    'noEventsHappeningNow' => 'Sem eventos a decorrer',
+    'noEventsNextWeek' => 'Não há eventos agendados próximamente',
+    'addContact' => 'Adiciona contacto',
+    'myContacts' => 'Os meus contactos',
+    'next_seeds' => 'Próximas Sementes',
+    'prev_seeds' => 'Sementes Anteriores',
 ];

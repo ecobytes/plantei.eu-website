@@ -3,6 +3,8 @@
 .env
 modules/TestModule
 public/css
+public/fonts
+public/js
 tmp
 .phpcomplete_extended
 dotdeb.gpg
