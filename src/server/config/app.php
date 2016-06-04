@@ -156,6 +156,7 @@ return [
 		'Riari\Forum\ForumServiceProvider',
 		'Riari\Forum\Frontend\ForumFrontendServiceProvider',
     Cmgmyr\Messenger\MessengerServiceProvider::class,
+    Mariuzzo\LaravelJsLocalization\LaravelJsLocalizationServiceProvider::class,
 	],
 
 	/*

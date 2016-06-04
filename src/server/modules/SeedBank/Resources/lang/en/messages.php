@@ -114,4 +114,5 @@ return [
     'myContacts' => 'My contacts',
     'next_seeds' => 'Next Seeds',
     'prev_seeds' => 'Previous Seeds',
+    'newmessage' => 'New message',
 ];

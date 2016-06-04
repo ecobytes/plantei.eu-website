@@ -26,12 +26,15 @@
 </div>
 
 {{>scripts}}
+<script>
+Lang.setLocale('pt');
+</script>
 
 {{#if part.myseeds}}
 <script type="text/javascript" src="/js/myseeds.js"></script>
 {{/if}}
 {{#if part.messages}}
-<script type="text/javascript" src="/js/messages.js"></script>
+<script type="text/javascript" src="/js/messenger.js"></script>
 {{/if}}
 {{#if part.exchanges}}
 <script type="text/javascript" src="/js/exchanges.js"></script>

@@ -5,6 +5,7 @@ var path = require('path');
 var browserSync = require('browser-sync');
 var reload      = browserSync.reload;
 var shell = require('gulp-shell')
+var exec = require('child_process').exec;
 var del = require('del');
 var rename = require("gulp-rename");
 
@@ -38,7 +39,9 @@ gulp.task('bowercopy', function(){
     .pipe(gulp.dest(base_path + 'src/server/public/css/'))
 
   gulp.src([
-    base_path + 'src/assets/js/event_scripts.js',
+    //base_path + 'src/assets/js/tinymce**/**',
+    base_path + 'src/assets/js/tinymce**/**/**/plugin.min.js',
+    base_path + 'src/assets/js/*.js',
     base_path + 'src/bower_components/bootstrap/dist/js/bootstrap.min.js',
     base_path + 'src/bower_components/jquery/dist/jquery.min.js',
     base_path + 'src/bower_components/jquery-ui/jquery-ui.min.js',
@@ -96,6 +99,10 @@ gulp.task('bowercopy', function(){
     base_path + 'src/assets/images/trigos.svg',
     ])
   .pipe(gulp.dest(base_path + 'src/server/public/images'));
+
+  // will break with gulp 4.0
+  gulp.src('gulpfile.js', {read: false})
+      .pipe(shell('php artisan lang:js -c public/js/messages.js', {cwd: base_path + 'src/server/', quiet: true}));
 
 });
 

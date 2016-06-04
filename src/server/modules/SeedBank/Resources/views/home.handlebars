@@ -10,7 +10,7 @@
   <div class="container">
     <!-- <div class="row lmt"> -->
     <div class="col-md-4">
-      <h1>{{messages.calendarTitle}}</h1>
+      <h1><a href="/{{#if admin}}admin/{{/if}}events">{{messages.calendarTitle}}</a></h1>
       <div class="well" style="color: black !important">
         {{#if calendarNow}}
         <h4>{{ messages.eventsHappeningNow }}</h4>
@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="col-md-4 text-center">
-      <h1>{{messages.latestAdditions}}</h1>
+      <h1><a href="/seedbank/myseeds">{{messages.latestAdditions}}</a></h1>
       <table class="table">
         <thead>
           <tr>
@@ -45,7 +45,7 @@
               <th>Pública</th> -->
           </tr>
         </thead>
-        <tbody>
+        <tbody id="seeds">
           {{#each seeds}}
           <tr data-user_id="{{user_id}}" data-seed_id="{{id}}">
             <td>{{common_name}}</td>
@@ -57,7 +57,7 @@
     </div>
 
     <div class="col-md-4">
-      <h1>{{messages.latestMessages}}
+      <h1><a href="/messages">{{messages.latestMessages}}</a>
         {{#if newMessagesCount}}<span class="badge">
           {{newMessagesCount}}
         </span>{{/if}}
@@ -69,9 +69,9 @@
             <th>{{messages.date}}</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="messages">
           {{#each threads}}
-          <tr data-message_id="{{id}}" {{#if unread}}style="font-weight: bold;"{{/if}}>
+          <tr data-thread_id="{{id}}" {{#if unread}}style="font-weight: bold;"{{/if}}>
             <td>{{subject}}</td>
             <td>{{{formatDate updated_at ../langString}}}</td>
           </tr>
@@ -86,7 +86,7 @@
 
 {{>scripts}}
 <script>
-$('tbody tr').on('click', function () {
+$('#seeds tr').on('click', function () {
   //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
   var seed_id = $(this).data('seed_id');
   $.get("/seedbank/seedm/" + seed_id, function (data) {
@@ -117,6 +117,18 @@ $('.listEvents').on('click', 'li', function (e) {
   });
 });
 
+$('#messages tr').on('click', function () {
+    $('#info_modal .modal-content').html('<img src="/js/tinymce/skins/lightgray/img/loader.gif"/>');
+    $('#info_modal').modal('show');
+    var threadId = $(this).data('thread_id');
+    $.get('/messages/' + threadId, function (data) {
+      $('#info_modal .modal-content').html(data);
+    });
+  }).mouseover(function () {
+    $(this).addClass('active');
+  }).mouseout( function () {
+    $(this).removeClass('active');
+  });
 
 /*$('#new_seed').on('click', function () {
   window.open('/seedbank/register', '_self');
