@@ -12,10 +12,8 @@ $( function () {
     return false;
   });
   $('.pageWrap nav').on('click', 'a', function () {
-    console.log($(this).data('url'));
     var url = $(this).data('url');
     $.get(url, function(data){
-      console.log(data);
       $('tbody').empty();
       $.each(data.data, function(i, item){
         var public = ''; var available = '';
@@ -31,12 +29,12 @@ $( function () {
       var buttons = '';
       if (data.prev_page_url) {
         buttons += '<li class="previous"><a style="color: black !important;" data-url="' + data.prev_page_url + '" class="btn btn-primary btn-md">\
-        ' + Lang.get('messages.prev_seeds') + '\
+        ' + Lang.get('paginate.previous') + '\
         </a></li>';
       }
       if (data.next_page_url) {
         buttons += '<li class="next"><a style="color: black !important;" data-url="' + data.next_page_url + '" class="btn btn-primary btn-md">\
-        ' + Lang.get('messages.next_seeds') + '\
+        ' + Lang.get('paginate.next') + '\
         </a></li>';
       }
       if (buttons != '') {

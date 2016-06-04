@@ -4,7 +4,6 @@ $(function (){
     exchange_id = $(this).parents('tr').data('exchange');
 
     $.get("/seedbank/exchange/" + action + "/" + exchange_id, function (data) {
-      console.log(data);
       if (data == "ok") { window.open('/seedbank/exchanges', '_self'); }
     });
   }).on('mouseover', 'tbody tr', function () {

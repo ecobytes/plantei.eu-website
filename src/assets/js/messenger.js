@@ -31,7 +31,6 @@ $( function () {
     $('.modal-content').html('<img src="/js/tinymce/skins/lightgray/img/loader.gif"/>');
     $('.modal').modal('show');
     var threadId = $(this).data('thread_id');
-    console.log($(this).data());
     $.get('/messages/' + threadId, function (data) {
       $('.modal-content').html(data);
     });
