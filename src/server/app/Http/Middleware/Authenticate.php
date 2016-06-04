@@ -60,8 +60,9 @@ class Authenticate {
     \View::share('username', $user->name);
     \View::share('menu', \Lang::get('seedbank::menu'));
     \View::share('messages', \Lang::get('seedbank::messages'));
-    if ( $request->path() == "forum" ){
+    if ( substr($request->path(), 0, 5) == "forum" ){
       \View::share('active', [ "forum" => true ]);
+      \View::share('bodyId', 'forum');
     }
 
 		return $next($request);

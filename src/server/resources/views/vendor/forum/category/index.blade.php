@@ -2,36 +2,33 @@
 @extends ('forum::master', ['category' => null])
 
 @section ('content')
-    @can ('createCategories')
+    {{-- @can ('createCategories')
         @include ('forum::category.partials.form-create')
     @endcan
 
-    <h2>{{ trans('forum::general.index') }}</h2>
+    <h2>{{ trans('forum::general.index') }}</h2> --}}
 
-    @foreach ($categories as $category)
         <table class="table table-index">
             <thead>
                 <tr>
                     <th>{{ trans_choice('forum::categories.category', 1) }}</th>
-                    <th class="col-md-2">{{ trans_choice('forum::threads.thread', 2) }}</th>
-                    <th class="col-md-2">{{ trans_choice('forum::posts.post', 2) }}</th>
-                    <th class="col-md-2">{{ trans('forum::threads.newest') }}</th>
-                    <th class="col-md-2">{{ trans('forum::posts.last') }}</th>
+                    <th>{{ trans_choice('forum::threads.thread', 2) }}</th>
+                    <th>{{ trans_choice('forum::posts.post', 2) }}</th>
+                    <th>{{ trans('forum::posts.last') }}</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
+    @foreach ($categories as $category)
                     @include ('forum::category.partials.list', ['titleClass' => 'lead'])
-                </tr>
-                @if (!$category->children->isEmpty())
+    @endforeach
+                {{-- @if (!$category->children->isEmpty())
                     <tr>
                         <th colspan="5">{{ trans('forum::categories.subcategories') }}</th>
                     </tr>
                     @foreach ($category->children as $subcategory)
                         @include ('forum::category.partials.list', ['category' => $subcategory])
                     @endforeach
-                @endif
+                @endif --}}
             </tbody>
         </table>
-    @endforeach
 @stop

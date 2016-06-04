@@ -33,8 +33,11 @@ class MessagesController extends Controller {
     $threads = Thread::forUser($currentUserId)->latest('updated_at')->get();
     $contacts = $user->contacts;
 
-    return view('seedbank::messenger', compact('threads', 'contacts'))
-      ->with('active', ['messages' => true]);
+    //return view('seedbank::messenger', compact('threads', 'contacts'))
+    $part = [ 'messages' => true ];
+    return view('seedbank::userarea', compact('threads', 'contacts', 'part'))
+      ->with('active', ['myseeds' => true])
+      ->with('bodyId', 'myseeds');
   }
 
   /**

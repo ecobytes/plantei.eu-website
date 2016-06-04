@@ -3,9 +3,9 @@
     @if (isset($category) && $category)
         @include ('forum::partials.breadcrumb-categories', ['category' => $category])
     @endif
-    @if (isset($thread) && $thread)
+    {{-- @if (isset($thread) && $thread)
         <li><a style="color: black;" href="{{ Forum::route('thread.show', $thread) }}">{{ $thread->title }}</a></li>
-    @endif
+    @endif --}}
     @if (isset($breadcrumb_other) && $breadcrumb_other)
         <li>{!! $breadcrumb_other !!}</li>
     @endif

@@ -1,0 +1,34 @@
+// Breaks at: screen-xs 480px; @screen-sm: 768px; @screen-md: 992px; @screen-lg: 1200px;
+@import "variables.less";
+
+#myseeds{
+  .container {
+    display:table;
+    //width: 100%;
+   // padding: 100px 0 0 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .row.myseeds
+  {
+    height: 100%;
+    display: table-row;
+  }
+
+  .col-md-3.no-float.myseeds, .col-md-9.no-float.myseeds {
+    float: none; /* thanks baxabbit */
+  }
+  .col-md-3.myseeds
+  {
+    display: table-cell;
+    background: lightgray;
+    vertical-align: top;
+  }
+  .col-md-9.myseeds
+  {
+    display: table-cell;
+    //background: yellow;
+    float:  none;
+  }
+
+}

@@ -100,8 +100,11 @@ class SeedBankController extends Controller {
         $tr['accepted'] = $tc;
       }
     }
-    return view('seedbank::myseeds')
+    //return view('seedbank::myseeds')
+    $part = [ 'myseeds' => true ];
+    return view('seedbank::userarea', compact('part'))
       ->with('seeds', $t)
+      ->with('bodyId', 'myseeds')
       ->with('transactionsBy', $transactions['asked_by'])
       ->with('transactionsTo', $transactions['asked_to'])
       ->with('active', ['myseeds' => true]);
@@ -160,10 +163,13 @@ class SeedBankController extends Controller {
         }
       }
     }
-    return view('seedbank::exchanges')
+    //return view('seedbank::exchanges')
+    $part = [ 'exchanges' => true ];
+    return view('seedbank::userarea', compact('part'))
+      ->with('bodyId', 'myseeds')
       ->with('transactionsBy', $transactions['asked_by'])
       ->with('transactionsTo', $transactions['asked_to'])
-      ->with('active', ['exchanges' => true]);
+      ->with('active', ['myseeds' => true]);
   }
 
 

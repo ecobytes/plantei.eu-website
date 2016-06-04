@@ -3,7 +3,7 @@
 
 @section ('content')
     <div id="category">
-        @can ('createCategories')
+        {{-- @can ('createCategories')
             @include ('forum::category.partials.form-create')
         @endcan
 
@@ -12,11 +12,10 @@
             @if ($category->description)
                 <small>{{ $category->description }}</small>
             @endif
-        </h2>
+        </h2> --}}
 
-        <hr>
 
-        @can ('manageCategories')
+        {{--@can ('manageCategories')
             <form action="{{ Forum::route('category.update', $category) }}" method="POST" data-actions-form>
                 {!! csrf_field() !!}
                 {!! method_field('patch') !!}
@@ -42,7 +41,7 @@
                     @endforeach
                 </tbody>
             </table>
-        @endif
+        @endif --}}
 
         <div class="row">
             <div class="col-xs-4">

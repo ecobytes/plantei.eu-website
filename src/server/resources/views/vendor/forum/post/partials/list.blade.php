@@ -1,36 +1,13 @@
 <tr id="post-{{ $post->id }}" class="{{ $post->trashed() ? 'deleted' : '' }}">
     <td>
-        <strong>{!! $post->authorName !!}</strong>
-    </td>
-    <td>
-        @if (!is_null($post->parent))
-            <p>
-                <strong>
-                    {{ trans('forum::general.response_to', ['item' => $post->parent->authorName]) }}
-                    (<a href="{{ Forum::route('post.show', $post->parent) }}">{{ trans('forum::posts.view') }}</a>):
-                </strong>
-            </p>
-            <blockquote>
-                {!! str_limit(Forum::render($post->parent->content)) !!}
-            </blockquote>
-        @endif
-
-        @if ($post->trashed())
-            <span class="label label-danger">{{ trans('forum::general.deleted') }}</span>
-        @else
-            {!! Forum::render($post->content) !!}
-        @endif
-    </td>
-</tr>
-<tr>
-    <td>
+        <strong>{!! $post->authorName !!}</strong><br>
         @if (!$post->trashed())
             @can ('edit', $post)
                 <a href="{{ Forum::route('post.edit', $post) }}">{{ trans('forum::general.edit') }}</a>
             @endcan
         @endif
     </td>
-    <td class="text-muted">
+    <td>
         {{ trans('forum::general.posted') }} {{ $post->posted }}
         @if ($post->hasBeenUpdated())
             | {{ trans('forum::general.last_updated') }} {{ $post->updated }}
@@ -53,5 +30,24 @@
                 @endcan
             @endif
         </span>
+
+<hr>
+        @if (!is_null($post->parent))
+            <p>
+                <strong>
+                    {{ trans('forum::general.response_to', ['item' => $post->parent->authorName]) }}
+                    (<a href="{{ Forum::route('post.show', $post->parent) }}">{{ trans('forum::posts.view') }}</a>):
+                </strong>
+            </p>
+            <blockquote>
+                {!! str_limit(Forum::render($post->parent->content)) !!}
+            </blockquote>
+        @endif
+
+        @if ($post->trashed())
+            <span class="label label-danger">{{ trans('forum::general.deleted') }}</span>
+        @else
+            {!! Forum::render($post->content) !!}
+        @endif
     </td>
 </tr>

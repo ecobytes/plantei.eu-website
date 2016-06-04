@@ -36,6 +36,7 @@ gulp.task('bowercopy', function(){
   gulp.src(base_path + 'src/assets/less/style.less')
     .pipe(less())
     .pipe(gulp.dest(base_path + 'src/server/public/css/'))
+
   gulp.src([
     base_path + 'src/assets/js/event_scripts.js',
     base_path + 'src/bower_components/bootstrap/dist/js/bootstrap.min.js',
@@ -50,6 +51,7 @@ gulp.task('bowercopy', function(){
     base_path + 'src/bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
     ])
   .pipe(gulp.dest(base_path + 'src/server/public/js'));
+
   gulp.src([
     base_path + 'src/bower_components/fullcalendar/dist/fullcalendar.min.js',
     base_path + 'src/bower_components/fullcalendar/dist/lang-all.js',
@@ -88,6 +90,13 @@ gulp.task('bowercopy', function(){
     base_path + 'src/bower_components/bootstrap/fonts/*.{eot,svg,ttf,woff,woff2}',
     ])
   .pipe(gulp.dest(base_path + 'src/server/public/fonts'));
+
+  gulp.src([
+    base_path + 'src/assets/images/logo_plantei.svg',
+    base_path + 'src/assets/images/trigos.svg',
+    ])
+  .pipe(gulp.dest(base_path + 'src/server/public/images'));
+
 });
 
 gulp.task('js', function(){

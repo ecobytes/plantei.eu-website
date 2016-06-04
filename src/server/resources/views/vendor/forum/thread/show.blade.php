@@ -2,10 +2,11 @@
 
 @section ('content')
     <div id="thread">
-        <h2>
+        {{-- <h2>
+
             @if ($thread->trashed())
                 <span class="label label-danger">{{ trans('forum::general.deleted') }}</span>
-            @endif
+            @endif 
             @if ($thread->locked)
                 <span class="label label-warning">{{ trans('forum::threads.locked') }}</span>
             @endif
@@ -15,22 +16,22 @@
             {{ $thread->title }}
         </h2>
 
-        <hr>
+        <hr> --}}
 
-        @can ('manageThreads', $category)
+        {{-- @can ('manageThreads', $category)
             <form action="{{ Forum::route('thread.update', $thread) }}" method="POST" data-actions-form>
                 {!! csrf_field() !!}
                 {!! method_field('patch') !!}
 
                 @include ('forum::thread.partials.actions')
             </form>
-        @endcan
+        @endcan 
 
         @can ('deletePosts', $thread)
             <form action="{{ Forum::route('bulk.post.update') }}" method="POST" data-actions-form>
                 {!! csrf_field() !!}
                 {!! method_field('delete') !!}
-        @endcan
+        @endcan --}}
 
         @can ('reply', $thread)
             <div class="row">

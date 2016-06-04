@@ -7,14 +7,6 @@
         <td>{{ $category->threadCount }}</td>
         <td>{{ $category->postCount }}</td>
         <td>
-            @if ($category->newestThread)
-                <a href="{{ Forum::route('thread.show', $category->newestThread) }}">
-                    {{ $category->newestThread->title }}
-                    ({{ $category->newestThread->authorName }})
-                </a>
-            @endif
-        </td>
-        <td>
             @if ($category->latestActiveThread)
                 <a href="{{ Forum::route('thread.show', $category->latestActiveThread->lastPost) }}">
                     {{ $category->latestActiveThread->title }}

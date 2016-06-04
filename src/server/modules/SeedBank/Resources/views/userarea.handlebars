@@ -1,0 +1,39 @@
+{{> header}}
+{{> menu}}
+<div class="modal fade" id="message-display">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="myseeds pageWrap background-primary">
+  <div class="container myseeds">
+    <div class="row myseeds">
+      {{> userarea-menu }}
+      <div class="col-md-9 myseeds">
+      {{#if part.myseeds}}
+      {{> myseeds-part }}
+      {{/if}}
+      {{#if part.messages}}
+      {{> messenger-part }}
+      {{/if}}
+      {{#if part.exchanges}}
+      {{> exchanges-part }}
+      {{/if}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{>scripts}}
+
+{{#if part.myseeds}}
+<script type="text/javascript" src="/js/myseeds.js"></script>
+{{/if}}
+{{#if part.messages}}
+<script type="text/javascript" src="/js/messages.js"></script>
+{{/if}}
+{{#if part.exchanges}}
+<script type="text/javascript" src="/js/exchanges.js"></script>
+{{/if}}
+{{>footer}}

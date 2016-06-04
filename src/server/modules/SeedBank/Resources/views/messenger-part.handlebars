@@ -1,0 +1,44 @@
+<div class="col-md-3">
+  <h3>{{messages.myContacts}}
+    <button id="newContact" type="button" class="btn btn-default">{{ messages.addContact }}</button>
+  </h3>
+  <div class="addContact" style="display:none">
+  </div>
+  <ul id="contactList">
+    {{#each contacts}}
+    <li>{{ name }}</li>
+    {{/each}}
+  </ul>
+</div>
+<div class="col-md-9">
+  <h1>{{messages.latestMessages}}
+    <span class="badge">{{unreadmessages}}</span>
+  </h1>
+  <button id="newMessage" type="button" class="btn btn-default">New message</button>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{messages.subject}}</th>
+        <th>{{messages.date}}</th>
+        <th>{{messages.unread}}/{{messages.read}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#if threads}}
+      {{#each threads}}
+      <tr data-thread_id="{{id}}" class="bootstrap-modal-form-open" {{#if enabled}}data-reply="1" style="font-weight: bold;"{{/if}}>
+        <td>{{subject}}</td>
+        <td>{{created_at}}</td>
+        <td style="text-align: center;">
+          {{#if sent}} {{../messages.sent}}XEnviadaX
+          {{/if}}
+        </td>
+      </tr>
+      {{/each}}
+      {{else}}
+      <p>No threads</p>
+      {{/if}}
+    </tbody>
+  </table>
+</div>
