@@ -12,14 +12,16 @@
 
           <div class="form-group">
             <label class="control-label">{{messages.username}}</label>
-            <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name" value="{{user.name}}" autocomplete="off"></span>
+            <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name"
+              value="{{#if oldInput.name}}{{oldInput.name}}{{else}}{{user.name}}{{/if}}" autocomplete="off"></span>
           </div>
 
           <div class="form-group">
             <label class="control-label">{{messages.email}}</label>
             <input type="password" style="display:none;">
             <input type="text" style="display:none;">
-            <span class="cell"><input autocomplete="off" type="email" class="form-control" name="email" value="{{user.email}}"></span>
+            <span class="cell"><input autocomplete="off" type="email" class="form-control" name="email"
+              value="{{#if oldInput.email}}{{oldInput.email}}{{else}}{{user.email}}{{/if}}"></span>
           </div>
 
           <div class="form-group">
@@ -36,7 +38,8 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="control-label">{{messages.whereareyou}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name" value="{{ user.place_name }}" autocomplete="off"></span>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name"
+                  value="{{#if oldInput.place_name}}{{oldInput.place_name}}{{else}}{{user.place_name}}{{/if}}" autocomplete="off"></span>
               </div>
             </div>
             {{#if updatelocation}}
@@ -56,13 +59,15 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.latitude}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="lat" value="{{ user.lat }}" autocomplete="off"></span>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="lat"
+                  value="{{#if oldInput.lat}}{{oldInput.lat}}{{else}}{{user.lat}}{{/if}}" autocomplete="off"></span>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">{{messages.longitude}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="lon" value="{{ user.lon }}" autocomplete="off"></span>
+                <span class="cell"><input type="text" class="form-control" placeholder="" name="lon"
+                  value="{{#if oldInput.lon}}{{oldInput.lon}}{{else}}{{user.lon}}{{/if}}" autocomplete="off"></span>
               </div>
             </div>
           </div>

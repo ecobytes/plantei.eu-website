@@ -41,7 +41,6 @@ class SeedBankController extends Controller {
   public function prefValidator(array $data)
   {
     $user = \Auth::user();
-    if (!$data['email']){unset($data['email']);};
     $rules = [
       'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
       'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
@@ -50,9 +49,12 @@ class SeedBankController extends Controller {
     if (! $user->name == $data['name']){
       $rules['name'] = 'required|max:255|unique:users';
     }
-    //if (! $user->email == $data['email']){
-    $rules['email'] = 'sometimes|required|email|max:255|unique:users';
-    //}
+    //dd(($user->email !== $data['email']));
+    if (( $user->email !== $data['email']) && ($data['email'])) {
+    //dd($user->email . '::' . $data['email']);
+      $rules['email'] = 'sometimes|required|email|max:255|unique:users';
+    //dd($rules);
+    }
     if ($data['password']){
       $rules['password'] = 'required|confirmed|min:6';
     }
@@ -339,6 +341,16 @@ class SeedBankController extends Controller {
   public function getPreferences()
   {
     $user = \Auth::user();
+    if(\Session::hasOldInput()){
+      $oldInput =  \Session::getOldInput();
+      foreach($oldInput as $key => $val) {
+        if (( $user[$key] == $oldInput[$key] ) || (! $oldInput[$key])) {
+          unset($oldInput[$key]);
+        }
+      }
+    } else {
+      $oldInput = [];
+    }
     $updatelocation = false;
     $location = false;
     $locale = $user->locale ?: config('app.locale');
@@ -370,7 +382,7 @@ class SeedBankController extends Controller {
       'lon' => 121.1,
   'place_name' => 'Porto' ];*/
     }
-    return view('seedbank::preferences')
+    return view('seedbank::preferences', compact('oldInput'))
       ->with('messages', \Lang::get('authentication::messages'))
       ->with('user', $user)
       ->with('updatelocation', $updatelocation)
@@ -382,6 +394,7 @@ class SeedBankController extends Controller {
   {
     $user = \Auth::user();
     $validator = $this->prefValidator($request->all(), [],\Lang::get('auth::validation'));
+    //dd($validator);
     if($validator->fails())
     {
       $this->throwValidationException(
@@ -393,6 +406,10 @@ class SeedBankController extends Controller {
     } else {
       $request['password'] = bcrypt($request->password);
     };
+
+    if (!$request->input('email')){
+      $request['email'] = null;
+    }
 
     $user = $user->update($request->all());
     //dd($user);
