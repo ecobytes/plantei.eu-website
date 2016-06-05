@@ -105,6 +105,7 @@ class SeedBankController extends Controller {
     //return view('seedbank::myseeds')
     $part = [ 'myseeds' => true ];
     return view('seedbank::userarea', compact('part'))
+      ->with('pagination', \Lang::get('pagination'))
       ->with('seeds', $t)
       ->with('bodyId', 'myseeds')
       ->with('transactionsBy', $transactions['asked_by'])

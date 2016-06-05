@@ -29,12 +29,12 @@ $( function () {
       var buttons = '';
       if (data.prev_page_url) {
         buttons += '<li class="previous"><a style="color: black !important;" data-url="' + data.prev_page_url + '" class="btn btn-primary btn-md">\
-        ' + Lang.get('paginate.previous') + '\
+        ' + Lang.get('pagination.previous') + '\
         </a></li>';
       }
       if (data.next_page_url) {
         buttons += '<li class="next"><a style="color: black !important;" data-url="' + data.next_page_url + '" class="btn btn-primary btn-md">\
-        ' + Lang.get('paginate.next') + '\
+        ' + Lang.get('pagination.next') + '\
         </a></li>';
       }
       if (buttons != '') {
