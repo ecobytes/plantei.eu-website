@@ -419,9 +419,10 @@ class SeedBankController extends Controller {
 
   public function getSearch()
   {
-    $user = \Auth::user();
-    return view('seedbank::search')
-      ->with('active', ['search' => true]);
+    return view('seedbank::userarea')
+      ->with('active', ['myseeds' => true])
+      ->with('bodyId', 'myseeds')
+      ->with('part', ['search' => true]);
 
   }
 

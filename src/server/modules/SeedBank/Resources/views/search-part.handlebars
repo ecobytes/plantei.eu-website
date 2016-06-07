@@ -1,0 +1,55 @@
+{{> formErrors}}
+<div class="col-md-12 text-center">
+  <!-- <h1>Pesquisa</h1> -->
+  <form class="form-horizontal" role="form" method="POST" action="/seedbank/search">
+    <input type="hidden" name="_token" value="{{ csrfToken }}">
+    <div class="form-group">
+      <span class="cell">
+        <input type="text" class="form-control search_autocomplete" placeholder="{{messages.common_name}}" name="common_name" value="" autocomplete="off">
+      </span>
+    </div>
+    <div class="form-group">
+      <span class="cell">
+        <input type="text" class="form-control search_autocomplete" placeholder="{{messages.latin_name}}" name="latin_name" value="" autocomplete="off">
+      </span>
+    </div>
+    <div class="form-group lmt">
+      <button id="search" type="submit" class="btn btn-primary btn-lg">
+        {{messages.search}}
+      </button>
+    </div>
+  </form>
+</div>
+<div class="col-md-12 text-center" id="results" style="display: none;">
+  <div class="col-md-4 results_general">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{messages.common_name}}</th>
+          <th>{{messages.latin_name}}</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-8 results_detail">
+    <h3>{{messages.chooseseedfrom}} <span class="label label-default"></span></h3>
+    <button type="button" id="newsearch" class="btn btn-warning">{{messages.newsearch}}</button>
+    <button type="button" id="startexchange" class="btn btn-success">{{messages.starttransaction}}</button>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{messages.mark}}</th>
+          <th>{{messages.common_name}}</th>
+          <th>{{messages.state}}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--<script src="/js/jquery-ui.min.js"></script>
+<script src="/js/laravel-bootstrap-modal-form.js"></script>-->

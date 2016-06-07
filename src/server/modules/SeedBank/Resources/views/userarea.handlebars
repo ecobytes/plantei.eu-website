@@ -20,6 +20,9 @@
       {{#if part.exchanges}}
       {{> exchanges-part }}
       {{/if}}
+      {{#if part.search}}
+      {{> search-part }}
+      {{/if}}
       </div>
     </div>
   </div>
@@ -38,5 +41,8 @@ Lang.setLocale('pt');
 {{/if}}
 {{#if part.exchanges}}
 <script type="text/javascript" src="/js/exchanges.js"></script>
+{{/if}}
+{{#if part.search}}
+<script type="text/javascript" src="/js/search.js"></script>
 {{/if}}
 {{>footer}}
