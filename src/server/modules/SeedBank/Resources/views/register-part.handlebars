@@ -29,13 +29,13 @@
               </span>
             </div>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-5">
                 <div class="form-group">
                   <label class="control-label">{{../messages.sitecollected}}</label>
                   <span class="cell"><input type="text" class="form-control" name="local" value="{{ local }}" autocomplete="off"></span>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="control-label">{{../messages.yearcollected}}</label>
                   <span class="cell"><input type="text" class="form-control" name="year" value="{{ year }}" autocomplete="off"></span>
@@ -111,7 +111,7 @@
         <div id="farming" class="panel-collapse collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="headingFarming">
           <div class="panel-body">
             <div class="row">
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="control-label">{{../messages.directseeding}}</label>
                   <span class="cell btn-group" data-toggle="buttons">
@@ -124,7 +124,7 @@
                   </span>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="control-label">{{../messages.polinization}}</label>
                   <span class="cell btn-group" data-toggle="buttons">
@@ -142,7 +142,7 @@
             <div class="form-group">
               <span class="cell btn-group"  data-toggle="buttons" >
                 <label class="btn btn-default {{#if months.1}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.1}}checked{{/if}} value="1" /> {{../messages.monthjan}}C
+                  <input type="checkbox" name="months[]" {{#if months.1}}checked{{/if}} value="1" /> {{../messages.monthjan}}
                 </label>
                 <label class="btn btn-default {{#if months.2}}active{{/if}}">
                   <input type="checkbox" name="months[]" {{#if months.2}}checked{{/if}} value="2" /> {{../messages.monthfeb}}
