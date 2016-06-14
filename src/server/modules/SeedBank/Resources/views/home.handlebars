@@ -105,7 +105,7 @@ $('#seeds tr').on('click', function () {
 });
 
 $('#info_modal').on('click', '.modal-footer .footer-left button', function(){
-  var seed_id = $('#seed_info .modal-title').data("seed_id");
+  var seed_id = $('#info_modal .modal-title').data("seed_id");
   window.open('/seedbank/register/' + seed_id, '_self');
 });
 
