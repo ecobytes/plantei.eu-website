@@ -33,6 +33,13 @@
             <label class="control-label">{{messages.confirmpassword}}</label>
             <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
           </div>
+
+          <div class="form-group">
+            <label class="control-label">{{messages.language}}</label>
+            <span class="cell"><input id="lang" type="text" class="form-control" placeholder="{{messages.language}}" name="lang"
+              value="{{#if oldInput.lang}}{{oldInput.lang}}{{/if}}" autocomplete="off"></span>
+          </div>
+
           {{#if location}}
           <div class="row">
             <div class="col-md-8">
@@ -112,6 +119,23 @@ $('#updatelocation').on('click', function() {
     $('input[name="'+f+'"]').val($('#sug_'+f).val());
   });
   $('#updatelocation').val('update');
+});
+
+var availableLangs = {{{ availableLangs }}};
+$( "#lang" ).autocomplete({
+  source: availableLangs,
+  response: function(event, ui) {
+    if (ui.content.length == 1)
+    {
+      var v = ui.content[0].label
+      $(this).val(v);
+      /*$('.city').prop('disabled', false).focus();
+      $.get("/api/location/" + v, function (data) {
+        cities = data;
+      });
+      $('.city').focus();*/
+    }
+  },
 });
 </script>
 {{> footer}}

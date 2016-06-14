@@ -1,42 +1,55 @@
-<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included 
-<script src="/js/vendor/jquery.ui.widget.js"></script> -->
-<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="/js/load-image.all.min.js"></script>
-<!-- The Canvas to Blob plugin is included for image resizing functionality
-  <script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
-  <!-- Bootstrap JS is not required, but included for the responsive demo navigation 
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-<script src="/js/jquery.iframe-transport.js"></script>
-<!-- The basic File Upload plugin -->
-<script src="/js/jquery.fileupload.js"></script>
-<!-- The File Upload processing plugin -->
-<script src="/js/jquery.fileupload-process.js"></script>
-<!-- The File Upload image preview & resize plugin -->
-<script src="/js/jquery.fileupload-image.js"></script>
-<!-- The File Upload audio preview plugin -->
-<script src="/js/jquery.fileupload-audio.js"></script>
-<!-- The File Upload video preview plugin -->
-<script src="/js/jquery.fileupload-video.js"></script>
-<!-- The File Upload validation plugin -->
-<script src="/js/jquery.fileupload-validate.js"></script>
-<script>
-/*jslint unparam: true, regexp: true */
-/*global window, $ */
-$(document).ready(function () {
-  'use strict';
+$(function () {
+  $('#cancel_seed').on('click', function () {
+    window.open('/seedbank/myseeds', '_self');
+    return false;
+  });
+  $('form').on('submit', function (){
+    element = $('input[name="common_name"]');
+    if (! element.val()) {
+      $('#identification').collapse('show');
+      element.closest('.form-group').addClass('has-error');
+      element.next('.help-block').text('This field is the only field required');
+      element.focus();
+      return false;
+    }
+  });
+  tinymce.init({
+    selector: 'textarea',
+    inline: false,
+    menubar: 'tools',
+    width: '100%',
+    plugins: [ "placeholder" ],
+    setup : function(ed)
+    {
+      ed.on('init', function()
+          {
+            this.getDoc().body.style.fontSize = '18px';
+            $('.mce-toolbar-grp').hide();
+            $('.mce-statusbar').hide();
+            $(this.getBody()).on('blur', function() {
+              $('.mce-toolbar-grp').hide();
+              $('.mce-statusbar').hide();
+            });
+            $(this.getBody()).on('focus', function() {
+              $('.mce-toolbar-grp').show();
+              $('.mce-statusbar').show();
+            });
+          });
+    }
+  });
+  //Picture uploader
   var confirmed = false;
-  var deletebuttontext = "{{messages.delete}}"
+  var deletebuttontext = Lang.get('seedbank.messages.delete');
     $("form").on('submit', function () {
       if (confirmed) { return true };
       tinymce.triggerSave();
       var formdata = $(this).serializeArray();
       $.post('/seedbank/register', formdata, function(data) {
         $("#seed-preview").html(data).show();
-        $.each($('#files').children('.col-md-3').not('.processing'), function (index, elem){
+        $.each($('#files').children('.col-md-4').not('.processing'), function (index, elem){
           if ($(elem).find('img').length) {
             $("#seed-preview .pictures").append($(elem).clone()
-                .removeClass('col-md-3').addClass('col-md-4'))
+                .removeClass('col-md-4').addClass('col-md-4'))
               .find('button').remove();
           }
         });
@@ -56,13 +69,13 @@ $(document).ready(function () {
     that = this;
     $.getJSON(file.deleteUrl, function (data){
       if (data.files[0][file.md5sum]){
-        that.closest('.col-md-3').remove();
+        that.closest('.col-md-4').remove();
         upload_counter = upload_counter - 1;
       }
     });
-    $.each($('#files').children('.col-md-3').not('.processing'), function (index, elem){
+    $.each($('#files').children('.col-md-4').not('.processing'), function (index, elem){
       if (! $(elem).find('img').length) {
-        $(elem).closest('.col-md-3').remove();
+        $(elem).closest('.col-md-4').remove();
       }
     });
   });
@@ -76,11 +89,11 @@ $(document).ready(function () {
       file = $this.data().result.files[0];
       $.getJSON(file.deleteUrl, function (data){
         if (data.files[0][file.md5sum]){
-          $this.closest('.col-md-3').remove();
+          $this.closest('.col-md-4').remove();
           upload_counter = upload_counter - 1;
         }
       });
-      $.each($('#files').children('.col-md-3').not('.processing'), function (index, elem){
+      $.each($('#files').children('.col-md-4').not('.processing'), function (index, elem){
         if (! $(elem).find('img').length) {
           $(elem).remove();
         }
@@ -118,7 +131,7 @@ $(document).ready(function () {
       data.formData = {};
     }
   }).on('fileuploadadd', function (e, data) {
-    data.context = $('<div/>').addClass('col-md-3').css("padding-bottom", "24px").appendTo('#files');
+    data.context = $('<div/>').addClass('col-md-4').css("padding-bottom", "24px").appendTo('#files');
     $.each(data.files, function (index, file) {
       var node = $('<p/>');
       /*if (!index) {
@@ -157,24 +170,24 @@ $(document).ready(function () {
     $.each(data.result.files, function (index, file) {
       if (file.url) {
         upload_counter += 1;
-        $.each($('#files').children('.col-md-3'), function (index, elem) {
+        $.each($('#files').children('.col-md-4'), function (index, elem) {
           var elem_img = $(elem).find('img');
           if (elem_img.length) {
             if ($(elem_img[0]).data('file-id') == file.id) {
-              $(elem_img[0]).closest('.col-md-3').remove();
+              $(elem_img[0]).closest('.col-md-4').remove();
               upload_counter = upload_counter - 1;
             }
           }
         });
         if (upload_counter > $("#fileupload").fileupload('option', 'maxNumberOfFiles')) {
-          $(data.context.children()[index]).closest('.col-md-3').remove();
+          $(data.context.children()[index]).closest('.col-md-4').remove();
           $.getJSON(file.deleteUrl, function (){
             upload_counter = upload_counter - 1;
           });
           return false;
         }
         var hidden_input = '<input type="hidden" name="pictures_id[]" value="' + file.id + '">';
-        var image = $('<img class="img-responsive img-rounded" data-file-id="' + file.id + '" src="' + file.url + '" alt="' + file.label + '" />');
+        var image = $('<img class="img-responsive img-rounded cell" data-file-id="' + file.id + '" src="' + file.url + '" alt="' + file.label + '" />');
         /*var link = $('<a>')
           .attr('target', '_blank')
           .prop('href', file.url);*/
@@ -197,6 +210,5 @@ $(document).ready(function () {
     });
   }).prop('disabled', !$.support.fileInput)
   .parent().addClass($.support.fileInput ? undefined : 'disabled');
-  var upload_counter = $('#files .col-md-3').length;
+  var upload_counter = $('#files .col-md-4').length;
 });
-</script>

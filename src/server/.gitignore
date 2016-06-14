@@ -11,3 +11,4 @@ tmp
 dotdeb.gpg
 index_cache
 geoip.mmdb
+storage/*

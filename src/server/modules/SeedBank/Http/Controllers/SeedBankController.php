@@ -240,9 +240,13 @@ class SeedBankController extends Controller {
     if (! isset($oldInput)){
       $oldInput = [];
     }
-    return view('seedbank::registerseed', ['update' => $update])
-      ->with('active', ['myseeds' => true])
-      ->with('oldInput', $oldInput);
+    $part = [ 'register' => true ];
+    return view('seedbank::userarea', compact('part', 'update'))
+      ->with('bodyId', 'myseeds')
+      ->with('oldInput', $oldInput)
+      ->with('active', ['myseeds' => true]);
+    /*return view('seedbank::registerseed', ['update' => $update])
+      ->with('active', ['myseeds' => true])*/
   }
 
   public function postRegister(Request $request)
@@ -383,7 +387,13 @@ class SeedBankController extends Controller {
       'lon' => 121.1,
   'place_name' => 'Porto' ];*/
     }
-    return view('seedbank::preferences', compact('oldInput'))
+    $availableLangs = "[";
+    foreach(config('app.availableLanguagesFull') as $key => $value ) {
+        $availableLangs .= "{value: '" . $key . "', label: '" . $value . "'},";
+    }
+    $availableLangs .= "]";
+
+    return view('seedbank::preferences', compact('oldInput', 'availableLangs'))
       ->with('messages', \Lang::get('authentication::messages'))
       ->with('user', $user)
       ->with('updatelocation', $updatelocation)
