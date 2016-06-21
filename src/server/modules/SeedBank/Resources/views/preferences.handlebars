@@ -34,10 +34,16 @@
             <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
           </div>
 
-          <div class="form-group">
+          <div class="col-md-4">
+          <div class="form-group" style="overflow: hidden;">
             <label class="control-label">{{messages.language}}</label>
-            <span class="cell"><input id="lang" type="text" class="form-control" placeholder="{{messages.language}}" name="lang"
-              value="{{#if oldInput.lang}}{{oldInput.lang}}{{/if}}" autocomplete="off"></span>
+            <span class="cell"><select class="form-control" name="locale">
+                {{#each availableLangs}}
+                <option value="{{ value }}" {{#if selected }}selected{{/if}}>{{ label }}</option>
+                {{/each}}
+              </select>
+            </span>
+          </div>
           </div>
 
           {{#if location}}
@@ -134,7 +140,10 @@ $( "#lang" ).autocomplete({
         cities = data;
       });
       $('.city').focus();*/
+    } else {
+      $(this).val("");
     }
+
   },
 });
 </script>

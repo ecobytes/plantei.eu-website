@@ -17,16 +17,16 @@ class CreateSementecasTable extends Migration
             $table->timestamps();
             $table->string('contact');
             $table->string('address');
-            $table->string('location');
+            $table->float('lon');
+            $table->float('lat');
             $table->string('name');
-            $table->text('schedule');
+            $table->text('descrition');
         });
         Schema::create('sementecas_calendar', function (Blueprint $table) {
             $table->integer('sementeca_id')->unsigned();
             $table->foreign('sementeca_id')->references('id')->on('sementecas');
             $table->integer('calendar_id')->unsigned();
             $table->foreign('calendar_id')->references('id')->on('calendar');
-            $table->primary(['sementeca_id', 'calendar_id']);
         });
     }
 

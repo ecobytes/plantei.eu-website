@@ -5,7 +5,7 @@
         <li role="presentation" {{#if active.events}}class="active"{{/if}}><a href="/{{#if admin}}admin/{{/if}}events">{{menu.events}}</a></li>
         <li role="presentation" {{#if active.forum}}class="active"{{/if}}><a href="/forum">{{menu.forum}}</a></li>
         <!-- <li role="presentation"{{#if active.sementecas}} class="active"{{/if}}><a href="/{{#if admin}}admin/{{/if}}sementecas">{{menu.seedshare}}</a></li> -->
-        <li role="presentation" class="disabled"{{#if active.sementecas}}class="active"{{/if}}><a class="disabled" href="#">{{menu.seedshare}}</a></li>
+        <li role="presentation" {{#if active.sementecas}}class="active"{{/if}}><a href="/sementecas">{{menu.seedshare}}</a></li>
       </ul>
       <ul class="nav nav-pills navbar-nav navbar-right">
         <li role="presentation" {{#if active.home}}class="active"{{/if}}><a href="/seedbank"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span>{{!--menu.home--}}</a></li>
@@ -15,8 +15,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>{{!--menu.admin--}}<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li role="presentation"><a href="/admin/events">{{menu.events}}</a></li>
-            <!-- <li role="presentation"><a class="disabled" href="/admin/sementecas">{{menu.seedshare}}</a></li> -->
-            <li role="presentation" class="disabled"><a class="disabled" href="#">{{menu.seedshare}}</a></li>
+            <li role="presentation" class="disabled"><a class="disabled" href="/admin/sementecas">{{menu.seedshare}}</a></li>
           </ul>
         </li>
         {{/if}}

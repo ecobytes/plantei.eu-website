@@ -28,7 +28,7 @@ class User extends Model implements AuthenticatableContract,
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password', 'lat', 'lon', 'place_name'];
+	protected $fillable = ['name', 'email', 'password', 'lat', 'lon', 'place_name', 'locale'];
 
 	protected $casts = [
         'lat' => 'float',

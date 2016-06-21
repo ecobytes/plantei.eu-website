@@ -10,7 +10,8 @@
     "fullcalendar": "~2.7.1",
     "bootstrap-tokenfield": "0.12.1",
     "jquery-timepicker": "*",
-    "jt.timepicker": "^1.11.1"
+    "jt.timepicker": "^1.11.1",
+    "leaflet": "^0.7.7"
   },
   "private": true
 }

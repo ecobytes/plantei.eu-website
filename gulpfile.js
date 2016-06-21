@@ -62,6 +62,17 @@ gulp.task('bowercopy', function(){
     ])
   .pipe(gulp.dest(base_path + 'src/server/public/js/fullcalendar'));
 
+  gulp.src([
+    base_path + 'src/bower_components/leaflet/dist/leaflet.js',
+    ])
+  .pipe(gulp.dest(base_path + 'src/server/public/js/leaflet'));
+
+  gulp.src([
+    base_path + 'src/bower_components/leaflet/dist/leaflet.css',
+    base_path + 'src/bower_components/leaflet/dist/images**/*',
+    ])
+  .pipe(gulp.dest(base_path + 'src/server/public/js/leaflet'));
+
   gulp.src(base_path + 'src/bower_components/moment/min/moment-with-locales.min.js')
   .pipe(rename('moment.min.js'))
   .pipe(gulp.dest(base_path + 'src/server/public/js/fullcalendar'));

@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration {
 			$table->string('place_name');
 			$table->string('lat');
 			$table->string('lon');
-			$table->string('locale', 3);
+			$table->string('locale', 3)->default('pt');
 			$table->string('password', 60);
 			$table->rememberToken();
 			$table->timestamps();

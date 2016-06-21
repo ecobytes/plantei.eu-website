@@ -9,27 +9,40 @@
 <div class="pageWrap background-primary">
   <div class="container">
     <!-- <div class="row lmt"> -->
-    <div class="col-md-6 text-center">
+    <div class="col-md-12 text-center">
       <h1>{{menu.seedshare}}</h1>
       {{#if isadmin }}
       {{!-- TODO: Add scripts to manage sementecas --}}
       <h2>Admin MOde</h2>
       {{/if}}
+    </div>
+    <div class="col-md-3">
       <table class="table">
         <thead>
           <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>ID</th>
+            <th>Nome</th>
           </tr>
         </thead>
         <tbody>
         </tbody>
       </table>
     </div>
+    <div class="col-md-9">
+      <div id="map" style="min-height: 400px; width:100%;">
+      </div>
+    </div>
   </div>
 </div>
 
 {{>scripts}}
+<script type="text/javascript" src="/js/leaflet/leaflet.js"></script>
+<script type="text/javascript" src="/js/sementecas.js"></script>
+<script>
+window.onload = function () {
+  initmap({{lat}}{{#if lon}}, {{lon}}{{/if}});
+  map.on('click', onMapClick);
+};
+</script>
+
 {{>footer}}

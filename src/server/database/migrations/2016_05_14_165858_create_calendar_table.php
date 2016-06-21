@@ -22,6 +22,8 @@ class CreateCalendarTable extends Migration
             $table->string('category');
             $table->string('address');
             $table->string('location');
+            $table->float('lon');
+            $table->float('lat');
             $table->string('title');
             $table->text('description');
             $table->string('image');

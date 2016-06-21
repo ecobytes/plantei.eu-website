@@ -155,7 +155,11 @@ Route::group(['prefix' => 'sementecas', 'namespace' => 'Modules\SeedBank\Http\Co
 {
   Route::group(['middleware' => 'auth'], function(){
     Route::get('/', function () {
-      return view('seedbank::sementecas')
+      $user = \Auth::user();
+      $lat = sprintf("%.5F", $user->lat);
+      $lon = sprintf("%.5F", $user->lon);
+      //dd(compact('lat', 'lon'));
+      return view('seedbank::sementecas', compact('lat', 'lon'))
         ->with('active', [ 'sementecas' => true ]);
     });
     /*Route::get('/', function () {

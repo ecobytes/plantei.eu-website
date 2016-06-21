@@ -28,6 +28,10 @@ return [
 	'cancel' => 'Cancelar',
 	'registertitle' => 'Registar uma nova conta',
 	'login' => 'Iniciar Sessão',
-    'updateTo' => 'Actualiza',
-    'unknowncity' => 'Sítio sem nome'
+  'updateTo' => 'Actualiza',
+  'unknowncity' => 'Sítio sem nome',
+  'emailHelp' => 'Não obrigatório, pode ser usado para recuperar a palavra passe',
+  'saveLocationLatLonHelp' => 'Pode ser útil para procurar eventos ou sementecas nas proximidades',
+  'usernameHelp' => 'Nome a ser usado no login da plataforma',
+  'language' => 'Idioma',
 ];

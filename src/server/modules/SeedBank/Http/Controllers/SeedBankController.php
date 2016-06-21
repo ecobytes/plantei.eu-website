@@ -356,9 +356,15 @@ class SeedBankController extends Controller {
     } else {
       $oldInput = [];
     }
+    if ( isset($oldInput['locale']) )
+    {
+      $locale = $oldInput['locale'];
+    } else {
+      $locale = $user->locale ?: config('app.locale');
+    }
+
     $updatelocation = false;
     $location = false;
-    $locale = $user->locale ?: config('app.locale');
     if ($locale == 'pt'){
       $preflocale = array('pt', 'pt-BR', 'en');
     } else {
@@ -383,15 +389,14 @@ class SeedBankController extends Controller {
       if ($user->place_name){
         $location = true;
       }
-  /*  $updatelocation = [ 'lat' => 12.2,
-      'lon' => 121.1,
-  'place_name' => 'Porto' ];*/
+      /*  $updatelocation = [ 'lat' => 12.2,
+                              'lon' => 121.1,
+                              'place_name' => 'Porto' ];*/
     }
-    $availableLangs = "[";
+    $availableLangs = [];
     foreach(config('app.availableLanguagesFull') as $key => $value ) {
-        $availableLangs .= "{value: '" . $key . "', label: '" . $value . "'},";
+        array_push($availableLangs, ["value" => $key, "label" => $value, "selected" => ($key == $locale)]);
     }
-    $availableLangs .= "]";
 
     return view('seedbank::preferences', compact('oldInput', 'availableLangs'))
       ->with('messages', \Lang::get('authentication::messages'))

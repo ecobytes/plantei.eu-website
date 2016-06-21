@@ -78,10 +78,12 @@ class AuthController extends Controller {
    */
   public function create(array $data)
   {
-    if ($data['saveLocation'] == "0")  {
-      $data['place_name'] = false; $data['lon'] = false; $data['lat'] = false; 
+    if (isset($data['saveLocation'])) {
+      if ($data['saveLocation'] == "0")  {
+        $data['place_name'] = false; $data['lon'] = false; $data['lat'] = false; 
+      }
+      unset($data['saveLocation']);
     }
-    unset($data['saveLocation']);
 
     foreach ($data as $key => $value){
       if ((!$value) || (!in_array($key, ['name', 'email', 'password', 'place_name', 'lat', 'lon']))){
@@ -156,11 +158,13 @@ class AuthController extends Controller {
         $oldInput['subscribeNewsletter'][1] = true;
       }
 
-      if ($oldInput['saveLocation'] == "0") {
-        $oldInput['saveLocation'] = false;
-      } else {
-        $oldInput['saveLocation'] = true ;
+      if (isset($data['saveLocatio'])) {
+        if ($oldInput['saveLocation'] == "0") {
+          $oldInput['saveLocation'] = false;
+        } else {
+          $oldInput['saveLocation'] = true ;
 
+        }
       }
 
     } else {
