@@ -49,11 +49,8 @@ class SeedBankController extends Controller {
     if (! $user->name == $data['name']){
       $rules['name'] = 'required|max:255|unique:users';
     }
-    //dd(($user->email !== $data['email']));
     if (( $user->email !== $data['email']) && ($data['email'])) {
-    //dd($user->email . '::' . $data['email']);
       $rules['email'] = 'sometimes|required|email|max:255|unique:users';
-    //dd($rules);
     }
     if ($data['password']){
       $rules['password'] = 'required|confirmed|min:6';
@@ -119,7 +116,6 @@ class SeedBankController extends Controller {
 
     $userMessages = $user->lastMessages(10)->toArray();
     //->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
-    //dd($userMessages);
     $unreadmessages = 0;
     foreach($userMessages as &$m) {
       if (($m['sender_id'] != $user->id) && ($m['read'])){
@@ -251,8 +247,6 @@ class SeedBankController extends Controller {
 
   public function postRegister(Request $request)
   {
-    // if error with form
-    //dd($request->input());
     $this->validate($request, [
       'common_name' => 'required',
       //'origin' => 'required',
@@ -312,7 +306,6 @@ class SeedBankController extends Controller {
         }
       }
       if ($key == 'months'){
-        ///dd($value);
         $months_new = $value;
       }
     }
@@ -410,7 +403,6 @@ class SeedBankController extends Controller {
   {
     $user = \Auth::user();
     $validator = $this->prefValidator($request->all(), [],\Lang::get('auth::validation'));
-    //dd($validator);
     if($validator->fails())
     {
       $this->throwValidationException(
@@ -422,13 +414,14 @@ class SeedBankController extends Controller {
     } else {
       $request['password'] = bcrypt($request->password);
     };
-
-    if (!$request->input('email')){
-      $request['email'] = null;
+    foreach(['email', 'lat', 'lon', 'place_name'] as $field)
+    {
+      if (!$request->input($field))
+      {
+        unset($request[$field]);
+      }
     }
-
     $user = $user->update($request->all());
-    //dd($user);
     return redirect('/seedbank');
   }
 
@@ -452,7 +445,6 @@ class SeedBankController extends Controller {
       }
     }
     if (! $q){ return [];}
-    //dd($q);
     $query = \Caravel\Seed::query()
       ->where('public', true)
       ->where('available', true)
