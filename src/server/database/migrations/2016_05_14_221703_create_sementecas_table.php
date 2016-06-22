@@ -15,12 +15,12 @@ class CreateSementecasTable extends Migration
         Schema::create('sementecas', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('contact');
-            $table->string('address');
-            $table->float('lon');
-            $table->float('lat');
-            $table->string('name');
-            $table->text('descrition');
+            $table->string('contact')->nullable();
+            $table->string('address')->nullable();
+            $table->float('lon')->nullable();
+            $table->float('lat')->nullable();
+            $table->string('name')->nullable();
+            $table->text('descrition')->nullable();
         });
         Schema::create('sementecas_calendar', function (Blueprint $table) {
             $table->integer('sementeca_id')->unsigned();
