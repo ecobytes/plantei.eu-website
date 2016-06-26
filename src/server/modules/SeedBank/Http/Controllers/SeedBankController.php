@@ -72,7 +72,7 @@ class SeedBankController extends Controller {
         'users.name', 'users.email', 'user_id')
         ->get();
 
-    $newMessagesCount = $user->newMessagesCount();
+    $newMessagesCount = $user->newThreadsCount();
     $threads = $user->threads()->orderBy('updated_at', 'DESC')->limit(10)->get();
     $calendarNow = \Caravel\Calendar::now()->get();
     $calendarNext = \Caravel\Calendar::nextDays()->get();
