@@ -18,7 +18,8 @@
 		"riari/laravel-forum": "~3.0",
 		"riari/laravel-forum-frontend": "~1.0",
     "cmgmyr/messenger": "^2.10",
-    "mariuzzo/laravel-js-localization": "1.2.*"
+    "mariuzzo/laravel-js-localization": "1.2.*",
+		"doctrine/dbal": "^2.5"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

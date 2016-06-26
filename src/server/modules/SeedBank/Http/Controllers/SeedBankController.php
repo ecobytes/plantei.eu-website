@@ -28,6 +28,8 @@ class SeedBankController extends Controller {
         $picture = \Caravel\Picture::create([
           'path' => $picture_path . '/' . $file_name,
           'url' => '/seedbank/pictures/' . $file_md5,
+          //TODO: eliminate following line
+          'label' => '',
           'md5sum' => $file_md5
         ]);
       } else {

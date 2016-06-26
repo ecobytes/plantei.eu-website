@@ -34,8 +34,7 @@
             <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
           </div>
 
-          <div class="col-md-4">
-          <div class="form-group" style="overflow: hidden;">
+          <div class="form-group" style="width: 50%">
             <label class="control-label">{{messages.language}}</label>
             <span class="cell"><select class="form-control" name="locale">
                 {{#each availableLangs}}
@@ -43,7 +42,6 @@
                 {{/each}}
               </select>
             </span>
-          </div>
           </div>
 
           {{#if location}}

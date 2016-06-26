@@ -18,7 +18,7 @@ class CreatePituresTable extends Migration
             $table->string('path',254);
             $table->string('url',254);
             $table->string('md5sum',32)->unique();
-            $table->string('label',254);
+            $table->string('label',254)->nullable();
             $table->integer('seed_id')->unsigned()->nullable();
             $table->foreign('seed_id')->references('id')->on('seeds');
         });
