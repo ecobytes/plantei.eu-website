@@ -1,0 +1,58 @@
+{{> header}}
+<div class="modal fade" id="event_info">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{{> menu}}
+<div class="pageWrap background-primary">
+  <div class="container">
+    <div id='mycalendar'></div>
+  </div>
+</div>
+
+{{>scripts}}
+<script type="text/javascript" src="/js/fullcalendar/moment.min.js"></script>
+<script type="text/javascript" src="/js/fullcalendar/fullcalendar.min.js"></script>
+<script type="text/javascript" src="/js/fullcalendar/lang/pt.js"></script>
+
+<script>
+$(document).ready(function() {
+  var date = new Date();
+  var d = date.getDate();
+  var m = date.getMonth();
+  var y = date.getFullYear();
+  // page is now ready, initialize the calendar...
+  $('#mycalendar').fullCalendar({
+    // put your options and callbacks here
+    //defaultView: 'agendaWeek',
+    theme: true,
+    contentHeight: 400,
+    fixedWeekCount: false,
+    lang: "pt",
+    timeFormat: 'HH:mm',
+    eventClick: function(calEvent, jsEvent, view) {
+      console.log(calEvent);
+      $.get("/events/get/" + calEvent.id, function (data) {
+        if (data.length == 0){
+          return false;
+        }
+        $('#event_info .modal-content').empty();
+        $('#event_info .modal-content').append(data);
+
+        $('#event_info').modal('show');
+      });
+    },
+    eventSources: [
+    {
+      url: '/api/calendar',
+      type: 'POST',
+      color: 'yellow',
+      textColor: 'black'
+    }
+    ],
+  });
+});
+</script>
+{{>footer}}

@@ -125,4 +125,8 @@ return [
     'updateTo' => 'Update to',
     'updateusertitle' => 'Update User',
     'whereareyou' => 'Where are you?',
+    'name' => 'Name',
+    'contact' => 'Contact',
+    'createSementeca' => 'Register seed share point',
+
 ];

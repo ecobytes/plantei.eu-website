@@ -17,7 +17,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
     Route::get('/preferences', 'SeedBankController@getPreferences');
     Route::post('/preferences', 'SeedBankController@postPreferences');
     Route::post('/add-pictures', 'SeedBankController@postAddPicture');
-    //Route::post('/seed/{id}', 'SeedBankController@postSeed');
+   //Route::post('/seed/{id}', 'SeedBankController@postSeed');
     Route::get('/seed/{id}', function ($id) {
       $user = \Auth::user();
       $seed = \Caravel\Seed::findOrFail($id);
@@ -162,17 +162,62 @@ Route::group(['prefix' => 'sementecas', 'namespace' => 'Modules\SeedBank\Http\Co
       return view('seedbank::sementecas', compact('lat', 'lon'))
         ->with('active', [ 'sementecas' => true ]);
     });
-    /*Route::get('/', function () {
-      return \Caravel\Sementeca::paginate(5);
+    Route::get('new', function () {
+      $user = \Auth::user();
+
+
+      return view('seedbank::sementeca_modal_edit')
+        ->with('active', [ 'sementecas' => true ]);
     });
-    Route::get('/{id}', function ($id) {
-      if ( ! $id )
+    Route::post('new', 'SeedBankController@postSementecasNew');
+    Route::get('update/{id}', function ($id) {
+      $user = \Auth::user();
+      $lat = sprintf("%.5F", $user->lat);
+      $lon = sprintf("%.5F", $user->lon);
+      //dd(compact('lat', 'lon'));
+      return view('seedbank::sementecas', compact('lat', 'lon'))
+        ->with('active', [ 'sementecas' => true ]);
+    });
+    Route::get('delete/{id}', function ($id) {
+      $user = \Auth::user();
+      $lat = sprintf("%.5F", $user->lat);
+      $lon = sprintf("%.5F", $user->lon);
+      //dd(compact('lat', 'lon'));
+      return view('seedbank::sementecas', compact('lat', 'lon'))
+        ->with('active', [ 'sementecas' => true ]);
+    });
+    Route::get('activate/{id}', function ($id) {
+      /* Only admins should have access to this function */
+      $user = \Auth::user();
+      $lat = sprintf("%.5F", $user->lat);
+      $lon = sprintf("%.5F", $user->lon);
+      //dd(compact('lat', 'lon'));
+      return view('seedbank::sementecas', compact('lat', 'lon'))
+        ->with('active', [ 'sementecas' => true ]);
+    });
+    Route::get('get', function (Request $request) {
+      $user = \Auth::user();
+      if ( ! $request->input('id') )
       {
+        /*if ( isset($request->input()['all']) ){
+          return \Caravel\Sementeca::select('lat', 'lon', 'name', 'description')->get();
+      }*/
+        if ( isset($request->input()['term']) ){
+          return \Caravel\Sementeca::where('name', 'ilike', '%' . $request->input('term') . '%')->select('lat', 'lon', 'name', 'description')->get();
+        }
         return \Caravel\Sementeca::paginate(5);
       }
-      $sementeca = \Caravel\Sementeca::findOrFail($id);
-      return $sementeca;
-    });*/
+      $id = $request->input('id');
+      return \Caravel\Sementeca::findOrFail($id);
+    });
+    Route::post('find', function (Request $request) {
+      $user = \Auth::user();
+      $lat = sprintf("%.5F", $user->lat);
+      $lon = sprintf("%.5F", $user->lon);
+      //dd(compact('lat', 'lon'));
+      return view('seedbank::sementecas', compact('lat', 'lon'))
+        ->with('active', [ 'sementecas' => true ]);
+    });
   });
 });
 

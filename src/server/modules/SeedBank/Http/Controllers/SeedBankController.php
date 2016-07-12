@@ -663,4 +663,16 @@ class SeedBankController extends Controller {
     //return redirect('/events');
     return '';
   }
+
+  public function postSementecasNew (Request $request) {
+    $user = \Auth::user();
+    //TODO: Check that user can create sementecas
+    $this->validate($request, [
+      'name' => 'required',
+      'lat' => 'required',
+      'lon' => 'required',
+    ], \Lang::get('seedbank::validation'));
+    $sementeca = \Caravel\Sementeca::create($request->input());
+    return $sementeca;
+  }
 }

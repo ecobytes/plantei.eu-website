@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sementeca extends Model
 {
-    protected $fillable = ['contact', 'schedule', 'description', 'address'];
+    protected $fillable = ['contact', 'description', 'address', 'lat', 'lon', 'name', 'active'];
 
     public function events() {
 

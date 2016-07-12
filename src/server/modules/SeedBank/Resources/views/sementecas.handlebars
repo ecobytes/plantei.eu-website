@@ -1,6 +1,6 @@
 {{> header}}
 {{> menu}}
-<div class="modal fade" id="seed_info">
+<div class="modal fade" id="sementeca">
   <div class="modal-dialog">
     <div class="modal-content">
     </div><!-- /.modal-content -->
@@ -16,7 +16,7 @@
       <h2>Admin MOde</h2>
       {{/if}}
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" style="display: none;">
       <table class="table">
         <thead>
           <tr>
@@ -28,7 +28,7 @@
         </tbody>
       </table>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-9 col-md-offset-3">
       <div id="map" style="min-height: 400px; width:100%;">
       </div>
     </div>
@@ -37,6 +37,7 @@
 
 {{>scripts}}
 <script type="text/javascript" src="/js/leaflet/leaflet.js"></script>
+<script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="/js/sementecas.js"></script>
 <script>
 window.onload = function () {

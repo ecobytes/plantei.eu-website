@@ -115,4 +115,7 @@ return [
     'next_seeds' => 'Próximas Sementes',
     'prev_seeds' => 'Sementes Anteriores',
     'newmessage' => 'Nova mensagem',
+    'name' => 'Nome',
+    'contact' => 'Contacto',
+    'createSementeca' => 'Regista sementeca',
 ];
