@@ -288,23 +288,29 @@ class SeedBankController extends Controller {
       'latin_name','common_name','polinization','direct',
     ];
     $seed_taxonomy = ['species', 'variety','family'];
+    $taxonomy_model = [
+      'species' => '\Caravel\Species',
+      'variety' => '\Caravel\Variety',
+      'family' => '\Caravel\Family'
+    ];
     $seed_new = [];
     $months_new = [];
     foreach ( $request->input() as $key =>  $value ){
       if (in_array($key, $seed_keys)){
-        $seed_new[$key] = $value;
+        if ( $value ) {
+          $seed_new[$key] = $value;
+        }
       }
       if (in_array($key, $seed_taxonomy)){
         // TODO: Should do a special function to work this out
         if ($value) {
-          $t = (array)\DB::table($key)->where('name', $value)->first();
-          if (! $t) {
-            $t['id'] = \DB::table($key)->insertGetId(['name' => $value]);
+          $t = $taxonomy_model[$key]::firstOrCreate(['name' => $value]);
+          $seed_new[$key . '_id'] = $t->id;
+        } else {
+          if ($request->input('_id')) {
+            $seedt = \Caravel\Seed::findOrFail($request->input('_id'));
+            $seedt->update([$key . '_id' => Null]);
           }
-
-          $seed_new[$key . '_id'] = $t['id'];
-          //$seed_new[$key] = $t;
-          //unset($seed_new[$key]);
         }
       }
       if ($key == 'months'){

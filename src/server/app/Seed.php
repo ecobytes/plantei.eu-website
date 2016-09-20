@@ -70,6 +70,7 @@ class Seed extends Model
 class Family extends Model
 {
   protected $table = 'family';
+  protected $fillable = ['name'];
   public function species()
   {
     return $this->hasMany('Caravel\Species');
@@ -83,6 +84,7 @@ class Family extends Model
 class Species extends Model
 {
   protected $table = 'species';
+  protected $fillable = ['name'];
   public function family()
   {
     return $this->belongsTo('Caravel\Family');
@@ -100,6 +102,7 @@ class Species extends Model
 class Variety extends Model
 {
   protected $table = 'variety';
+  protected $fillable = ['name'];
   public function species()
   {
     return $this->belongsTo('Caravel\Species');
@@ -113,6 +116,8 @@ class Variety extends Model
 
 class SeedMonth extends Model
 {
+  protected $primaryKey = null;
+  public $incrementing = false;
   protected $table = 'seeds_months';
   protected $fillable = ['month'];
   public $timestamps = false;
