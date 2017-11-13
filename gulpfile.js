@@ -105,9 +105,13 @@ gulp.task('bowercopy', function(){
     ])
   .pipe(gulp.dest(base_path + 'src/server/public/fonts'));
 
+  //gulp.src([
+  //  base_path + 'src/assets/images/logo_plantei.svg',
+  //  base_path + 'src/assets/images/trigos.svg',
+  //  ])
+  //.pipe(gulp.dest(base_path + 'src/server/public/images'));
   gulp.src([
-    base_path + 'src/assets/images/logo_plantei.svg',
-    base_path + 'src/assets/images/trigos.svg',
+    base_path + 'src/assets/images/*'
     ])
   .pipe(gulp.dest(base_path + 'src/server/public/images'));
 

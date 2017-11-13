@@ -1,0 +1,16 @@
+  <h2>No Forum</h2>
+  <table class="table" id="forum">
+    <tbody>
+      {{#each posts}}
+      <tr data-forum_id="{{id}}">
+        <td>{{thread.title}}</td>
+        <td>{{author.name}}</td>
+        <td>{{updated_at}}</td>
+      </tr>
+      {{else}}
+      <tr>
+        <h4>No content</h4>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>

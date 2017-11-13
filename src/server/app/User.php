@@ -269,6 +269,32 @@ class User extends Model implements AuthenticatableContract,
 
   }
 
+  /**
+   * Get latest unread messages.
+   * @param $limit(integer)
+   * @return Collection
+   */
+  public function lastMessages($limit=4)
+  {
+    $messages = [];
+
+    foreach ($this->threadsWithNewMessages()->sortByDesc('updated_at') as $thread)
+    {
+      foreach($thread->messages->sortByDesc('updated_at') as $message)
+      {
+        //$message->load('user', 'thread');
+        $messages[] = $message;
+      }
+    }
+
+    $colmessages = collect($messages)->sortByDesc('updated_at')->take($limit);
+    foreach ($colmessages as $m)
+    {
+      $m->load('user', 'thread');
+    }
+
+    return $colmessages;
+  }
 }
 
 /*class Contact extends Model 

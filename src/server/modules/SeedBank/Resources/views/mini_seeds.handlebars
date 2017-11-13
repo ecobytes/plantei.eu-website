@@ -1,0 +1,42 @@
+  <h2>Sementes</h2>
+  <table class="table" id="seeds">
+    <!-- All seeds -->
+    <thead>
+      <tr>
+        <h4>Adicionadas recentemente</h4>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each seeds}}
+      <tr data-seed_id="{{id}}">
+        <td>{{common_name}}</td>
+        <td>loc</td>
+        <td>user</td>
+      </tr>
+      {{else}}
+      <tr>
+        <h4>No content</h4>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <table class="table" id="mySeeds">
+    <!-- My seeds -->
+    <thead>
+      <tr>
+        <h4>O meu banco</h4>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each myseeds}}
+      <tr data-seed_id="{{id}}">
+        <td>{{common_name}}</td>
+        <td>YYYY/MM/DD</td>
+      </tr>
+      {{else}}
+      <tr>
+        <h4>No content</h4>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>

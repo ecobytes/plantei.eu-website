@@ -65,21 +65,56 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
 
     $seeds = \Caravel\Seed::where('public', true)
-      ->orWhere('user_id', 1)
+      ->where('user_id', '<>', $user->id)
       ->orderBy('seeds.updated_at', 'desc')
-      ->limit(10)->join('users', 'users.id', '=', 'user_id')
-      ->select('seeds.id', 'seeds.latin_name', 'seeds.common_name',
+      ->limit(3)->join('users', 'users.id', '=', 'user_id')
+      ->select('seeds.id', 'seeds.common_name',
         'users.name', 'users.email', 'user_id')
         ->get();
 
-    $newMessagesCount = $user->newThreadsCount();
-    $threads = $user->threads()->orderBy('updated_at', 'DESC')->limit(10)->get();
+    $myseeds = \Caravel\Seed::where('user_id', $user->id)
+      ->orderBy('seeds.updated_at', 'desc')
+      ->limit(3)
+      ->select('seeds.id', 'seeds.common_name')
+      ->get();
+
+    //$newMessagesCount = $user->newThreadsCount();
+    $posts = \Riari\Forum\Models\Post::orderBy('updated_at', 'DESC')->limit(4)->get();
+    foreach ($posts as $post)
+    {
+      $post->load('thread', 'author');
+    }
+    $messages = $user->lastMessages();
     $calendarNow = \Caravel\Calendar::now()->get();
     $calendarNext = \Caravel\Calendar::nextDays()->get();
 
-    return view('seedbank::home', compact('threads', 'newMessagesCount', 'calendarNow', 'calendarNext'))
+    return view('seedbank::home', compact('posts', 'messages', 'calendarNow', 'calendarNext'))
       ->with('seeds', $seeds)
+      ->with('myseeds', $myseeds)
+      ->with('bodyId', 'mainapp')
       ->with('active', ['home' => true]);
+  }
+
+  public function getMySeeds()
+  {
+    // View for my seeds
+    $user = \Auth::user();
+    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
+    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
+    $paginated = $user->seeds()->orderBy('updated_at', 'desc')->paginate(5)->setPath('/seedbank/myseeds');
+    //return view('seedbank::myseeds')
+    foreach ($paginated->getCollection() as $seed)
+    {
+      $seed->load('family');
+    }
+    $part = [ 'myseeds' => true ];
+    return view('seedbank::myseeds', compact('part'))
+      ->with('pagination', \Lang::get('pagination'))
+      ->with('paginated', $paginated)
+      ->with('links', $paginated->render())
+      //->with('myseeds', $seeds->get())
+      ->with('bodyId', 'mainapp')
+      ->with('active', ['myseeds' => true]);
   }
 
   public function mySeeds()

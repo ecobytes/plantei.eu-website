@@ -1,0 +1,67 @@
+{{> header}}
+<!-- Horizontal Menu -->
+<div class="container-fluid" style="margin-top: 15px;margin-right: 15px;margin-left: 15px;">
+  <nav class="navbar navbar-default">
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li style="padding-left: 10%; padding-right: 10%;">
+          <img height=80px src="/images/planteieulogobranco.png">
+        </li>
+        <li class="navbar-right">
+          <div style="text-align: center;">
+          <div class="lang text-center">
+            <p class="langbtn">pt<span class="caret"></span></p>
+            <div class="lang-choices">
+            <a href="/en">en</a>
+            </div>
+          </div>
+            <a href="/logout"><img class="img-responsive" src="/images/logout.svg" width=100px>
+            </a>
+          </div>
+        </li>
+        <li class="navbar-right">
+          <a href="/search"><img class="img-responsive size" src="/images/pesquisa.svg" width=100px>
+          </a>
+        </li>
+        <li class="navbar-right{{#if active.events}} active{{/if}}">
+          <a href="/events" class="iconified enc">
+            <span>{{menu.enciclopedia}}</span>
+          </a>
+        </li>
+        <li class="navbar-right{{#if active.events}} active{{/if}}">
+          <a href="/events" class="iconified cal">
+            <span>{{menu.events}}</span>
+          </a>
+        </li>
+        <li class="navbar-right{{#if active.forum}} active{{/if}}">
+          <a href="/events" class="iconified forum">
+            <span style="padding-left: 16px">{{menu.forum}}</span>
+          </a>
+        </li>
+        <li class="navbar-right{{#if active.sementecas}} active{{/if}}">
+          <a href="/sementecas" class="iconified sem">
+            <span>{{menu.seedshare}}</span>
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </nav>
+</div>
+<!-- End Horizontal Menu -->
+<div class="container-fluid">
+  <div class="row main">
+    <!-- Vertical Left Menu -->
+    <nav class="col-md-2 side-nav">
+      <div class="col-md-12" style="backround: black;">
+        <ul class="nav nav-pills nav-stacked" style="margin: 0 !important;">
+          <li{{#if active.home}} class="active"{{/if}}><a class="iconified home" href="/seedbank"></a></li>
+          <li{{#if active.myseeds}} class="active"{{/if}}><a class="iconified seed" href="/seedbank/myseeds"></a></li>
+          <li{{#if active.messages}} class="active"{{/if}}><a class="iconified mess" href="/messages"></a></li>
+          <li{{#if active.settings}} class="active"{{/if}}><a class="iconified sett" href="/seedbank/search"></a></li>
+        </ul>
+      </div>
+    </nav>
+    <!-- End  Vertical Left Menu -->
+    <!-- Main Content -->
+    <div class="col-md-10">

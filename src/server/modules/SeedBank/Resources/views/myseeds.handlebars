@@ -1,25 +1,39 @@
 {{> mainapp_start}}
     <div class="row">
-      <h1>PANASAD da MARIA</h1>
+      <h1>O MEU BANCO DE SEMENTES</h1>
     </div>
-    <div class="col-md-4">
-      <div class="row">
-        {{> mini_seeds}}
-      </div>
-      <div class="row">
-        {{> mini_calendar}}
-      </div>
-    </div>
-    <div class="col-md-8">
-      <div class="row">
-        {{> mini_messages}}
-      </div>
-      <div class="row">
-        {{> mini_news}}
-      </div>
-      <div class="row">
-        {{> mini_forum}}
-      </div>
+    <div class="row">
+      <table style="width: 100%">
+        <thead>
+          <tr>
+            <th width="100px"></th>
+            <th>NOME,<br>FAMILIA</th>
+            <th>ONDE E <br>QUANDO</th>
+            <th>MÉTODO E <br> RECOLHA</th>
+            <th>DISPONÍVEL <br> PARA TROCA</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each paginated.data}}
+          <tr data-seed_id={{id}}>
+            <td><img style="width: 100px" src="/images/planteieulogocinza.png" alt=""></td>
+            <td>
+              <p>{{common_name}}</p>
+              <p>{{latin_name}}</p>
+              <p>Família: {family.name}}</p>
+            </td>
+            <td><p>{{local}}</p>{{year}}<p></p></td>
+            <td>ḿetodo</td>
+            <td>Não</td>
+          </tr>
+          {{else}}
+          <tr>
+            No Content
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{> paginator}}
     </div>
 
     {{> mainapp_end}}
