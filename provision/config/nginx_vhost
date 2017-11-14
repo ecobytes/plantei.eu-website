@@ -2,7 +2,7 @@ server {
   listen 80;
   server_name localhost behat.localhost;
 
-  root /var/www/plantei.eu/public;
+  root /var/www/src/server/public;
   index index.php;
 
 # Important for VirtualBox
