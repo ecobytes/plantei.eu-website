@@ -35,11 +35,26 @@ fi
 # Install dependencies
 cd "${ROOTDIR}"
 npm install
+while [ $? != 0 ]; do
+  npm install
+done
+
 cd src
 bower install
+# Bower sometimes fails when installing everything
+while [ $? != 0 ]; do
+  bower install
+done
+
 cd server
+while [ $? != 0 ]; do
+  npm install
+done
 npm install
 php -d memory_limit=-1  ~/bin/composer install
+while [ $? != 0 ]; do
+  php -d memory_limit=-1  ~/bin/composer install
+done
 
 # Compile assets into public folder
 gulp bowercopy

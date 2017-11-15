@@ -17,15 +17,16 @@ touch /home/vagrant/last-apt-update
 lastUpdate=$(</home/vagrant/last-apt-update)
 
 apt-get update
-
-if [ $((start-lastUpdate)) -gt 86400 ];
-then
-  apt-get -y dist-upgrade
-  apt-get -y autoremove
-fi
-
-echo "Provisioning virtual machine..."
-
+#
+#if [ $((start-lastUpdate)) -gt 86400 ];
+#then
+#  apt-get -y dist-upgrade
+#  apt-get -y autoremove
+#fi
+#
+#echo "Provisioning virtual machine..."
+#
+apt-get install -y screen
 echo "Installing git"
 apt-get install git -y
 
@@ -48,12 +49,6 @@ sed -i -e 's:^user.*:user = vagrant:' -e 's:^group.*:group = vagrant:' /etc/php5
 
 service php5-fpm restart
 
-#apt-get install debconf-utils -y
-
-
-#START ADDITIONS
-# Change permissions on variable data files
-chmod -R a+rw /vagrant/src/server/{bootstrap/cache,storage}
 
 # Create symlink inside /var/www
 ln -s /vagrant/ /var/www/plantei.eu
@@ -88,84 +83,19 @@ rm -rf /etc/nginx/sites-available/default
 
 service nginx restart
 
-
-
 sudo -i -u vagrant bash /vagrant/provision/config_vagrant.sh
 
+if [ ! "$(grep vagrant /etc/rc.local)" ]; then
+  sed -i "s:^\(exit 0\):su - vagrant -c /home/vagrant/bin/start_browser-sync.sh \n\1:" /etc/rc.local
+fi
 
+if [ ! -f /home/vagrant/bin/start_browser-sync.sh ]; then
+  sudo -u vagrant cp /vagrant/provision/config/start_browser-sync.sh /home/vagrant/bin
+  chmod +x /home/vagrant/bin/start_browser-sync.sh
+fi
 
+/etc/rc.local
 
-
-
-# echo "Installing nodejs npm bower phantomjs and gulp"
-# curl --silent --location https://deb.nodesource.com/setup_4.x | sudo bash -
-# apt-get install nodejs -y
-# if [ ! -f "/usr/bin/node" ]; then ln /usr/bin/nodejs /usr/bin/node ; fi;
-# 
-# if [ ! -f "/usr/local/bin/bower" ]; then npm install -g bower; fi;
-# if [ ! -f "/usr/local/bin/gulp" ]; then npm install -g gulp; fi;
-# #Windows does not like npm long path names, so lets hide them
-# if [ ! -h "/vagrant/node_modules" ]; then ln -s /home/vagrant/node_modules /vagrant/node_modules; mkdir /home/vagrant/node_modules; fi
-# 
-# 
-# echo "installing composer"
-# if [ ! -f "/usr/local/bin/composer" ]; then echo "installing composer"; curl -sS https://getcomposer.org/installer | php; mv composer.phar /usr/local/bin/composer; fi
-# 
-# echo "installing laravel"
-# su -c 'composer global require "laravel/installer=~1.1"' vagrant
-# 
-# #link for web directory
-# if [ ! -h "/home/vagrant/www" ]; then ln -s /vagrant/src /home/vagrant/www; fi;
-# 
-# 
-# 
-#  if ! grep -q 'cd /vagrant' "/home/vagrant/.profile"; then
-#    echo 'cd /vagrant' >> /home/vagrant/.profile
-#  fi
-# 
-# if [ ! -f "/vagrant/src/.env" ]; then cp /vagrant/src/server/.env.example /vagrant/src/server/.env ; fi;
-# 
-# 
-#  if ! grep -q 'PATH="~/.composer/vendor/bin:/vagrant/bin:$PATH"' "/home/vagrant/.profile"; then
-#    echo 'PATH="~/.composer/vendor/bin:/vagrant/bin:$PATH"' >> /home/vagrant/.profile
-#  fi
-# 
-#  updatedb
-# 
-# cp /vagrant/provision/config/99-caravel /etc/update-motd.d/
-# chmod +x /etc/update-motd.d/99-caravel
-# 
-# cd /vagrant
-# npm install
-# npm update
-# cd /vagrant/src/server
-# composer update
-# 
-# echo ">>> Installing Mailhog (testing email server)"
-# 
-# # Download binary from github
-# mailHogURL=$(curl -s https://api.github.com/repos/mailhog/MailHog/releases | grep browser_download_url | grep 'linux_386' | head -n 1 | cut -d '"' -f 4)
-# 
-# wget -O /usr/local/bin/mailhog "$mailHogURL"
-# 
-# # Make it executable
-# chmod +x /usr/local/bin/mailhog
-# 
-# # Make it start on reboot
-# sudo tee /etc/init/mailhog.conf <<EOL
-# description "Mailhog"
-# start on runlevel [2345]
-# stop on runlevel [!2345]
-# respawn
-# pre-start script
-#     exec su - vagrant -c "/usr/bin/env /usr/local/bin/mailhog > /dev/null 2>&1 &"
-# end script
-# EOL
-# 
-# # Start it now in the background
-# sudo service mailhog start
-# 
-# 
 end=`date +%s`
 runtime=$((end-start))
 echo $start > /home/vagrant/last-apt-update
