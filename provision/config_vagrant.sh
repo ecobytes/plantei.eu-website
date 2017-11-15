@@ -36,7 +36,7 @@ fi
 cd "${ROOTDIR}"
 npm install
 while [ $? != 0 ]; do
-  npm install
+  npm install --no-bin-links 
 done
 
 cd src
@@ -47,11 +47,12 @@ while [ $? != 0 ]; do
 done
 
 cd server
-while [ $? != 0 ]; do
-  npm install
-done
 npm install
-php -d memory_limit=-1  ~/bin/composer install
+while [ $? != 0 ]; do
+  npm install --no-bin-links 
+done
+
+php ~/bin/composer install
 while [ $? != 0 ]; do
   php -d memory_limit=-1  ~/bin/composer install
 done
