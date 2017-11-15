@@ -42,6 +42,10 @@ php5enmod mcrypt
 
 mv '/etc/php5/fpm/php.ini' '/etc/php5/fpm/php.original'
 cp '/usr/share/php5/php.ini-development' '/etc/php5/fpm/php.ini'
+
+# Run php-fpm as vagrant (file permissions)
+sed -i -e 's:^user.*:user = vagrant:' -e 's:^group.*:group = vagrant:' /etc/php5/fpm/pool.d/www.conf
+
 service php5-fpm restart
 
 #apt-get install debconf-utils -y
@@ -50,6 +54,9 @@ service php5-fpm restart
 #START ADDITIONS
 # Change permissions on variable data files
 chmod -R a+rw /vagrant/src/server/{bootstrap/cache,storage}
+
+# Create symlink inside /var/www
+ln -s /vagrant/ /var/www/plantei.eu
 
 apt-get -y install postgresql php5-pgsql
 
@@ -69,9 +76,13 @@ sudo -u postgres psql -c "ALTER USER ${DBUSER} WITH PASSWORD '${DBPASS}';"
 echo "Configuring Nginx"
 rm /etc/nginx/sites-available/nginx_vhost 2> /dev/null
 rm /etc/nginx/sites-enabled/nginx_vhost 2> /dev/null
-cp /var/www/provision/config/nginx_vhost /etc/nginx/sites-available/caravel
+rm /etc/nginx/sites-available/default 2> /dev/null
+rm /etc/nginx/sites-enabled/default 2> /dev/null
+cp /vagrant/provision/config/nginx_vhost /etc/nginx/sites-available/caravel
 
-if [ ! -h "/etc/nginx/sites-enabled/" ]; then ln -s /etc/nginx/sites-available/caravel /etc/nginx/sites-enabled/; fi
+if [ ! -h "/etc/nginx/sites-enabled/" ]; then
+  ln -s /etc/nginx/sites-available/caravel /etc/nginx/sites-enabled/
+fi
 
 rm -rf /etc/nginx/sites-available/default
 
