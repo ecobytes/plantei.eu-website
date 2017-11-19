@@ -92,5 +92,7 @@ Vagrant.configure(2) do |config|
   # config.vm.provision "shell", inline <<-SHELL
   #   sudo apt-get install apache2
   # SHELL
+  config.vm.post_up_message = "Connect to development server with autoreload:\n----------------\nhttp://localhost:3000\n----------------"
+
 
 end
