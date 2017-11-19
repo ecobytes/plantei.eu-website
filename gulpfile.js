@@ -129,6 +129,9 @@ gulp.task('js', function(){
 
 gulp.task('browser-sync', function() {
     browserSync({
-        proxy: "127.0.0.1"
+        proxy: "127.0.0.1",
+        watchOptions: {
+          usePolling: true
+        }
     });
 });
