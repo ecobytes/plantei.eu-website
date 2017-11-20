@@ -1,9 +1,7 @@
-{{> header}}
-{{> menu}}
-<div class="pageWrap background-primary">
+{{> mainapp_start}}
   <div class="container-fluid">
     <div class="row lmt">
-      <div class="col-md-6 col-md-offset-3">
+      <!-- div class="col-md-6 col-md-offset-3" -->
         <h2>{{messages.updateusertitle}}</h2>
         {{> formErrors}}
         <form class="form-horizontal" role="form" method="POST" action="/seedbank/preferences">
@@ -109,10 +107,10 @@
             </div>
           </div>
         </form>
-      </div>
+      <!-- /div -->
     </div>
   </div>
-</div>
+  {{>mainapp_end }}
 {{> scripts }}
 <script>
 $(function () {

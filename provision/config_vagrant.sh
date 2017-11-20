@@ -62,5 +62,6 @@ gulp bowercopy
 
 php artisan migrate
 php artisan db:seed
+php artisan geoip:update
 
 chmod -R a+wr /vagrant/src/server/{storage,bootstrap/cache}

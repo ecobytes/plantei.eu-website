@@ -16,15 +16,32 @@ var htmlFiles = [base_path + 'src/server/public/*.php', base_path + 'src/resourc
 var jsFiles = base_path + 'src/server/public/js/*.js';
 var appFiles = [base_path + 'src/server/app/**/**', base_path + 'src/server/modules/**/**']
 
+
 gulp.task('default', ['bowercopy', 'browser-sync','less', 'js'], function() {
 
 
   gulp.watch(lessFiles, { interval: 1000 }, ['less']);
   gulp.watch(htmlFiles, { interval: 1000 }).on('change', reload);
   gulp.watch(jsFiles, { interval: 1000 }, ['js']);
-  gulp.watch(appFiles, { interval: 1000 }).on('change', reload);
+  gulp.watch(appFiles, { interval: 1000 }, ['clear_views']);
+  //on('change', function(){
+  //  shell.task(['php /vagrant/src/server/artisan view:clear'], {cwd: base_path + 'src/server/'});
+  //  reload();
+  //});
 
 });
+
+
+
+
+
+gulp.task('clear_views', function(){
+  // will break with gulp 4.0
+  gulp.src('gulpfile.js', {read: false})
+      .pipe(shell('php artisan view:clear', {cwd: base_path + 'src/server/'}))
+      .pipe(reload({stream:true}));
+});
+
 
 gulp.task('less', function() {
   gulp.src(base_path + 'src/assets/less/style.less')

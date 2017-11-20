@@ -115,6 +115,30 @@ class SeedBankController extends Controller {
       //->with('myseeds', $seeds->get())
       ->with('bodyId', 'mainapp')
       ->with('active', ['myseeds' => true]);
+    
+  }
+
+  public function getAllSeeds()
+  {
+    // View for seeds
+    $user = \Auth::user();
+    $seeds = \Caravel\Seed::where('public', true)->orderBy('updated_at', 'desc');
+    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
+    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
+    $paginated = $seeds->paginate(15)->setPath('/seedbank/seeds');
+    //return view('seedbank::myseeds')
+    foreach ($paginated->getCollection() as $seed)
+    {
+      $seed->load('family');
+    }
+    $part = [ 'myseeds' => true ];
+    return view('seedbank::seeds', compact('part'))
+      ->with('pagination', \Lang::get('pagination'))
+      ->with('paginated', $paginated)
+      ->with('links', $paginated->render())
+      //->with('myseeds', $seeds->get())
+      ->with('bodyId', 'mainapp')
+      ->with('active', ['seeds' => true]);
   }
 
   public function mySeeds()
@@ -439,7 +463,8 @@ class SeedBankController extends Controller {
       ->with('user', $user)
       ->with('updatelocation', $updatelocation)
       ->with('location', $location)
-      ->with('active', ['profile' => true]);
+      ->with('bodyId', 'mainapp')
+      ->with('active', ['settings' => true]);
   }
 
   public function postPreferences(Request  $request)

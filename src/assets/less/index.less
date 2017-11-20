@@ -130,62 +130,184 @@ a.iconified span {
 }
 
 #mainapp {
-  ul.nav.navbar-nav {
-      width: 100%;
-  }
-  ul.nav {
-    background: #808080;
-  }
-  /* ul.nav li.active a {
-    background: white;
-  } */
-  .side-nav ul.nav > li.active > a {
-    background-color: white;
-    z-index: 999;
-    margin-top: 1px;
-  }
-  .side-nav ul.nav > li {
-    color: white;
-    border-bottom: solid thin;
-  }
-
   .row.main {
-    margin-left: 15px;
-    margin-right: 15px;
-    padding: 0px;
-    .row {
-      padding-left: 15px;
-      padding-right: 15px;
+    .col-md-10 .col-sm-4 div {
+      border-top: solid thin;
+      padding: 6px;
     }
   }
-  .row.main .col-md-10 {
-    min-width: 92%;
-    max-width: 98%;
-    min-height: 450px;
-    background: white;
-    padding-right: 0px;
-    float:right;
-    border: solid thin;
-  }
-  .side-nav {
-    background: white;
-    width: 0px;
-    margin: 0px;
-    padding: 0px;
-  }
-  .side-nav .col-md-12 {
-    width: auto;
-    margin: 0px;
-    padding: 0px;
-  }
-  .navbar {
-    margin-bottom: 0px;
-    text-transform: uppercase;
+}
+@media only screen and (min-width: 904px) {
+  #mainapp {
+    ul.nav.navbar-nav {
+        width: 100%;
+        li:last-child {
+          padding-right: 10%;
+          /*margin: 16px auto;*/
+        }
+        li:first-child {
+          float: clear;
+          display: none;
+        }
+    }
+    ul.nav {
+      background: #808080;
+    }
+    ul.nav > li.navbar-right.active > a {
+      background-color: white;
+    }
+    .side-nav ul.nav > li.active > a {
+      background-color: white;
+      z-index: 999;
+      margin-top: 1px;
+    }
+    .side-nav ul.nav > li {
+      color: white;
+      border-bottom: solid thin;
+    }
+    .row.main {
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0px;
+      .row {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+    }
+    .row.main .col-md-10 {
+      /*min-width: 92%;
+      max-width: 98%;*/
+      min-height: 450px;
+      background: white;
+      padding-right: 16px;
+      /*padding-left: 120px;*/
+      margin-left: 98px;
+      float:none;
+      width: auto;
+      border: solid thin;
+      table {
+        td, th {
+          padding-left: 16px;
+          padding-right: 16px;
+          border-bottom: solid thin;
+        }
+        img {
+          margin: 12px;
+        }
+      }
+    }
+    .side-nav {
+      background: white;
+      margin: 0px;
+      padding: 0px;
+    }
+    .side-nav .col-md-12 {
+      width: 100px;
+      position: absolute;
+      margin: 0px;
+      padding: 0px;
+    }
+    .navbar {
+      margin-bottom: 0px;
+      text-transform: uppercase;
+    }
   }
 }
 
+@media only screen and (min-width: 480px) and (max-width: 904px) {
+  #mainapp {
+    ul.nav.navbar-nav {
+      float: right;
+        li:last-child {
+          margin: 16px auto;
+          display: block;
+        }
+        li:first-child {
+          float: clear;
+          display: block;
+        }
 
+        li {
+          display: none;
+        }
 
+    }
+    ul.nav {
+      background: #808080;
+    }
+    /* ul.nav li.active a {
+      background: white;
+    } */
+    .side-nav {
+      ul.nav > li.active > a {
+        background-color: white;
+        z-index: 10;
+        margin-top: 1px;
+      }
+      ul.nav > li {
+        color: white;
+        border-bottom: solid thin;
+      }
+      ul li {
+        float: right;
+      }
+      background: white;
+      margin: 0px;
+      padding: 0px;
+      .col-md-12 {
+        width: 100%;
+        position: absolute;
+        margin: 0px;
+        padding: 0px;
+      }
+    }
+    .col-md-2.side-nav {
+      width: 100%;
+      z-index: 100;
+      position: relative;
+      margin: 0px;
+      padding: 0px;
+      display: block;
+      float: left;
+    }
+    .row.main {
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0px;
+      .row {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      .col-md-10 {
+        /*width: 100%;
+        margin: 0px;*/
+        padding-top: 100px;
+        min-height: 450px;
+        background: white;
+        padding-right: 16px;
+        float:none;
+        width: auto;
+        border: solid thin;
+        table {
+          td, th {
+            padding-left: 16px;
+            padding-right: 16px;
+            border-bottom: solid thin;
+          }
+          img {
+            margin: 12px;
+          }
+        }
+      }
+    }
+    .navbar {
+      margin-bottom: 0px;
+      text-transform: uppercase;
+    }
+  }
+}
+
+/*
 @media (max-width: @screen-sm) {
   #index {
     .jumbotron.intro .mainActions {
@@ -204,3 +326,4 @@ a.iconified span {
     }
   }
 }
+*/

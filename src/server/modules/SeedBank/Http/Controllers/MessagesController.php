@@ -35,9 +35,9 @@ class MessagesController extends Controller {
 
     //return view('seedbank::messenger', compact('threads', 'contacts'))
     $part = [ 'messages' => true ];
-    return view('seedbank::userarea', compact('threads', 'contacts', 'part'))
-      ->with('active', ['myseeds' => true])
-      ->with('bodyId', 'myseeds');
+    return view('seedbank::messenger', compact('threads', 'contacts', 'part'))
+      ->with('active', ['messages' => true])
+      ->with('bodyId', 'mainapp');
   }
 
   /**

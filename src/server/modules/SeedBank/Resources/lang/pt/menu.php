@@ -8,7 +8,9 @@ return [
     'exchanges' => 'Trocas',
     'logout' => 'Sair',
     'events' => 'Calendário',
+    'encyclopedia' => 'Enciclopédia',
     'seedshare' => 'Sementecas',
+    'seeds' => 'Sementes',
     'admin' => 'Admin',
     'forum' => 'Forum'
 ];
