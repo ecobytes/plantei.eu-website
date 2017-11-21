@@ -62,11 +62,11 @@ class Administrator {
     \View::share('menu', \Lang::get('seedbank::menu'));
     \View::share('messages', \Lang::get('seedbank::messages'));
     if ( substr($request->path(), 0, 16) == "seedbank/myseeds" ){
-      \View::share('bodyId', 'myseeds');
+      \View::share('bodyId', 'mainapp');
     }
     if ( substr($request->path(), 0, 5) == "forum" ){
       \View::share('active', [ "forum" => true ]);
-      \View::share('bodyId', 'forum');
+      \View::share('bodyId', 'mainapp');
     }
 
     return $next($request);

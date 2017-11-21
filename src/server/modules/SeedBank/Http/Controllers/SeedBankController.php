@@ -650,6 +650,7 @@ class SeedBankController extends Controller {
   public function getEvents () {
     $user = \Auth::user();
     return view('seedbank::events')
+      ->with('bodyId', 'mainapp')
       ->with('active', ['events' => true]);
   }
   public function getAdminEvents () {

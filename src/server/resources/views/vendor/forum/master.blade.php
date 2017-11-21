@@ -1,9 +1,6 @@
-@include('header')
-@include('menu')
-
-
-<div class="pageWrap background-primary" style="padding-top: 24px;">
-    <div class="container">
+@include('mainapp_start')
+<!-- div class="pageWrap background-primary" style="padding-top: 24px;">
+    <div class="container" -->
 <div class="col-md-12">
         @if (isset($thread) && $thread)
             <h1><a style="color: black" href="{{ Forum::route('thread.show', $thread) }}">{{ $thread->title }}</a></h1>
@@ -15,8 +12,10 @@
 
         @yield('content')
 </div>
-    </div>
-</div>
+    <!-- /div>
+</div -->
+@include('mainapp_end')
+
 
 @include('scripts')
 <script>

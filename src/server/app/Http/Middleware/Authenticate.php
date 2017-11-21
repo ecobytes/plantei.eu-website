@@ -61,7 +61,7 @@ class Authenticate {
     \View::share('messages', \Lang::get('seedbank::messages'));
     if ( substr($request->path(), 0, 5) == "forum" ){
       \View::share('active', [ "forum" => true ]);
-      \View::share('bodyId', 'forum');
+      \View::share('bodyId', 'mainapp');
     }
 
     return $next($request);
