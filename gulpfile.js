@@ -6,6 +6,7 @@ var browserSync = require('browser-sync');
 var reload      = browserSync.reload;
 var shell = require('gulp-shell')
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var del = require('del');
 var rename = require("gulp-rename");
 
@@ -31,15 +32,20 @@ gulp.task('default', ['bowercopy', 'browser-sync','less', 'js'], function() {
 
 });
 
-
-
-
-
 gulp.task('clear_views', function(){
   // will break with gulp 4.0
   gulp.src('gulpfile.js', {read: false})
       .pipe(shell('php artisan view:clear', {cwd: base_path + 'src/server/'}))
       .pipe(reload({stream:true}));
+
+});
+
+gulp.task('rebootdb', function(){
+  var cmd = spawn('bash', ['rebootdb.sh'], {cwd: '/vagrant/scripts', stdio: 'inherit'});
+  cmd.on('close', function(code) {
+    console.log('Done rebooting Database... exit code: ' + code);
+  });
+
 });
 
 
