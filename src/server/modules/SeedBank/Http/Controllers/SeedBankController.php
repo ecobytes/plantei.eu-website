@@ -298,7 +298,7 @@ class SeedBankController extends Controller {
       $oldInput = [];
     }
     $part = [ 'register' => true ];
-    return view('seedbank::userarea', compact('part', 'update'))
+    return view('seedbank::modal-register', compact('part', 'update'))
       ->with('bodyId', 'myseeds')
       ->with('oldInput', $oldInput)
       ->with('active', ['myseeds' => true]);
