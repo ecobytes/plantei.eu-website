@@ -15,7 +15,7 @@ var lessFiles = [base_path + 'src/assets/less/**'];
 //var jsFiles = base_path + 'src/client/js/**/**.js';
 var htmlFiles = [base_path + 'src/server/public/*.php', base_path + 'src/resources/views/**/**.php'];
 var jsFiles = base_path + 'src/server/public/js/*.js';
-var appFiles = [base_path + 'src/server/app/**/**', base_path + 'src/server/modules/**/**']
+var appFiles = [base_path + 'src/server/app/**/**', base_path + 'src/server/modules/**/**', base_path + 'src/server/resources/views/**/**']
 
 
 gulp.task('default', ['bowercopy', 'browser-sync','less', 'js'], function() {
@@ -34,9 +34,15 @@ gulp.task('default', ['bowercopy', 'browser-sync','less', 'js'], function() {
 
 gulp.task('clear_views', function(){
   // will break with gulp 4.0
-  gulp.src('gulpfile.js', {read: false})
-      .pipe(shell('php artisan view:clear', {cwd: base_path + 'src/server/'}))
-      .pipe(reload({stream:true}));
+  //gulp.src('gulpfile.js', {read: false})
+  //    .pipe(shell('php artisan view:clear', {cwd: base_path + 'src/server/'}))
+  //    .pipe(reload({stream:true}));
+  var cmd = spawn('php', ['artisan', 'view:clear'], {cwd: base_path + 'src/server', stdio: 'inherit'});
+  cmd.on('close', function(code) {
+    console.log('Done clearing view... exit code: ' + code);
+    reload();
+  //});
+  });
 
 });
 

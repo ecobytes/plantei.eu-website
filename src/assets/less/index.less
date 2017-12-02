@@ -13,11 +13,11 @@
     }
     .description {
       font-family: @font-family-serif;
-      font-size: 21px;
+      font-size: 25px;
       font-weight: bold;
     }
     .description a {
-      font-size: 14px;
+      font-size: 18px;
       font-weight: bold;
     }
     .mainActions {
@@ -44,10 +44,27 @@
     #emailInput:-ms-input-placeholder {
      text-align: center;
     }
+
+    .btn-lg {
+      font-size: 18px;
+      width: 200px;
+      height: 60px;
+      line-height: 40px;
+      font-weight: bold;
+      background-color: #ADC77F;
+      border-color: #ADC77F;
+      }
+
+      .btn-lg:hover {
+        background-color: #C1D6A1;
+        border-color: #C1D6A1;
+      }
+
   }
   .info-box {
     background: white;
     margin: auto;
+    min-height: 300px;
     img {
       width: 50%;
       margin-bottom: 24px;
@@ -55,8 +72,10 @@
     p {
       font-family: @font-family-sans-serif;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 20px;
       text-transform: uppercase;
+      max-width: 320px;
+      margin: auto;
     }
   }
 }
@@ -80,7 +99,6 @@
     display: none;
     position: relative;
     background-color: #f9f9f9;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     /*margin-left: 40px;*/
   }
@@ -105,6 +123,9 @@ a.iconified {
 }
 a.iconified.enc {
   background: transparent url('/images/enciclopedia.svg') scroll no-repeat center center;
+}
+a.iconified.seedbank {
+  background: transparent url('/images/organiza.svg') scroll no-repeat center center;
 }
 a.iconified.cal {
   background: transparent url('/images/calendario.svg') scroll no-repeat left center;

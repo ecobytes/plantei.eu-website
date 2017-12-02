@@ -36,7 +36,7 @@ $(function () {
     $(container).addClass('active');
   };
 
-  $(".container form").on('submit', function(){
+  $(".container-fluid form").on('submit', function(){
     $('#results tbody').empty();
     if ( $('#results').is(':visible')) {
       $('#results').hide();

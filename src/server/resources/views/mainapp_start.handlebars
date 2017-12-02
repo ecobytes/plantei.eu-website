@@ -11,10 +11,10 @@
         </li>
         <li class="navbar-right">
           <div style="text-align: center;">
-          <div class="lang text-center">
-            <p class="langbtn">pt<span class="caret"></span></p>
-            <div class="lang-choices">
-            <a href="/en">en</a>
+            <div class="lang text-center">
+              <p class="langbtn">pt<span class="caret"></span></p>
+              <div class="lang-choices">
+              <a href="/en">en</a>
             </div>
           </div>
             <a href="/auth/logout"><img class="img-responsive" src="/images/logout.svg" width=100px>
@@ -22,12 +22,17 @@
           </div>
         </li>
         <li class="navbar-right">
-          <a href="/search"><img class="img-responsive size" src="/images/pesquisa.svg" width=100px>
+          <a href="/seedbank/search"><img class="img-responsive size" src="/images/pesquisa.svg" width=100px>
           </a>
         </li>
         <li style="display: none;" class="navbar-right{{#if active.events}} active{{/if}}">
           <a href="/encyclopedia" class="iconified enc">
             <span>{{menu.encyclopedia}}</span>
+          </a>
+        </li>
+        <li class="navbar-right{{#if active.sementecas}} active{{/if}}">
+          <a href="/sementecas" class="iconified seedbank">
+            <span>{{menu.seedbank}}Sementecas</span>
           </a>
         </li>
         <li class="navbar-right{{#if active.events}} active{{/if}}">
