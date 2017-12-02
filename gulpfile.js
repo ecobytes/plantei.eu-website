@@ -15,21 +15,16 @@ var lessFiles = [base_path + 'src/assets/less/**'];
 //var jsFiles = base_path + 'src/client/js/**/**.js';
 var htmlFiles = [base_path + 'src/server/public/*.php', base_path + 'src/resources/views/**/**.php'];
 var jsFiles = base_path + 'src/server/public/js/*.js';
-var appFiles = [base_path + 'src/server/app/**/**', base_path + 'src/server/modules/**/**', base_path + 'src/server/resources/views/**/**']
+var appFiles = [base_path + 'src/server/app/**/**', base_path + 'src/server/modules/**/**', base_path + 'src/server/resources/views/**/**'];
+var imgFiles = [base_path + 'src/assets/images/*'];
 
 
 gulp.task('default', ['bowercopy', 'browser-sync','less', 'js'], function() {
-
-
   gulp.watch(lessFiles, { interval: 1000 }, ['less']);
   gulp.watch(htmlFiles, { interval: 1000 }).on('change', reload);
+  gulp.watch(imgFiles, { interval: 1000 }, ['bower_copy']);
   gulp.watch(jsFiles, { interval: 1000 }, ['js']);
   gulp.watch(appFiles, { interval: 1000 }, ['clear_views']);
-  //on('change', function(){
-  //  shell.task(['php /vagrant/src/server/artisan view:clear'], {cwd: base_path + 'src/server/'});
-  //  reload();
-  //});
-
 });
 
 gulp.task('clear_views', function(){
