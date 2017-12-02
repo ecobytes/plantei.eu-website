@@ -1,116 +1,116 @@
 {{> mainapp_start}}
-  <div class="container-fluid">
-    <div class="row lmt">
-      <!-- div class="col-md-6 col-md-offset-3" -->
-        <h2>{{messages.updateusertitle}}</h2>
-        {{> formErrors}}
-        <form class="form-horizontal" role="form" method="POST" action="/seedbank/preferences">
-          <input type="hidden" name="_token" value="{{ csrfToken }}">
-          <input type="hidden" name="updatelocation" value=""/>
+<div class="row lmt">
+  <!-- div class="col-md-6 col-md-offset-3" -->
+    <h1>{{messages.updateusertitle}}</h1>
+    {{> formErrors}}
+</div>
+<div class="row content">
+  <form class="form-horizontal" role="form" method="POST" action="/seedbank/preferences">
+    <input type="hidden" name="_token" value="{{ csrfToken }}">
+    <input type="hidden" name="updatelocation" value=""/>
 
-          <div class="form-group">
-            <label class="control-label">{{messages.username}}</label>
-            <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name"
-              value="{{#if oldInput.name}}{{oldInput.name}}{{else}}{{user.name}}{{/if}}" autocomplete="off"></span>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label">{{messages.email}}</label>
-            <input type="password" style="display:none;">
-            <input type="text" style="display:none;">
-            <span class="cell"><input autocomplete="off" type="email" class="form-control" name="email"
-              value="{{#if oldInput.email}}{{oldInput.email}}{{else}}{{user.email}}{{/if}}"></span>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label">{{messages.password}}</label>
-            <span class="cell"><input type="password" class="form-control" name="password"></span>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label">{{messages.confirmpassword}}</label>
-            <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
-          </div>
-
-          <div class="form-group" style="width: 50%">
-            <label class="control-label">{{messages.language}}</label>
-            <span class="cell"><select class="form-control" name="locale">
-                {{#each availableLangs}}
-                <option value="{{ value }}" {{#if selected }}selected{{/if}}>{{ label }}</option>
-                {{/each}}
-              </select>
-            </span>
-          </div>
-
-          {{#if location}}
-          <div class="row">
-            <div class="col-md-8">
-              <div class="form-group">
-                <label class="control-label">{{messages.whereareyou}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name"
-                  value="{{#if oldInput.place_name}}{{oldInput.place_name}}{{else}}{{user.place_name}}{{/if}}" autocomplete="off"></span>
-              </div>
-            </div>
-            {{#if updatelocation}}
-            <div class="col-md-4">
-              <div class="form-group">
-                <button type="button" id="updatelocation" class="btn btn-primary btn-md">
-                  {{messages.updateTo}}
-                </button>
-                <input type="hidden" id="sug_place_name" value="{{updatelocation.place_name}}"/>
-                <input type="hidden" id="sug_lat" value="{{updatelocation.lat}}"/>
-                <input type="hidden" id="sug_lon" value="{{updatelocation.lon}}"/>
-              </div>
-            </div>
-            {{/if}}
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="control-label">{{messages.latitude}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="lat"
-                  value="{{#if oldInput.lat}}{{oldInput.lat}}{{else}}{{user.lat}}{{/if}}" autocomplete="off"></span>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="control-label">{{messages.longitude}}</label>
-                <span class="cell"><input type="text" class="form-control" placeholder="" name="lon"
-                  value="{{#if oldInput.lon}}{{oldInput.lon}}{{else}}{{user.lon}}{{/if}}" autocomplete="off"></span>
-              </div>
-            </div>
-          </div>
-          {{/if}}
-          <!--
-            <div class="form-group">
-            <label class="control-label">{{messages.iwanttosubscribenewsletter}}</label>
-            <span class="cell btn-group" data-toggle="buttons">
-            <label class="btn btn-default {{#if oldInput.subscribeNewsletter.1}}active{{/if}}">
-            <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.1}}checked{{/if}} value="1" /> {{messages.yes}}
-            </label>
-            <label class="btn btn-default {{#if oldInput.subscribeNewsletter.0}}active{{/if}}">
-            <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.0}}checked{{/if}} value="0" /> {{messages.no}}
-            </label>
-            </span>
-            </div>
-          -->
-          <div class="row">
-            <div class="form-group lmt">
-              <div class="col-md-12 text-center">
-                <a href="/seedbank" class="btn btn-danger btn-lg">
-                  {{messages.cancel}}
-                </a>
-                <button type="submit" class="btn btn-primary btn-lg">
-                  {{messages.update}}
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      <!-- /div -->
+    <div class="form-group">
+      <label class="control-label">{{messages.username}}</label>
+      <span class="cell"><input type="text" class="form-control" placeholder="{{messages.realornot}}" name="name"
+        value="{{#if oldInput.name}}{{oldInput.name}}{{else}}{{user.name}}{{/if}}" autocomplete="off"></span>
     </div>
-  </div>
-  {{>mainapp_end }}
+
+    <div class="form-group">
+      <label class="control-label">{{messages.email}}</label>
+      <input type="password" style="display:none;">
+      <input type="text" style="display:none;">
+      <span class="cell"><input autocomplete="off" type="email" class="form-control" name="email"
+        value="{{#if oldInput.email}}{{oldInput.email}}{{else}}{{user.email}}{{/if}}"></span>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label">{{messages.password}}</label>
+      <span class="cell"><input type="password" class="form-control" name="password"></span>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label">{{messages.confirmpassword}}</label>
+      <span class="cell"><input type="password" class="form-control" name="password_confirmation"></span>
+    </div>
+
+    <div class="form-group" style="width: 50%">
+      <label class="control-label">{{messages.language}}</label>
+      <span class="cell">
+        <select class="form-control" name="locale">
+          {{#each availableLangs}}
+          <option value="{{ value }}" {{#if selected }}selected{{/if}}>{{ label }}</option>
+          {{/each}}
+        </select>
+      </span>
+    </div>
+
+    {{#if location}}
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="control-label">{{messages.whereareyou}}</label>
+          <span class="cell"><input type="text" class="form-control" placeholder="" name="place_name"
+            value="{{#if oldInput.place_name}}{{oldInput.place_name}}{{else}}{{user.place_name}}{{/if}}" autocomplete="off"></span>
+        </div>
+      </div>
+      {{#if updatelocation}}
+      <div class="col-md-4">
+        <div class="form-group">
+          <button type="button" id="updatelocation" class="btn btn-primary btn-md">
+            {{messages.updateTo}}
+          </button>
+          <input type="hidden" id="sug_place_name" value="{{updatelocation.place_name}}"/>
+          <input type="hidden" id="sug_lat" value="{{updatelocation.lat}}"/>
+          <input type="hidden" id="sug_lon" value="{{updatelocation.lon}}"/>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label">{{messages.latitude}}</label>
+          <span class="cell"><input type="text" class="form-control" placeholder="" name="lat"
+            value="{{#if oldInput.lat}}{{oldInput.lat}}{{else}}{{user.lat}}{{/if}}" autocomplete="off"></span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label">{{messages.longitude}}</label>
+          <span class="cell"><input type="text" class="form-control" placeholder="" name="lon"
+            value="{{#if oldInput.lon}}{{oldInput.lon}}{{else}}{{user.lon}}{{/if}}" autocomplete="off"></span>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+    <!--
+      <div class="form-group">
+      <label class="control-label">{{messages.iwanttosubscribenewsletter}}</label>
+      <span class="cell btn-group" data-toggle="buttons">
+      <label class="btn btn-default {{#if oldInput.subscribeNewsletter.1}}active{{/if}}">
+      <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.1}}checked{{/if}} value="1" /> {{messages.yes}}
+      </label>
+      <label class="btn btn-default {{#if oldInput.subscribeNewsletter.0}}active{{/if}}">
+      <input type="radio" name="subscribeNewsletter" {{#if oldInput.subscribeNewsletter.0}}checked{{/if}} value="0" /> {{messages.no}}
+      </label>
+      </span>
+      </div>
+    -->
+    <div class="row">
+      <div class="form-group lmt">
+        <div class="col-md-12 text-center">
+          <a href="/seedbank" class="btn btn-danger btn-lg">
+            {{messages.cancel}}
+          </a>
+          <button type="submit" class="btn btn-primary btn-lg">
+            {{messages.update}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{{>mainapp_end }}
 {{> scripts }}
 <script>
 $(function () {
@@ -121,26 +121,6 @@ $('#updatelocation').on('click', function() {
     $('input[name="'+f+'"]').val($('#sug_'+f).val());
   });
   $('#updatelocation').val('update');
-});
-
-var availableLangs = {{{ availableLangs }}};
-$( "#lang" ).autocomplete({
-  source: availableLangs,
-  response: function(event, ui) {
-    if (ui.content.length == 1)
-    {
-      var v = ui.content[0].label
-      $(this).val(v);
-      /*$('.city').prop('disabled', false).focus();
-      $.get("/api/location/" + v, function (data) {
-        cities = data;
-      });
-      $('.city').focus();*/
-    } else {
-      $(this).val("");
-    }
-
-  },
 });
 </script>
 {{> footer}}
