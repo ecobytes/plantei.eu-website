@@ -23,6 +23,10 @@
     </div>
 
     {{> mainapp_end}}
+<script type="text/javascript" src="/js/fullcalendar/moment.min.js"></script>
+<script type="text/javascript" src="/js/fullcalendar/fullcalendar.min.js"></script>
+<script type="text/javascript" src="/js/fullcalendar/lang/pt.js"></script>
+
 <script>
 $('#seeds tr').on('click', function () {
   //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
@@ -73,5 +77,34 @@ $('#messages tr').on('click', function () {
   return false;
   });
  */
+
+$('#calendar').fullCalendar({
+  // put your options and callbacks here
+  defaultView: 'month',
+  themeSystem: 'bootstrap3',
+  //contentHeight: 400,
+  fixedWeekCount: false,
+  lang: "pt",
+  timeFormat: 'HH:mm',
+  eventClick: function(calEvent, jsEvent, view) {
+    console.log(calEvent);
+    $.get("/events/get/" + calEvent.id, function (data) {
+      if (data.length == 0){
+        return false;
+      }
+      $('#event_info .modal-content').empty();
+      $('#event_info .modal-content').append(data);
+      $('#event_info').modal('show');
+    });
+  },
+  eventSources: [
+    {
+      url: '/api/calendar',
+      type: 'POST',
+      color: 'yellow',
+      textColor: 'black'
+    }
+  ],
+});
 </script>
 {{>footer}}

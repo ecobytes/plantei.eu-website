@@ -497,9 +497,7 @@ class SeedBankController extends Controller {
   {
     return view('seedbank::search')
       ->with('active', ['search' => true])
-      ->with('bodyId', 'mainapp')
-      ->with('part', ['search' => true]);
-
+      ->with('bodyId', 'mainapp');
   }
 
   public function postSearch(Request $request)
