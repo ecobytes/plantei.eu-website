@@ -98,8 +98,8 @@
   .lang-choices {
     display: none;
     position: relative;
+    /* z-index: 1; */
     background-color: #f9f9f9;
-    z-index: 1;
     /*margin-left: 40px;*/
   }
   .lang-choices a {
@@ -108,10 +108,16 @@
     text-decoration: none;
     display: block;
   }
-  .lang-choices a:hover {background-color: #f1f1f1}
+  .lang-choices a:hover {
+    background-color: #f1f1f1
+  }
 }
 .lang:hover .lang-choices {
   display: block;
+  background-color: #f9f9f9;
+  position: absolute;
+  padding: 0 5px;
+  z-index: 5;
 }
 
 a.iconified {

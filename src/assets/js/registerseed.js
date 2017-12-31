@@ -1,4 +1,4 @@
-$(function () {
+var initRegisterSeed = function () {
   $('#cancel_seed').on('click', function () {
     window.open('/seedbank/myseeds', '_self');
     return false;
@@ -211,4 +211,4 @@ $(function () {
   }).prop('disabled', !$.support.fileInput)
   .parent().addClass($.support.fileInput ? undefined : 'disabled');
   var upload_counter = $('#files .col-md-4').length;
-});
+}

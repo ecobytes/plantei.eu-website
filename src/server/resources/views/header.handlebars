@@ -5,7 +5,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{title}}</title>
-  <link href='http://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet' type='text/css'>
+  <!-- link href='/fonts?family=Merriweather' rel='stylesheet' type='text/css' -->
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/jquery-ui.theme.min.css">
   <link rel="stylesheet" href="/css/jquery.fileupload.css">
@@ -23,6 +23,54 @@
   </style>
 </head>
 <body id="{{bodyId}}">
+  {{#if modal}}
+  <div class="modal fade" id="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  {{/if}}
+  {{#if login}}
+  <div class="modal fade" id="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <h2>{{messages.login}}</h2>
+        {{> formErrors}}
+        <form class="form-horizontal" role="form" method="POST" action="/{{langString}}/auth/login">
+          <input type="hidden" name="_token" value="{{ csrfToken }}">
+          <div class="form-group">
+            <label class="control-label">{{ messages.username }}</label>
+            <span class="cell"><input type="text" class="form-control" placeholder="{{mesages.username}}" name="nameoremail" value="{{ oldInput.name }}" autocomplete="off"></span>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{messages.password}}</label>
+            <span class="cell"><input type="password" class="form-control" placeholder="{{messages.password}}" name="password"></span>
+          </div>
+          <div class="row">
+            <div class="form-group lmt">
+              <div class="col-md-12 text-center">
+                <a href="/{{ langString }}" class="btn btn-danger btn-lg">
+                  {{messages.cancel}}
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                  {{messages.login}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+    <!-- <div class="form-group lmt">
+      <div class="col-md-12 text-center">
+        <button type="submit" class="btn btn-primary btn-lg">
+          {{messages.login}}
+        </button>
+      </div>
+    </div> -->
+  {{/if}}
   <!--
 <div class="container-fluid">
  {{#unless isProduction}}

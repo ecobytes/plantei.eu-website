@@ -10,7 +10,7 @@ use GeoIp2\Database\Reader;
 
 
 class SeedBankController extends Controller {
-  public static function save_image($uploadedimage) {
+  private function save_image($uploadedimage) {
     $file_md5 = md5_file($uploadedimage);
     $file_name = $file_md5;
     $picture = \Caravel\Picture::where('md5sum', $file_md5)->first();
@@ -112,10 +112,11 @@ class SeedBankController extends Controller {
       ->with('pagination', \Lang::get('pagination'))
       ->with('paginated', $paginated)
       ->with('links', $paginated->render())
+      ->with('modal', true)
       //->with('myseeds', $seeds->get())
       ->with('bodyId', 'mainapp')
       ->with('active', ['myseeds' => true]);
-    
+
   }
 
   public function getAllSeeds()
@@ -299,9 +300,7 @@ class SeedBankController extends Controller {
     }
     $part = [ 'register' => true ];
     return view('seedbank::modal-register', compact('part', 'update'))
-      ->with('bodyId', 'myseeds')
-      ->with('oldInput', $oldInput)
-      ->with('active', ['myseeds' => true]);
+      ->with('oldInput', $oldInput);
     /*return view('seedbank::registerseed', ['update' => $update])
       ->with('active', ['myseeds' => true])*/
   }
@@ -612,6 +611,7 @@ class SeedBankController extends Controller {
     // maybe flash an 'Added new seed' message
     return redirect('/seedbank/search');
   }
+
   public function postAddPicture (Request $request) {
     // TODO: Limit number of picture by seed?
     $user = \Auth::user();
@@ -622,7 +622,8 @@ class SeedBankController extends Controller {
     }
     if ($request->hasFile('pictures')) {
       $picture = $request->file('pictures')[0];
-      $status = SeedBankController::save_image($picture);
+      //$status = SeedBankController::save_image($picture);
+      $status = self::save_image($picture);
       if (isset($status['error'])) {
         return [ 'files' => [ ['error' => $status['error']]]];
       } else {
@@ -645,6 +646,7 @@ class SeedBankController extends Controller {
     }
     return [ 'files' => [['error' => 'No files sent']]];
   }
+
   public function getEvents () {
     $user = \Auth::user();
     return view('seedbank::events')

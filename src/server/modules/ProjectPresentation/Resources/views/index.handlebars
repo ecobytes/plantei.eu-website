@@ -1,11 +1,5 @@
 {{> header}}
 <!-- div class="pageWrap" -->
-<div class="modal fade" id="info_modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
   <div class="intro-box container-fluid">
     <div class="lang">
       <p class="langbtn">
@@ -32,7 +26,8 @@
         <div class="row lmt mmb">
           <div class="col-md-12 text-center">
             <a class="btn btn-success btn-lg" href="/{{ langString }}/auth/register">{{messages.register}}</a>
-            <a class="btn btn-success btn-lg" href="{{ langString}}/auth/login">{{messages.login}}</a> 
+            {{!-- <a class="btn btn-success btn-lg" href="{{ langString}}/auth/login">{{messages.login}}</a>  --}}
+            <a class="btn btn-success btn-lg" id="login" href="#">{{messages.login}}</a>
           </div>
         </div>
         {{/if}}
@@ -97,4 +92,10 @@
   </div>
 <!-- /div -->
 {{> scripts}}
+<script type="text/javascript" src="/js/index.js"></script>
+{{#if errors}}
+<script type="text/javascript">
+  $('#modal').modal('show');
+</script>
+{{/if}}
 {{> footer}}

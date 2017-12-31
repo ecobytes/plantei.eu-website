@@ -3,60 +3,203 @@ var gulp = require('gulp');
 var less = require('gulp-less');
 var path = require('path');
 var browserSync = require('browser-sync');
-var reload      = browserSync.reload;
-var shell = require('gulp-shell')
-var exec = require('child_process').exec;
+var reload = browserSync.reload;
+var shell = require('gulp-shell');
 var spawn = require('child_process').spawn;
 var del = require('del');
 var rename = require("gulp-rename");
 
-var lessFiles = [base_path + 'src/assets/less/**'];
-//var htmlFiles = [base_path + 'src/client/**/**', base_path + 'src/resources/views/**/**.php'];
-//var jsFiles = base_path + 'src/client/js/**/**.js';
-var htmlFiles = [base_path + 'src/server/public/*.php', base_path + 'src/resources/views/**/**.php'];
-var jsFiles = base_path + 'src/server/public/js/*.js';
-var appFiles = [base_path + 'src/server/app/**/**', base_path + 'src/server/modules/**/**', base_path + 'src/server/resources/views/**/**'];
-var imgFiles = [base_path + 'src/assets/images/*'];
-
-
-gulp.task('default', ['bowercopy', 'browser-sync','less', 'js'], function() {
-  gulp.watch(lessFiles, { interval: 1000 }, ['less']);
-  gulp.watch(htmlFiles, { interval: 1000 }).on('change', reload);
-  gulp.watch(imgFiles, { interval: 1000 }, ['bower_copy']);
-  gulp.watch(jsFiles, { interval: 1000 }, ['js']);
-  gulp.watch(appFiles, { interval: 1000 }, ['clear_views']);
+const publicDir = base_path + 'src/server/public/';
+var paths = {
+  lessFiles: [base_path + 'src/assets/less/**'],
+  jsFiles: [base_path + 'src/assets/js/**'],
+  tmplFiles: [
+    base_path + 'src/server/resources/views/**',
+    base_path + 'src/server/modules/*/Resources/views/**'
+  ],
+  imgFiles: [
+    base_path + 'src/assets/images/**',
+    base_path + 'src/assets/images/button**/**',
+  ],
+  langFiles: [
+    base_path + 'src/server/resources/lang/*/*.php',
+    base_path + 'src/server/modules/*/Resources/lang/*/*.php'
+  ],
+  vendorFiles: [
+    {
+      dir: '/leaflet',
+      src: "/dist/leaflet.min.js",
+      dst: publicDir + 'js/leaflet'
+    },
+    {
+      dir: '/leaflet',
+      src: [
+        "/dist/leaflet.css",
+        "/dist/images**/*"
+      ],
+      dst: publicDir + 'css/leaflet'
+    },
+    {dir: '/jquery', src: "/jquery.min.js", dst: "js/jquery" },
+    {
+      dir: '/jquery-ui',
+      src: [
+        "**/*.min.js",
+        "**/themes**/**",
+        "**/ui**/**"
+      ],
+      dst: "js" },
+    {
+      dir: '/fullcalendar',
+      src: "/dist/fullcalendar.min.css",
+      dst: publicDir + 'css/fullcalendar'
+    },
+    {
+      dir: '/fullcalendar',
+      src: [
+        "/dist/fullcalendar.min.js", "/dist/lang-all.js", "/dist/lang**/*"
+      ],
+      dst: publicDir + 'js/fullcalendar'
+    },
+    {
+      dir: '/moment',
+      src: "/min/moment-with-locales.min.js",
+      dst: publicDir + 'js/fullcalendar',
+      rename: 'moment.min.js'
+    },
+    {
+      dir: '/Merriweather-Fontface',
+      src: "/fonts/*",
+      dst: publicDir + 'fonts'
+    },
+    {
+      dir: '/bootstrap',
+      src: "/fonts/*",
+      dst: publicDir + 'fonts'
+    },
+    {
+      dir: '/tinymce',
+      src: [
+        "**/skins/**",
+        "**/plugins/**",
+        "**/themes/**",
+        "**/tinymce.min.js"
+      ],
+      dst: publicDir + 'js'
+    },
+  ]
+};
+gulp.task('vendorAssetCopy', function(){
+  for ( let v of paths.vendorFiles ) {
+    let dir = base_path + 'src/bower_components' + v.dir;
+    if ( v.src instanceof Array) {
+      for (let i in v.src) {
+        v.src[i] = dir + v.src[i];
+      }
+    } else {
+      v.src = dir + v.src;
+    }
+    if (v.rename) {
+      gulp.src(v.src)
+        .pipe(rename(v.rename))
+        .pipe(gulp.dest(v.dst));
+    } else {
+      gulp.src(v.src).pipe(gulp.dest(v.dst));
+    }
+  }
 });
-
 gulp.task('clear_views', function(){
-  // will break with gulp 4.0
-  //gulp.src('gulpfile.js', {read: false})
-  //    .pipe(shell('php artisan view:clear', {cwd: base_path + 'src/server/'}))
-  //    .pipe(reload({stream:true}));
-  var cmd = spawn('php', ['artisan', 'view:clear'], {cwd: base_path + 'src/server', stdio: 'inherit'});
+  var cmd = spawn(
+    'php',
+    ['artisan', 'view:clear'],
+    {cwd: base_path + 'src/server', stdio: 'inherit'}
+  );
   cmd.on('close', function(code) {
     console.log('Done clearing view... exit code: ' + code);
     reload();
-  //});
-  });
-
+  })
 });
-
 gulp.task('rebootdb', function(){
-  var cmd = spawn('bash', ['rebootdb.sh'], {cwd: '/vagrant/scripts', stdio: 'inherit'});
+  var cmd = spawn('bash', ['rebootdb.sh'], {cwd: base_path + 'scripts', stdio: 'inherit'});
   cmd.on('close', function(code) {
     console.log('Done rebooting Database... exit code: ' + code);
   });
-
+  reload();
 });
-
+gulp.task('langs', function(){
+  var cmd = spawn(
+    'php',
+    ['artisan', 'lang:js', '-c', 'public/js/messages.js'],
+    {cwd: base_path + 'src/server', stdio: 'inherit'}
+  );
+  cmd.on('close', function(code) {
+    console.log('Done rebooting Database... exit code: ' + code);
+  });
+});
 
 gulp.task('less', function() {
-  gulp.src(base_path + 'src/assets/less/style.less')
+  return gulp.src(base_path + 'src/assets/less/style.less')
     .pipe(less())
-    .pipe(gulp.dest(base_path + 'src/server/public/css/'))
-    .pipe(reload({stream:true})); //Browser Sync
+    .pipe(gulp.dest(base_path + 'src/server/public/css/'));
+});
+gulp.task('less-watch', ['less'], function(done){
+  reload();
+  done();
 });
 
+gulp.task('js', function(){
+  gulp.src(paths.jsFiles)
+  .pipe(gulp.dest(publicDir + 'js'));
+});
+gulp.task('js-watch', ['js'], function(done){
+  reload();
+  done();
+});
+
+gulp.task('images', function(){
+  gulp.src(paths.imgFiles)
+  .pipe(gulp.dest(publicDir + 'images'))
+  .pipe(reload({stream:true})); //Browser Sync
+});
+gulp.task('images-watch', ['images'], function(done){
+  reload();
+  done();
+});
+
+gulp.task('browser-sync', function() {
+    browserSync.init({
+        proxy: "127.0.0.1",
+        watchOptions: {
+          usePolling: true
+        }
+    });
+});
+gulp.task(
+  'default',
+  [
+    'vendorAssetCopy',
+    'browser-sync',
+    'less',
+    'js',
+    'images',
+    'clear_views'
+  ],
+  function() {
+    gulp.watch(paths.lessFiles, { interval: 1000 }, ['less-watch']);
+    gulp.watch(paths.jsFiles, { interval: 1000 }, ['js-watch']);
+    gulp.watch(paths.tmplFiles, { interval: 1000 }, ['clear_views']);
+    gulp.watch(paths.langFiles, { interval: 1000 }, ['langs']);
+    gulp.watch(
+      base_path + 'src/bower_components/**',
+      { interval: 1000 },
+      ['vendorAssetCopy']
+    );
+    gulp.watch(paths.imgFiles, { interval: 1000 }, ['images-watch']);
+    /*
+    gulp.watch(htmlFiles, { interval: 1000 });
+    gulp.watch(appFiles, { interval: 1000 }, ['clear_views']);
+    */
+  }
+);
 gulp.task('bowercopy', function(){
   gulp.src(base_path + 'src/assets/less/style.less')
     .pipe(less())
@@ -87,15 +230,10 @@ gulp.task('bowercopy', function(){
   .pipe(gulp.dest(base_path + 'src/server/public/js/fullcalendar'));
 
   gulp.src([
-    base_path + 'src/bower_components/leaflet/dist/leaflet.js',
-    ])
-  .pipe(gulp.dest(base_path + 'src/server/public/js/leaflet'));
-
-  gulp.src([
     base_path + 'src/bower_components/leaflet/dist/leaflet.css',
-    base_path + 'src/bower_components/leaflet/dist/images**/*',
+    base_path + 'src/bower_components/leaflet/dist/images**/*'
     ])
-  .pipe(gulp.dest(base_path + 'src/server/public/js/leaflet'));
+    .pipe(gulp.dest(base_path + 'src/server/public/js/leaflet'));
 
   gulp.src(base_path + 'src/bower_components/moment/min/moment-with-locales.min.js')
   .pipe(rename('moment.min.js'))
@@ -139,23 +277,12 @@ gulp.task('bowercopy', function(){
     ])
   .pipe(gulp.dest(base_path + 'src/server/public/images'));
 
-  // will break with gulp 4.0
-  gulp.src('gulpfile.js', {read: false})
-      .pipe(shell('php artisan lang:js -c public/js/messages.js', {cwd: base_path + 'src/server/', quiet: true}));
-
-});
-
-gulp.task('js', function(){
-  gulp.src(jsFiles)
-  .pipe(reload({stream:true})); //Browser Sync
-});
-
-
-gulp.task('browser-sync', function() {
-    browserSync({
-        proxy: "127.0.0.1",
-        watchOptions: {
-          usePolling: true
-        }
-    });
+  var cmd = spawn(
+    'php',
+    ['artisan', 'lang:js', '-c', 'public/js/messages.js'],
+    {cwd: base_path + 'src/server', stdio: 'inherit'}
+  );
+  cmd.on('close', function(code) {
+    console.log('Done rebooting Database... exit code: ' + code);
+  });
 });

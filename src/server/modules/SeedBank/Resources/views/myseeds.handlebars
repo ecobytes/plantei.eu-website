@@ -1,21 +1,19 @@
 {{> mainapp_start}}
-<div class="modal fade" id="semente">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
     <div class="row">
       <div class="col-md-6">
         <h1>O MEU BANCO DE SEMENTES</h1>
       </div>
       <div class="col-md-6">
-        <button class="btn btn-error" type="button">Remover Semente</button>
-        <button class="btn btn-warning" type="button">Cria</button>
-        <button id="newseed" class="btn btn-success" type="button">Nova Semente</button>
+        <ul class="buttons">
+          <li><a class="iconified exchanges pt" href="#"></a></li>
+          <li><a class="iconified searchseed pt" href="#"></a></li>
+          <li><a class="iconified delseed pt" href="#"></a></li>
+          <li><a id="newseed" class="iconified newseed pt" href="#"></a></li>
+        </ul>
       </div>
-
+    </div>
+    <div class="row search">
+      <input type="text" name="searchseed" value="">
     </div>
     <div class="row content seeds">
       <table style="width: 100%">
@@ -52,6 +50,32 @@
     </div>
 
     {{> mainapp_end}}
+    <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included
+    <script src="/js/vendor/jquery.ui.widget.js"></script> -->
+    <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+    <script src="/js/load-image.all.min.js"></script>
+    <!--
+    <!- - The Canvas to Blob plugin is included for image resizing functionality
+    <script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+    <!- - Bootstrap JS is not required, but included for the responsive demo navigation
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!- - The Iframe Transport is required for browsers without support for XHR file uploads
+    -->
+    <script src="/js/jquery.iframe-transport.js"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="/js/jquery.fileupload.js"></script>
+    <!-- The File Upload processing plugin -->
+    <script src="/js/jquery.fileupload-process.js"></script>
+    <!-- The File Upload image preview & resize plugin -->
+    <script src="/js/jquery.fileupload-image.js"></script>
+    <!-- The File Upload audio preview plugin -->
+    <script src="/js/jquery.fileupload-audio.js"></script>
+    <!-- The File Upload video preview plugin -->
+    <script src="/js/jquery.fileupload-video.js"></script>
+    <!-- The File Upload validation plugin -->
+    <script src="/js/jquery.fileupload-validate.js"></script>
+    <script src="/js/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="/js/registerseed.js"></script>
 <script>
 $('#seeds tr').on('click', function () {
   //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
@@ -99,8 +123,13 @@ $('#messages tr').on('click', function () {
 
 $('#newseed').on('click', function () {
   $.get('/seedbank/register', function (data) {
-    $('#semente .modal-content').html(data);
-    $('#semente').modal('show');
+    $('#modal .modal-content').html(data);
+    $('#modal').modal('show');
+    $('#modal').on('click', '#cancel_seed', function(e){
+      $('#modal .modal-content').empty();
+      $('#modal').modal('hide');
+    })
+    initRegisterSeed();
   });
   return false;
   });

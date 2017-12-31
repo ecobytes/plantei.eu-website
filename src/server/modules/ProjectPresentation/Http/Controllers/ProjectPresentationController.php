@@ -27,6 +27,7 @@ class ProjectPresentationController extends Controller {
 		->with('showSubscription', $showSubscription)
 		->with('showAuthentication', $showAuthentication)
 		->with('bodyId', 'index')
+		->with('login', true)
 		->with('csrfToken', csrf_token());
 	}
 
