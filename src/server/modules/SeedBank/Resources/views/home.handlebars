@@ -33,7 +33,8 @@
 $('#seeds tr').on('click', function () {
   //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
   var seed_id = $(this).data('seed_id');
-  $.get("/seedbank/seedm/" + seed_id, function (data) {
+  window.open('/seedbank/allseeds?seed_id=' + seed_id, '_self')
+  /* $.get("/seedbank/seedm/" + seed_id, function (data) {
     if (data.length == 0){
       return false;
     }
@@ -41,7 +42,16 @@ $('#seeds tr').on('click', function () {
     $('#info_modal .modal-content').append(data);
 
     $('#info_modal').modal('show');
-  });
+  }); */
+}).mouseover(function () {
+  $(this).addClass('active');
+}).mouseout(function () {
+  $(this).removeClass('active');
+});
+$('#mySeeds tr').on('click', function () {
+  //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
+  var seed_id = $(this).data('seed_id');
+  window.open('/seedbank/myseeds?seed_id=' + seed_id, '_self')
 }).mouseover(function () {
   $(this).addClass('active');
 }).mouseout(function () {
@@ -62,9 +72,10 @@ $('.listEvents').on('click', 'li', function (e) {
 });
 
 $('#messages tr').on('click', function () {
-    $('#info_modal .modal-content').html('<img src="/js/tinymce/skins/lightgray/img/loader.gif"/>');
-    $('#info_modal').modal('show');
-    var threadId = $(this).data('thread_id');
+    /*$('#info_modal .modal-content').html('<img src="/js/tinymce/skins/lightgray/img/loader.gif"/>');
+    $('#info_modal').modal('show');*/
+    var messageId = $(this).data('message_id') || '';
+    window.open('/messages/?message_id=' + messageId, '_self');
     $.get('/messages/' + threadId, function (data) {
       $('#info_modal .modal-content').html(data);
     });
