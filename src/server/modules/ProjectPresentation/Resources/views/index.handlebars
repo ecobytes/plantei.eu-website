@@ -25,9 +25,10 @@
         {{#if showAuthentication}}
         <div class="row lmt mmb">
           <div class="col-md-12 text-center">
-            <a class="btn btn-success btn-lg" href="/{{ langString }}/auth/register">{{messages.register}}</a>
+            <a class="btn btn-success btn-lg" id="register" href="/{{ langString }}/auth/register">{{messages.register}}</a>
+            {{!-- }}<a class="btn btn-success btn-lg" href="/{{ langString }}/auth/register">{{messages.register}}</a>
             {{!-- <a class="btn btn-success btn-lg" href="{{ langString}}/auth/login">{{messages.login}}</a>  --}}
-            <a class="btn btn-success btn-lg" id="login" href="#">{{messages.login}}</a>
+            <a class="btn btn-success btn-lg" id="login" href="/{{ langString}}/auth/login">{{messages.login}}</a>
           </div>
         </div>
         {{/if}}
@@ -97,5 +98,8 @@
 <script type="text/javascript">
   $('#modal').modal('show');
 </script>
+{{#if errors.login}}
+<h2>ERRORS LOGIN</h2>
+{{/if}}
 {{/if}}
 {{> footer}}
