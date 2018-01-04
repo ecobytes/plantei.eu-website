@@ -87,16 +87,16 @@ class User extends Model implements AuthenticatableContract,
       ->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
       ->select('seeds_exchanges.*', 'common_name', 'users.name', 'users.place_name', 'users.lat', 'users.lon');
     if ($orderBy)
-    { 
-      $askedTo = $askedTo->orderBy($orderBy, 'desc'); 
-      $askedBy = $askedBy->orderBy($orderBy, 'desc'); 
+    {
+      $askedTo = $askedTo->orderBy($orderBy, 'desc');
+      $askedBy = $askedBy->orderBy($orderBy, 'desc');
     }
     $askedTo = $askedTo->limit($limit);
     $askedBy = $askedBy->limit($limit);
     if ($toArray)
-    { 
+    {
       $askedTo = $askedTo->get()->toArray();
-      $askedBy = $askedBy->get()->toArray(); 
+      $askedBy = $askedBy->get()->toArray();
     }
 
 
@@ -141,8 +141,8 @@ class User extends Model implements AuthenticatableContract,
     foreach ($seed_ids as $seed_id)
     {
       if ( ! SeedsExchange::where([
-        'asked_by'=> $data['asked_by'], 
-        'asked_to'=> $data['asked_to'], 
+        'asked_by'=> $data['asked_by'],
+        'asked_to'=> $data['asked_to'],
         'seed_id' => $seed_id])
         ->where('completed', '<', 2)->count() ) {
         $data['seed_id'] = $seed_id;
@@ -157,7 +157,7 @@ class User extends Model implements AuthenticatableContract,
 
   /**
    * Accept transaction.
-   * 
+   *
    * @return void
    */
   public function acceptTransaction($id)
@@ -183,7 +183,7 @@ class User extends Model implements AuthenticatableContract,
 
   /**
    * Reject transaction.
-   * 
+   *
    * @return void
    */
   public function rejectTransaction($id)
@@ -202,7 +202,7 @@ class User extends Model implements AuthenticatableContract,
         $transaction->update(['accepted' => 1]);
       }
       return $transaction->updateParent();
-    } 
+    }
     if ( $transaction->asked_by == $this->id)
     {
       if ( ! $transaction->parent_id )
@@ -286,6 +286,13 @@ class User extends Model implements AuthenticatableContract,
         $messages[] = $message;
       }
     }
+    if (count($messages) < $limit) {
+      foreach (
+        $this->messages()->orderBy('updated_at', 'desc')->limit($limit - count($messages))->get() as $message) {
+          $messages[] = $message;
+        }
+    }
+
 
     $colmessages = collect($messages)->sortByDesc('updated_at')->take($limit);
     foreach ($colmessages as $m)
@@ -297,7 +304,7 @@ class User extends Model implements AuthenticatableContract,
   }
 }
 
-/*class Contact extends Model 
+/*class Contact extends Model
 {
   /**
    * The database table used by the model.

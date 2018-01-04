@@ -25,19 +25,48 @@ class MessagesController extends Controller {
    *
    * @return mixed
    */
-  public function index()
+  public function index(Request $request)
   {
     $user = \Auth::user();
-    $currentUserId = $user->id;
+    $userId = $user->id;
     // All threads that user is participating in
-    $threads = Thread::forUser($currentUserId)->latest('updated_at')->get();
+    $threads = Thread::forUser($userId)->latest('updated_at')->get();
     $contacts = $user->contacts;
+    $part = [ 'messages' => true ];
+
+    $view = view('seedbank::messenger', compact('threads', 'contacts', 'part'))
+      ->with('active', ['messages' => true])
+      ->with('modal', true)
+      ->with('bodyId', 'mainapp');
+
+    $message_id = $request->input('message_id', null);
+    if ($message_id) {
+      $message = Message::findOrFail($message_id);
+      $thread = $message->thread;
+      $users = User::whereIn('id', $thread->participantsUserIds($userId))->get();
+      $thread->markAsRead($userId);
+      $messages = [];
+      foreach($thread->messages as $message){
+        $message['username'] = \Caravel\User::find($message['user_id'])->name;
+        $messages[] = $message;
+      }
+
+      $view->with('message_id', $message_id)
+        ->with(
+          'modal_content',
+          view('seedbank::message_show_modal')
+            ->with('message_id', $message_id)
+            ->with('tmessages', $messages)
+  			    ->with('messages', \Lang::get('seedbank::messages'))
+            ->with('thread', $thread)
+            ->with('users', $users)
+            ->with('csrfToken', csrf_token())
+            ->render()
+        );
+    }
 
     //return view('seedbank::messenger', compact('threads', 'contacts'))
-    $part = [ 'messages' => true ];
-    return view('seedbank::messenger', compact('threads', 'contacts', 'part'))
-      ->with('active', ['messages' => true])
-      ->with('bodyId', 'mainapp');
+    return $view;
   }
 
   /**
@@ -94,6 +123,7 @@ class MessagesController extends Controller {
         'subject' => $input['subject'],
       ]
     );
+    $thread->save();
     // Message
     Message::create(
       [
@@ -112,7 +142,7 @@ class MessagesController extends Controller {
     );
     // Recipients
     if (Input::has('recipients')) {
-      $thread->addParticipants(explode(";", $input['recipients']));
+      $thread->addParticipant(explode(";", $input['recipients']));
     }
     return redirect('/messages');
   }
