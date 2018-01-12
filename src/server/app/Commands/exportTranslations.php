@@ -41,7 +41,7 @@ class exportTranslations extends Command implements SelfHandling {
 			$base = base_path().$path.'/resources/lang';
 			if(is_dir($base)){
 				foreach (scandir($base) as $key => $langDir) {
-					if ($langDir != '.' && $langDir != '..'){
+					if ($langDir != '.' && $langDir != '..' && $langDir != 'vendor'){
 						if (is_dir($base.'/'.$langDir)) {
 							$this->info($langDir);
 							$translationFiles = scandir($base.'/'.$langDir);
@@ -61,6 +61,7 @@ class exportTranslations extends Command implements SelfHandling {
 	}
 
 	private function outputArray($arr, $level){
+    $filecontent = "<?php\nreturn [\n";
 		foreach ($arr as $key => $value) {
 			if(is_array($value)){
 				$this->info($key. ' => ');
@@ -72,8 +73,9 @@ class exportTranslations extends Command implements SelfHandling {
 				}
 				$this->info($spaces.$key .' => '.$value);
 			}
-		}
-		
+    }
+    $this->info($filecontent);
+
 	}
 
 }

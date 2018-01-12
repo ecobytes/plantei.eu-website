@@ -43,6 +43,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
         $seed->variety;
         $seed->species;
         $seed->family;
+        $seed->months;
         $seed->cookings();
         $seed->medicines();
         if ($seed->pictures->count()){
@@ -50,7 +51,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
         } else {
           $picture = false;
         }
-
+        return $seed;
         return view('seedbank::seed_modal')
           ->with('seed', $seed)
           ->with('picture', $picture)

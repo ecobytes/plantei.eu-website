@@ -288,12 +288,12 @@ class User extends Model implements AuthenticatableContract,
     }
     if (count($messages) < $limit) {
       foreach (
-        $this->messages()->orderBy('updated_at', 'desc')->limit($limit - count($messages))->get() as $message) {
-          $messages[] = $message;
+        $this->messages()->orderBy('updated_at', 'desc')->limit($limit)->get() as $message) {
+          if ( ! in_array($message, $messages)) {
+            $messages[] = $message;
+          }
         }
     }
-
-
     $colmessages = collect($messages)->sortByDesc('updated_at')->take($limit);
     foreach ($colmessages as $m)
     {

@@ -22,11 +22,20 @@ class ProjectPresentationController extends Controller {
 		$login = \Session::get('login');
 		$formErrors = '';
 		if(!empty($errors)){
-		$formErrors = $errors;
-		\View::share('errors', $errors->default->toArray());
+			$formErrors = $errors;
+			\View::share('errors', $errors->default->toArray());
 	  }
 
-		$modal_content = [];
+		$modal_content = join("\n", [
+			view('auth::login_modal')->with('formErrors', $formErrors)
+			  ->with('login', $login)
+			  ->with('messages', \Lang::get('auth::messages'))
+				->with('csrfToken', csrf_token())->render(),
+			view('auth::register_modal')->with('formErrors', $formErrors)
+			  ->with('login', $login)
+			  ->with('messages', \Lang::get('auth::messages'))
+				->with('csrfToken', csrf_token())->render(),
+		]);
 
 
 		return view('projectpresentation::index')
@@ -36,16 +45,7 @@ class ProjectPresentationController extends Controller {
 		->with('bodyId', 'index')
 		->with('modal', true)
 		->with('formErrors', $formErrors)
-		->with('modal_content', join("\n", [
-			view('auth::login_modal')->with('formErrors', $formErrors)
-			  ->with('login', $login)
-			  ->with('messages', \Lang::get('auth::messages'))
-				->with('csrfToken', csrf_token())->render(),
-			view('auth::register_modal')->with('formErrors', $formErrors)
-			  ->with('login', $login)
-			  ->with('messages', \Lang::get('auth::messages'))
-				->with('csrfToken', csrf_token())->render(),
-		]))
+		->with('modal_content', $modal_content)
 		->with('csrfToken', csrf_token());
 	}
 }

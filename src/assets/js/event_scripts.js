@@ -77,7 +77,7 @@ $(function () {
   });
 
   // Form Validation
-  $('.modal form').on('submit', function(e)
+  $('#modal form').on('submit', function(e)
   {
     var $form = $(this);
     tinymce.triggerSave();
@@ -88,7 +88,7 @@ $(function () {
     $.post(url, formData, function(response)
     {
       //handle successful validation
-      $('#event_info').modal('toggle');
+      $('#modal').modal('toggle');
       $('#mycalendar').fullCalendar('refetchEvents');
       return false;
 
@@ -139,4 +139,3 @@ $(function () {
 
 
 });
-

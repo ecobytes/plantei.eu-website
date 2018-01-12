@@ -95,57 +95,27 @@ class SeedBankController extends Controller {
       ->with('active', ['home' => true]);
   }
 
-  public function getMySeeds()
-  {
-    // View for my seeds
-    $user = \Auth::user();
-    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
-    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
-    $paginated = $user->seeds()->orderBy('updated_at', 'desc')->paginate(5)->setPath('/seedbank/myseeds');
-    //return view('seedbank::myseeds')
-    foreach ($paginated->getCollection() as $seed)
-    {
-      $seed->load('family');
+  private function getMySeedForm ( $myseed = Null, $formErrors = Null) {
+    $myseed = $myseed ?: "";
+    if ($myseed){
+      $myseed->load('months', 'species', 'variety', 'family', 'pictures');
     }
-    $part = [ 'myseeds' => true ];
-    return view('seedbank::myseeds', compact('part'))
-      ->with('pagination', \Lang::get('pagination'))
-      ->with('paginated', $paginated)
-      ->with('links', $paginated->render())
-      ->with('modal', true)
-      //->with('myseeds', $seeds->get())
-      ->with('bodyId', 'mainapp')
-      ->with('active', ['myseeds' => true]);
 
-  }
-
-  public function getAllSeeds()
-  {
-    // View for seeds
-    $user = \Auth::user();
-    $seeds = \Caravel\Seed::where('public', true)->orderBy('updated_at', 'desc');
-    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
-    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
-    $paginated = $seeds->paginate(15)->setPath('/seedbank/seeds');
-    //return view('seedbank::myseeds')
-    foreach ($paginated->getCollection() as $seed)
-    {
-      $seed->load('family');
+    $formErrors = $formErrors ?: "";
+    return view('seedbank::seedform_modal')
+      ->with('formErrors', $formErrors)
+      ->with('update', true)
+      ->with('preview', true)
+      ->with('oldInput', $myseed )
+      ->with('seed', $myseed )
+      ->with('messages', \Lang::get('seedbank::messages'))
+      ->with('csrfToken', csrf_token())->render();
     }
-    $part = [ 'myseeds' => true ];
-    return view('seedbank::seeds', compact('part'))
-      ->with('pagination', \Lang::get('pagination'))
-      ->with('paginated', $paginated)
-      ->with('links', $paginated->render())
-      //->with('myseeds', $seeds->get())
-      ->with('bodyId', 'mainapp')
-      ->with('active', ['seeds' => true]);
-  }
 
-  public function mySeeds()
+  public function getMySeeds(Request $request)
   {
-    // View for my seeds
-    $user = \Auth::user();
+    // Transactions
+    /*
     $seeds = $user->seeds()->orderBy('updated_at', 'desc')->paginate(5)->setPath('/seedbank/seeds');
     $t = $seeds;
     $transactions = $user->transactionsPending();
@@ -169,7 +139,75 @@ class SeedBankController extends Controller {
       ->with('bodyId', 'myseeds')
       ->with('transactionsBy', $transactions['asked_by'])
       ->with('transactionsTo', $transactions['asked_to'])
-      ->with('active', ['myseeds' => true]);
+      ->with('active', ['myseeds' => true]); */
+
+    $user = \Auth::user();
+    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
+    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
+    $paginated = $user->seeds()->orderBy('updated_at', 'desc')->paginate(5)->setPath('/seedbank/myseeds');
+    //return view('seedbank::myseeds')
+    foreach ($paginated->getCollection() as $seed)
+    {
+      $seed->load('family');
+      $seed->load('pictures');
+    }
+
+    $myseed_id = $request->input('seed_id', null);
+    $myseed = $user->seeds->find($myseed_id);
+
+    // Just to create the div for the submition errors
+    $formErrors = true;
+
+    $modal_content = self::getMySeedForm(
+      $myseed = $myseed,
+      $formErrors = $formErrors
+    );
+
+    $part = [ 'myseeds' => true ];
+
+    $view = view('seedbank::myseeds', compact('part'))
+      ->with('pagination', \Lang::get('pagination'))
+      ->with('paginated', $paginated)
+      ->with('links', $paginated->render())
+      ->with('messages', \Lang::get('seedbank::messages'))
+      ->with('bodyId', 'mainapp')
+      ->with('modal_content', $modal_content)
+      ->with('active', ['myseeds' => true])
+      ->with('preview', true);
+
+    if ($myseed) {
+      $view = $view->with('modal', true);
+    }
+//dd($paginated);
+    return $view;
+  }
+
+  public function getAllSeeds()
+  {
+    // View for seeds
+    $user = \Auth::user();
+    $seeds = \Caravel\Seed::where('public', true)->orderBy('updated_at', 'desc');
+    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
+    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
+    $paginated = $seeds->paginate(15)->setPath('/seedbank/seeds');
+    //return view('seedbank::myseeds')
+    foreach ($paginated->getCollection() as $seed)
+    {
+      $seed->load('family');
+      $seed->load('pictures');
+    }
+    $part = [ 'myseeds' => true ];
+    return view('seedbank::seeds', compact('part'))
+      ->with('pagination', \Lang::get('pagination'))
+      ->with('paginated', $paginated)
+      ->with('links', $paginated->render())
+      //->with('myseeds', $seeds->get())
+      ->with('bodyId', 'mainapp')
+      ->with('active', ['seeds' => true]);
+  }
+
+  public function mySeeds()
+  {
   }
 
   public function getMessages()
@@ -312,7 +350,7 @@ class SeedBankController extends Controller {
       //'origin' => 'required',
     ]);
 
-    if (!($request->input('confirmed') == "1")){
+    /* if (!($request->input('confirmed') == "1")){
       $farming = false;
       $pictures = true;
       $taxonomy = false;
@@ -341,7 +379,7 @@ class SeedBankController extends Controller {
         ->with('taxonomy', $taxonomy)
         ->with('messages', \Lang::get('seedbank::messages'))
         ->with('deletebutton', \Lang::get('seedbank::messages')['delete']);
-    }
+    }*/
     $seed_keys = ['quantity','year', 'local', 'description', 'public', 'available', 'description',
       'latin_name','common_name','polinization','direct',
     ];
@@ -396,10 +434,12 @@ class SeedBankController extends Controller {
           $seed->pictures()->save($picture);
         }
       }
-      // maybe flash an 'Added new seed' message
+      //FIXME: maybe flash an 'Added new seed' message
     }
 
-    return redirect('/seedbank/myseeds');
+    //return redirect('/seedbank/myseeds');
+    $seed->load('pictures');
+    return $seed;
   }
 
   public function getPreferences()
@@ -651,6 +691,8 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
     return view('seedbank::events')
       ->with('bodyId', 'mainapp')
+      ->with('modal', true)
+      ->with('user', $user)
       ->with('active', ['events' => true]);
   }
   public function getAdminEvents () {

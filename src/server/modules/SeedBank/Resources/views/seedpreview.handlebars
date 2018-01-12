@@ -1,0 +1,68 @@
+<div id="seed-preview" class="col-md-8 col-md-offset-2" style="background-color: #9ACD32; background-color: rgba(154,205,50,0.5);{{#unless preview }} display:none;{{/unless}}">
+  <div class="row">
+    <h1 data-name="common_name">{{seed.common_name}}</h1>
+  </div>
+  <div class="row">
+    <div data-name="description" class="col-md-6">
+      {{{seed.description}}}
+    </div>
+    <div class="col-md-6">
+      <div data-name="files" class="pictures">
+        {{#each seed.pictures}}
+        <div class="col-md-4">
+          <img class="img-responsive img-rounded cell" data-file-id="{{ id }}" src="{{ url }}" alt="label" />'
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{#if farming}}
+    <div class="col-md-6">
+      <h2>{{messages.farming}}</h2>
+      {{#if months}}
+      <div  data-name="months" class="col-md-6" style="padding-top: 24px">
+        <table class="table table-bordered" style="border-color: black;">
+          <thead>
+            <tr style="text-align: center;">
+              <th>J</th><th>F</th><th>M</th><th>A</th><th>M</th><th>J</th>
+              <th>J</th><th>A</th><th>S</th><th>O</th><th>N</th><th>D</th>
+            </tr>
+          </thead>
+          <tbody style="border-color: black;">
+            <tr style="height: 32px;">
+              {{#each months}}
+              <td{{#if month}} style="background-color: rgb(243, 234, 59)"{{/if}}></td>
+              {{/each}}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {{/if}}
+    </div>
+    {{/if}}
+    <div class="col-md-6" style="padding-top: 24px">
+      {{#if seed.latin_name}}
+      <p>{{../messages.latin_name}}: <strong data-name="latin_name" data-parent="p"> {{seed.latin_name}}</strong></p>
+      {{/if}}
+      {{#if seed.variety}}
+      <p>{{../messages.variety}}: <strong data-name="variety" data-parent="p"> {{seed.variety.name}}</strong></p>
+      {{/if}}
+      {{#if seed.species}}
+      <p>{{../messages.species}}: <strong data-name="species" data-parent="p"> {{seed.species.name}}</strong></p>
+      {{/if}}
+      {{#if seed.family}}
+      <p>{{../messages.family}}: <strong data-name="family" data-parent="p"> {{seed.family.name}}</strong></p>
+      {{/if}}
+    </div>
+  </div>
+  <div class="row" style="padding-top: 24px; padding-bottom:24px">
+    <div class="col-md-12">
+      <button type="button" class="btn btn-warning btn-lg center-block">
+        {{messages.change}}
+      </button>
+      <!-- button type="button" class="btn btn-primary btn-lg">
+        {{messages.confirm}}
+      </button -->
+    </div>
+  </div>
+
+</div>

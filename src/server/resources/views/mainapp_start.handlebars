@@ -25,8 +25,8 @@
           <a href="/seedbank/search" class="iconified search">
           </a>
         </li>
-        <li class="navbar-right{{#if active.events}} active{{/if}}">
-          <a href="/encyclopedia" class="iconified enc">
+        <li class="navbar-right{{#if active.enciclopedia}} active{{/if}}">
+          <a href="#/encyclopedia" class="iconified enc">
             <span>{{menu.encyclopedia}}</span>
           </a>
         </li>
@@ -68,6 +68,7 @@
           <li{{#if active.home}} class="active"{{/if}}><a class="iconified home" href="/seedbank"></a></li>
           <li{{#if active.myseeds}} class="active"{{/if}}><a class="iconified seed" href="/seedbank/myseeds"></a></li>
           <li{{#if active.messages}} class="active"{{/if}}><a class="iconified mess" href="/messages"></a></li>
+          <li{{#if active.horta}} class="active"{{/if}}><a class="iconified hort" href="#/seedbank/horta"></a></li>
           <li{{#if active.settings}} class="active"{{/if}}><a class="iconified sett" href="/seedbank/preferences"></a></li>
         </ul>
       </div>

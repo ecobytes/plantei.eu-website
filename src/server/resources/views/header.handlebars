@@ -23,11 +23,10 @@
   </style>
 </head>
 <body id="{{bodyId}}">
-  {{#if modal}}
+  {{#if modal_content}}
   <div class="modal fade" id="modal">
     <div class="modal-dialog">
       <div class="modal-content">
-        {{#if modal_content }}
           {{#if formErrors }}
           <div class="row validationErrors">
             {{#each formErrors}}
@@ -36,7 +35,6 @@
           </div>
           {{/if}}
           {{{ modal_content }}}
-        {{/if}}
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->

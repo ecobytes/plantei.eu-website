@@ -16,7 +16,7 @@
       <input type="text" name="searchseed" value="">
     </div>
     <div class="row content seeds">
-      <table style="width: 100%">
+      <table class="table" style="width: 100%">
         <thead>
           <tr>
             <th width="100px"></th>
@@ -29,7 +29,7 @@
         <tbody>
           {{#each paginated.data}}
           <tr data-seed_id={{id}}>
-            <td><img style="width: 100px" src="/images/planteieulogocinza.png" alt=""></td>
+            <td><img style="width: 100px" src="{{#if pictures}}{{pictures.1.url}}{{else}}/images/planteieulogocinza.png{{/if}}" alt=""></td>
             <td>
               <p style="font-weight: bold; font-size:14px;">{{common_name}}</p>
               <p style="font-style: oblique;">{{latin_name}}</p>
@@ -67,28 +67,64 @@
     <!-- The File Upload validation plugin -->
     <script src="/js/jquery.fileupload-validate.js"></script>
     <script src="/js/tinymce/tinymce.min.js"></script>
-    <script type="text/javascript" src="/js/registerseed.js"></script>
+    <script src="/js/utils.js"></script>
+    <!-- script type="text/javascript" src="/js/registerseed.js"></script -->
+    <script type="text/javascript" src="/js/myseeds.js"></script>
 <script>
-$('#seeds tr').on('click', function () {
+{{#if modal }}
+$("#modal").modal('show');
+{{/if}}
+
+function validateInput(input) {
+  if (input.value == input.defaultValue) {
+      alert("Please change field.");
+      return false;
+  }
+  return true;
+}
+
+$('form').submit( function (e) {
+  console.log('validating');
+  // TODO: show changed fields
+});
+
+$('#files').on('click', 'button.delete', function(){
+  var file = $(this).data(),
+  that = this;
+  $.getJSON(file.deleteUrl, function (data){
+    if (data.files[0][file.md5sum]){
+      that.closest('.col-md-4').remove();
+    }
+  });
+  $.each($('#files').children('.col-md-4').not('.processing'), function (index, elem){
+    if (! $(elem).find('img').length) {
+      $(elem).closest('.col-md-4').remove();
+    }
+  });
+});
+
+
+
+/*$('#seeds tr').on('click', function () {
   //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
   var seed_id = $(this).data('seed_id');
   $.get("/seedbank/seedm/" + seed_id, function (data) {
     if (data.length == 0){
       return false;
     }
-    $('#info_modal .modal-content').empty();
-    $('#info_modal .modal-content').append(data);
+    $('#modal .modal-content').empty();
+    $('#modal .modal-content').append(data);
 
-    $('#info_modal').modal('show');
+    $('#modal').modal('show');
   });
 }).mouseover(function () {
   $(this).addClass('active');
 }).mouseout(function () {
   $(this).removeClass('active');
-});
+});*/
 
-$('#info_modal').on('click', '.modal-footer .footer-left button', function(){
-  var seed_id = $('#info_modal .modal-title').data("seed_id");
+$('#modal').on('click', '.modal-footer .footer-left button', function(){
+  var seed_id = $('#modal .modal-title').data("seed_id");
   window.open('/seedbank/register/' + seed_id, '_self');
 });
 
@@ -96,18 +132,18 @@ $('.listEvents').on('click', 'li', function (e) {
   $.get('/events/get/' + $(this).data('id'), function (data) {
     if (! data ) { return false;}
     $(".modal-content").html(data);
-    $('#info_modal').modal('show');
+    $('#modal').modal('show');
   });
 });
 
 $('#messages tr').on('click', function () {
-    $('#info_modal .modal-content').html(
+    $('#modal .modal-content').html(
       '<img src="/js/tinymce/skins/lightgray/img/loader.gif"/>'
     );
-    $('#info_modal').modal('show');
+    $('#modal').modal('show');
     var threadId = $(this).data('thread_id');
     $.get('/messages/' + threadId, function (data) {
-      $('#info_modal .modal-content').html(data);
+      $('#modal .modal-content').html(data);
     });
   }).mouseover(function () {
     $(this).addClass('active');
@@ -115,7 +151,7 @@ $('#messages tr').on('click', function () {
     $(this).removeClass('active');
   });
 
-$('#newseed').on('click', function () {
+/*$('#newseed').on('click', function () {
   $.get('/seedbank/register', function (data) {
     $('#modal .modal-content').html(data);
     $('#modal').modal('show');
@@ -126,6 +162,6 @@ $('#newseed').on('click', function () {
     initRegisterSeed();
   });
   return false;
-  });
+});*/
 </script>
 {{>footer}}

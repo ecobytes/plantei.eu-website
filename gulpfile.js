@@ -20,6 +20,7 @@ var paths = {
   imgFiles: [
     base_path + 'src/assets/images/**',
     base_path + 'src/assets/images/button**/**',
+    base_path + 'src/assets/images/moons/**.svg',
   ],
   langFiles: [
     base_path + 'src/server/resources/lang/*/*.php',
