@@ -395,7 +395,12 @@ class SeedBankController extends Controller {
       if (in_array($key, $seed_keys)){
         if ( $value ) {
           $seed_new[$key] = $value;
+        } else {
+          if ($key == 'description') {
+            $seed_new[$key] = "";
+          }
         }
+
       }
       if (in_array($key, $seed_taxonomy)){
         // TODO: Should do a special function to work this out
@@ -403,8 +408,8 @@ class SeedBankController extends Controller {
           $t = $taxonomy_model[$key]::firstOrCreate(['name' => $value]);
           $seed_new[$key . '_id'] = $t->id;
         } else {
-          if ($request->input('_id')) {
-            $seedt = \Caravel\Seed::findOrFail($request->input('_id'));
+          if ($request->input('seed_id')) {
+            $seedt = \Caravel\Seed::findOrFail($request->input('seed_id'));
             $seedt->update([$key . '_id' => Null]);
           }
         }
@@ -414,8 +419,8 @@ class SeedBankController extends Controller {
       }
     }
 
-    if ($request->input('_id')){
-      $seed_id = $request->input('_id');
+    if ($request->input('seed_id')){
+      $seed_id = $request->input('seed_id');
       $seed = \Caravel\Seed::findOrFail($seed_id);
       if (Gate::denies('update-seed', $seed)){
         abort(403);

@@ -1,28 +1,54 @@
+let parameters = [
+  {"name": "seed_id", "value": "id"},
+  {"name": "_id", "value": "id"},
+  {"name": "common_name", "value": "common_name"},
+  {"name": "local", "value": "local"},
+  {"name": "year", "value": "year"},
+  {"name": "public", "value": "public", "type": "checked"},
+  {"name": "description", "value": "description", "type": "textarea"},
+  {"name": "pictures[]", "value": "pictures[]", "type": "file" },
+  {"name": "latin_name", "value": "latin_name"},
+  {"name": "species", "value": "species.name"},
+  {"name": "species_id", "value": "species.id"},
+  {"name": "family", "value": "family.name"},
+  {"name": "family_id", "value": "family.id"},
+  {"name": "variety", "value": "variety.name"},
+  {"name": "variety_id", "value": "variety.id"},
+  {"name": "months[]", "value": "months[].month", "type": "checked"},
+  {"name": "available", "value": "available", "type": "checked"},
+  {"name": "polinization", "value": "polinization", "type": "checked"},
+  {"name": "direct", "value": "direct", "type": "checked"}
+];
+
+$('form').on('submit', function (){
+  element = $('input[name="common_name"]');
+  if (! element.val()) {
+    $('#identification').collapse('show');
+    element.closest('.form-group').addClass('has-error');
+    element.next('.help-block').text('This field is the only field required');
+    element.focus();
+    return false;
+  }
+  tinymce.triggerSave();
+  var formdata = $(this).serializeArray();
+  $.post('/seedbank/register', formdata, function(data) {
+
+    previewseed(parameters, data);
+
+    $("form").hide();
+    $("#seed-preview").show();
+
+    $("#seed-preview").on('click', 'button.btn-danger', function(e) {
+      $("form").show();
+      $("#seed-preview").unbind().empty().hide();
+    });
+  });
+  return false;
+});
 
 $( function () {
 
 
-  let parameters = [
-    {"name": "seed_id", "value": "id"},
-    {"name": "_id", "value": "id"},
-    {"name": "common_name", "value": "common_name"},
-    {"name": "local", "value": "local"},
-    {"name": "year", "value": "year"},
-    {"name": "public", "value": "public", "type": "checked"},
-    {"name": "description", "value": "description", "type": "textarea"},
-    {"name": "pictures[]", "value": "pictures[]", "type": "file" },
-    {"name": "latin_name", "value": "latin_name"},
-    {"name": "species", "value": "species.name"},
-    {"name": "species_id", "value": "species.id"},
-    {"name": "family", "value": "family.name"},
-    {"name": "family_id", "value": "family.id"},
-    {"name": "variety", "value": "variety.name"},
-    {"name": "variety_id", "value": "variety.id"},
-    {"name": "months[]", "value": "months[].month", "type": "checked"},
-    {"name": "available", "value": "available", "type": "checked"},
-    {"name": "polinization", "value": "polinization", "type": "checked"},
-    {"name": "direct", "value": "direct", "type": "checked"}
-  ];
 
   $('tbody tr').on('click', function () {
     var seed_id = $(this).data('seed_id');
@@ -87,6 +113,8 @@ $( function () {
     }
   });
   var initRegisterSeed = function () {
+    var deletebuttontext = Lang.get('seedbank::messages.delete');
+
     //console.log("registerseed");
     /*$('#cancel_seed').on('click', function () {
       //window.open('/seedbank/myseeds', '_self');
@@ -102,49 +130,6 @@ $( function () {
     catch (error) {
       //console.log('catched error');
     };
-$('form').on('submit', function (){
-      element = $('input[name="common_name"]');
-      if (! element.val()) {
-        $('#identification').collapse('show');
-        element.closest('.form-group').addClass('has-error');
-        element.next('.help-block').text('This field is the only field required');
-        element.focus();
-        return false;
-      }
-    });
-    //Picture uploader
-    //var confirmed = false;
-    var deletebuttontext = Lang.get('seedbank::messages.delete');
-    $("form").on('submit', function () {
-      // if (confirmed) { return true };
-      tinymce.triggerSave();
-      var formdata = $(this).serializeArray();
-      $.post('/seedbank/register', formdata, function(data) {
-
-        /*$("#seed-preview").html(data).show();
-        $.each($('#files').children('.col-md-4').not('.processing'), function (index, elem){
-          if ($(elem).find('img').length) {
-            $("#seed-preview .pictures").append($(elem).clone()
-                .removeClass('col-md-4').addClass('col-md-4'))
-              .find('button').remove();
-          }
-        });*/
-        previewseed(parameters, data);
-
-        $("form").hide();
-        $("#seed-preview").show();
-
-        $("#seed-preview").on('click', 'button.btn-danger', function(e) {
-          $("form").show();
-          $("#seed-preview").unbind().empty().hide();
-        /*}).on('click', 'button.btn-primary', function(e) {
-          confirmed = true;
-          $("form").append('<input type="hidden" name="confirmed" value="1"/>').submit();
-        */
-        });
-      });
-      return false;
-    });
 /*    $('#files').on('click', 'button.delete', function(){
       console.log('global delete button');
       var file = $(this).data(),

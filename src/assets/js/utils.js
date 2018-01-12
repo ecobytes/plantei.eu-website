@@ -96,7 +96,7 @@ var previewseed = function (parameters, data){
       tag.parent(tag.data('parent')).show();
     }
 
-    if ( new RegExp('<[a-z][\s\S]*>').test(fieldValue) ) {
+    if ( /<[a-z][\s\S]*>/i.test(fieldValue) ) {
       tag.html(fieldValue);
     } else {
       tag.text(fieldValue);
