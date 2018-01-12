@@ -273,10 +273,7 @@ gulp.task('bowercopy', function(){
   //  base_path + 'src/assets/images/trigos.svg',
   //  ])
   //.pipe(gulp.dest(base_path + 'src/server/public/images'));
-  gulp.src([
-    base_path + 'src/assets/images/*'
-    ])
-  .pipe(gulp.dest(base_path + 'src/server/public/images'));
+  gulp.src(paths.imgFiles).pipe(gulp.dest(base_path + 'src/server/public/images'));
 
   var cmd = spawn(
     'php',

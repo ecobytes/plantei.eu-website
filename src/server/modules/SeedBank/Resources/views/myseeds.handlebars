@@ -29,7 +29,7 @@
         <tbody>
           {{#each paginated.data}}
           <tr data-seed_id={{id}}>
-            <td><img style="width: 100px" src="{{#if pictures}}{{pictures.1.url}}{{else}}/images/planteieulogocinza.png{{/if}}" alt=""></td>
+            <td><img style="width: 100px" src="{{#if pictures}}{{pictures.0.url}}{{else}}/images/planteieulogocinza.png{{/if}}" alt=""></td>
             <td>
               <p style="font-weight: bold; font-size:14px;">{{common_name}}</p>
               <p style="font-style: oblique;">{{latin_name}}</p>
