@@ -33,7 +33,8 @@ $('form').on('submit', function (){
   var formdata = $(this).serializeArray();
   $.post('/seedbank/register', formdata, function(data) {
     if (! data.errors ) {
-      window.location = "http://plantei.oficina/seedbank/myseeds?seed_id=" + data.id;
+      window.location = location.protocol + "//" + location.host + location.pathname +
+        "?seed_id=" + data.id;
     }
     //console.log(data);
     previewseed(parameters, data);
