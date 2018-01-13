@@ -175,8 +175,8 @@ var populateform = function(parameters, data) {
   }
 
  let setCheckbox = function (n, v) {
-   //console.log(n);
-   //console.log(v);
+   console.log(n);
+   console.log(v);
    let inputG = $('input[name="' + n + '"]')[0];
    if ( ! inputG ) { return; };
    var parent = inputG.closest('[data-toggle="buttons"]');
@@ -189,12 +189,13 @@ var populateform = function(parameters, data) {
      }
      vs.forEach( function(e) {
        //console.log(parent);
-       //console.log(e);
+       console.log(e);
        if ( e.constructor === Boolean ) {
          if ( e ) { e = 1; } else { e = 0; }
        }
        $input = $(parent)
          .find('input[value="' + e + '"]');
+       console.log($input);
        if ( ! $input.length ) {
          parent = $(parent.parentElement)
            .next('.form-group')

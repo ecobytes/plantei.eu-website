@@ -36,6 +36,8 @@ $('form').on('submit', function (){
       window.location = location.protocol + "//" + location.host + location.pathname +
         "?seed_id=" + data.id;
     }
+    return false;
+    
     //console.log(data);
     previewseed(parameters, data);
 
