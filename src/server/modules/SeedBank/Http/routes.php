@@ -40,12 +40,10 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
       $update_seed = ($seed->user_id == $user->id);
       if (($seed->public) || ($update_seed))
       {
-        $seed->variety;
-        $seed->species;
-        $seed->family;
-        $seed->months;
-        $seed->cookings();
-        $seed->medicines();
+        //'cookings', 'medicines'
+        $seed->load(
+          ['variety', 'species', 'family', 'months']
+        );
         if ($seed->pictures->count()){
           $picture = $seed->pictures->first();
         } else {

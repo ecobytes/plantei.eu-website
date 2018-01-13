@@ -32,16 +32,14 @@ $('form').on('submit', function (){
   tinymce.triggerSave();
   var formdata = $(this).serializeArray();
   $.post('/seedbank/register', formdata, function(data) {
-
+    if (! data.errors ) {
+      window.location = "http://plantei.oficina/seedbank/myseeds?seed_id=" + data.id;
+    }
+    //console.log(data);
     previewseed(parameters, data);
 
     $("form").hide();
     $("#seed-preview").show();
-
-    $("#seed-preview").on('click', 'button.btn-danger', function(e) {
-      $("form").show();
-      $("#seed-preview").unbind().empty().hide();
-    });
   });
   return false;
 });
@@ -76,12 +74,16 @@ $( function () {
     $('#seed-preview').hide();
     $('form').show();
     initRegisterSeed();
+    $("#modal").find('.modal-header').show();
+
     $('#modal').modal('show');
   });
 
   $('#modal').on('click', '#seed-preview button', function(){
     $('#seed-preview').hide();
     initRegisterSeed();
+    $("#modal").find('.modal-header').show();
+
     $('form').show();
   });
 

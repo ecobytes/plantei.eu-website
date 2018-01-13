@@ -17,10 +17,8 @@
         {{/each}}
       </div>
     </div>
-    {{#if farming}}
-    <div class="col-md-6">
+    <div class="col-md-6"{{#unless seed.months}} style="display: none;"{{/unless}}>
       <h2>{{messages.farming}}</h2>
-      {{#if months}}
       <div  data-name="months" class="col-md-6" style="padding-top: 24px">
         <table class="table table-bordered" style="border-color: black;">
           <thead>
@@ -31,16 +29,14 @@
           </thead>
           <tbody style="border-color: black;">
             <tr style="height: 32px;">
-              {{#each months}}
-              <td{{#if month}} style="background-color: rgb(243, 234, 59)"{{/if}}></td>
+              {{#each monthstable}}
+              <td{{#if this}} style="background-color: rgb(243, 234, 59)"{{/if}}></td>
               {{/each}}
             </tr>
           </tbody>
         </table>
       </div>
-      {{/if}}
     </div>
-    {{/if}}
     <div class="col-md-6" style="padding-top: 24px">
       {{#if seed.latin_name}}
       <p>{{../messages.latin_name}}: <strong data-name="latin_name" data-parent="p"> {{seed.latin_name}}</strong></p>

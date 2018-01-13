@@ -69,7 +69,27 @@ function getMoonPhase(year, month, day)
 
 var previewseed = function (parameters, data){
 
+  $("#modal").find('.modal-header').hide();
+
   let pdiv = $('#seed-preview');
+
+  let setupMonths = function (){
+    let monthsTr = pdiv.find('tbody td');
+
+    monthsTr.each(function(i, el){
+      el.style = "";
+    });
+
+    if (data.months.length) {
+      pdiv.find('[data-name="months"]').parent('div').show();
+      data.months.forEach(function (month) {
+        monthsTr[month.month - 1].style = "background-color: rgb(243, 234, 59)"
+      });
+    } else {
+      pdiv.find('[data-name="months"]').parent('div').hide();
+    }
+
+  };
 
   let setupField = function (v) {
     if ( (v.type != 'textarea') && ( v.type) ) {
@@ -85,6 +105,10 @@ var previewseed = function (parameters, data){
               image + '</div>';
             $('.pictures').append(pictureDiv);
         });
+      }
+      //console.log(v.name);
+      if ( v.name == 'months[]' ) {
+        setupMonths();
       }
       return;
     }
@@ -114,7 +138,13 @@ var previewseed = function (parameters, data){
  */
 
 var clearform = function() {
-  console.log('clearform');
+  //console.log('clearform');
+ $("#modal").find('.modal-header').show().find('.modal-title').text(Lang.get("seedbank::messages.add_new_seed"));
+ $('form .form-group.has-error').removeClass('has-error').find('.help-block').empty()
+ if (! $('#identification').hasClass('in')){
+   $('#identification').collapse('show');
+ };
+
  $('form').find('input').each(function (i) {
    if ( this.name == '_token') {
      return;
@@ -140,6 +170,9 @@ var clearform = function() {
 };
 
 var populateform = function(parameters, data) {
+  if (data.common_name){
+    $("#modal").find('.modal-header').show().find('.modal-title').text(Lang.get("seedbank::messages.change") + " - " + data.common_name);
+  }
 
  let setCheckbox = function (n, v) {
    //console.log(n);
@@ -241,6 +274,7 @@ var populateform = function(parameters, data) {
      return;
 
    }
+   console.log("name: " + p.name + "; value: " + getFieldValues(p, data));
    $('form')
      .find('input[name="' + p.name + '"]')
      .val(getFieldValues(p, data));
@@ -248,12 +282,15 @@ var populateform = function(parameters, data) {
 
  let getFieldValues = function(p, data) {
    // {"name": "species", "value": "species.name"},
+   //console.log("value: " + p.value)
    var fields = p.value.split('.');
+
 
    if ( fields.length === 1 ) {
      if (! data[fields[0]]) {
        return "";
      }
+     //console.log("data: " + data[fields[0]]);
      return data[fields[0]];
    };
 
@@ -279,7 +316,7 @@ var populateform = function(parameters, data) {
    }
    return data[fields[0]][fields[1]];
  };
-console.log('populate form');
+//console.log('populate form');
  $.each(parameters, function (i, v) {
    setInputfields(v);
  });

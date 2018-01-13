@@ -1,14 +1,15 @@
 {{> formErrors}}
 {{#if seed}}
-<div class="col-md-12 text-center">
-  <h1>{{#if update}}{{messages.update}}{{else}}{{messages.registernew}}{{/if}} {{messages.seed}}</h1>
+<div class="modal-header text-center" style="display: none;">
+  <!-- col-md-12 text-center" -->
+  <h1 class="modal-title">{{#if oldInput.common_name}}{{messages.update}} - {{oldInput.common_name}}{{/if}}</h1>
 </div>
 {{/if}}
 {{> seedpreview }}
 <form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/seedbank/register" {{#if preview}}style="display: none;"{{/if}}>
   <input type="hidden" name="_token" value="{{ csrfToken }}">
   <input type="hidden" name="_id" value="{{ oldInput.id }}">
-  <input type="hidden" name="seed_id" value="{{ oldInput.seed_id }}">
+  <input type="hidden" name="seed_id" value="{{ oldInput.id }}">
   <div class="row">
   <div class="col-md-12">
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="color: black;">
@@ -69,7 +70,7 @@
       <div class="panel panel-default"><!-- Accordion Pictures -->
         <div class="panel-heading" role="tab" id="headingPictures">
           <h4 class="panel-title">
-            <a style="color: black;" role="button" data-toggle="collapse" href="#pictures" aria-expanded="true" aria-controls="collapsePictures">
+            <a style="color: black;" role="button" data-toggle="collapse" href="#pictures" aria-expanded="false" aria-controls="collapsePictures">
               {{../messages.pictures}}
             </a>
           </h4>
@@ -105,7 +106,7 @@
       <div class="panel panel-default"><!-- Accordion Farming -->
         <div class="panel-heading" role="tab" id="headingFarming">
           <h4 class="panel-title">
-            <a style="color: black;" role="button" data-toggle="collapse" href="#farming" aria-expanded="true" aria-controls="collapseFarming">
+            <a style="color: black;" role="button" data-toggle="collapse" href="#farming" aria-expanded="false" aria-controls="collapseFarming">
               {{../messages.farming}}
             </a>
           </h4>
@@ -143,45 +144,45 @@
             <label class="control-label">{{../messages.farmingmonths}}</label>
             <div class="form-group">
               <span class="cell btn-group"  data-toggle="buttons" >
-                <label class="btn btn-default {{#if months.1}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.1}}checked{{/if}} value="1" /> {{../messages.monthjan}}
+                <label class="btn btn-default {{#if monthstable.0}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if months.0}}checked{{/if}} value="1" /> {{../messages.monthjan}}
                 </label>
-                <label class="btn btn-default {{#if months.2}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.2}}checked{{/if}} value="2" /> {{../messages.monthfeb}}
+                <label class="btn btn-default {{#if monthstable.1}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.1}}checked{{/if}} value="2" /> {{../messages.monthfeb}}
                 </label>
-                <label class="btn btn-default {{#if months.3}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.3}}checked{{/if}} value="3" /> {{../messages.monthmar}}
+                <label class="btn btn-default {{#if monthstable.2}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.2}}checked{{/if}} value="3" /> {{../messages.monthmar}}
                 </label>
-                <label class="btn btn-default {{#if months.4}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.4}}checked{{/if}} value="4" /> {{../messages.monthapr}}
+                <label class="btn btn-default {{#if monthstable.3}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.3}}checked{{/if}} value="4" /> {{../messages.monthapr}}
                 </label>
-                <label class="btn btn-default {{#if months.5}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.5}}checked{{/if}} value="5" /> {{../messages.monthmay}}
+                <label class="btn btn-default {{#if monthstable.4}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.4}}checked{{/if}} value="5" /> {{../messages.monthmay}}
                 </label>
-                <label class="btn btn-default {{#if months.6}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.6}}checked{{/if}} value="6" /> {{../messages.monthjun}}
+                <label class="btn btn-default {{#if monthstable.5}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.5}}checked{{/if}} value="6" /> {{../messages.monthjun}}
                 </label>
               </span>
             </div>
             <div class="form-group">
               <span class="cell btn-group"  data-toggle="buttons">
-                <label class="btn btn-default {{#if months.7}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.7}}checked{{/if}} value="7" /> {{../messages.monthjul}}
+                <label class="btn btn-default {{#if monthstable.6}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.6}}checked{{/if}} value="7" /> {{../messages.monthjul}}
                 </label>
-                <label class="btn btn-default {{#if months.8}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.8}}checked{{/if}} value="8" /> {{../messages.monthaug}}
+                <label class="btn btn-default {{#if monthstable.7}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.7}}checked{{/if}} value="8" /> {{../messages.monthaug}}
                 </label>
-                <label class="btn btn-default {{#if months.9}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.9}}checked{{/if}} value="9" /> {{../messages.monthsep}}
+                <label class="btn btn-default {{#if monthstable.8}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.8}}checked{{/if}} value="9" /> {{../messages.monthsep}}
                 </label>
-                <label class="btn btn-default {{#if months.10}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.10}}checked{{/if}} value="10" /> {{../messages.monthoct}}
+                <label class="btn btn-default {{#if monthstable.9}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.9}}checked{{/if}} value="10" /> {{../messages.monthoct}}
                 </label>
-                <label class="btn btn-default {{#if months.11}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.11}}checked{{/if}} value="11" /> {{../messages.monthnov}}
+                <label class="btn btn-default {{#if monthstable.10}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.10}}checked{{/if}} value="11" /> {{../messages.monthnov}}
                 </label>
-                <label class="btn btn-default {{#if months.12}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if months.12}}checked{{/if}} value="12" /> {{../messages.monthdec}}
+                <label class="btn btn-default {{#if monthstable.11}}active{{/if}}">
+                  <input type="checkbox" name="months[]" {{#if monthstable.11}}checked{{/if}} value="12" /> {{../messages.monthdec}}
                 </label>
               </span>
             </div>
@@ -191,7 +192,7 @@
       <div class="panel panel-default"><!-- Accordion Characteristics -->
         <div class="panel-heading" role="tab" id="headingCharacteristics">
           <h4 class="panel-title">
-            <a style="color: black;" role="button" data-toggle="collapse" href="#characteristics" aria-expanded="true" aria-controls="collapseCharacteristics">
+            <a style="color: black;" role="button" data-toggle="collapse" href="#characteristics" aria-expanded="false" aria-controls="collapseCharacteristics">
               {{../messages.taxonomy}}
             </a>
           </h4>
@@ -225,7 +226,7 @@
       <div class="panel panel-default" style="display: none;"><!-- Accordion Confirmation -->
         <div class="panel-heading" role="tab" id="headingConfirmation">
           <h4 class="panel-title">
-            <a style="color: black;" role="button" data-toggle="collapse" href="#confirmation" aria-expanded="true" aria-controls="collapseConfirmation">
+            <a style="color: black;" role="button" data-toggle="collapse" href="#confirmation" aria-expanded="false" aria-controls="collapseConfirmation">
               {{messages.confirmationregister}}
             </a>
           </h4>
