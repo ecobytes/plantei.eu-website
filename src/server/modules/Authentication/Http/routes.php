@@ -17,11 +17,8 @@ foreach($languages as $l){
 		$lang[] = $l;
 	}
 }
-$lang[] = "es";
-$lang[] = "el";
 
 \View::share('langs', $lang);
-
 
 Route::group(array('prefix' => $locale), function(){
 
