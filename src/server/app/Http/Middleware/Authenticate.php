@@ -54,14 +54,16 @@ class Authenticate {
 
     $lang[] = $locale;
     foreach(config('app.availableLanguages') as $l) {
-      if (! $l == $locale ){
+      if ( $l != $locale ){
         $lang[] = $l;
       }
     }
+    $lang[] = 'Outro';
 
     \App::setLocale($locale);
-    \View::share('lang', $lang);
+    \View::share('langs', $lang);
     \View::share('langString', $locale);
+    \View::share('urls', ['logout' => route('logout',[],false)]);
     \View::share('admin', $user->is_admin());
     \View::share('username', $user->name);
     \View::share('menu', \Lang::get('seedbank::menu'));

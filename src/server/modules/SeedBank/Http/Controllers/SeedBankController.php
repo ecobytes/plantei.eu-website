@@ -218,7 +218,7 @@ class SeedBankController extends Controller {
     }
     if ($seed) {
       $seed->load(['months', 'species', 'variety', 'family', 'pictures']);
-      foreach ( $myseed->months as $month) {
+      foreach ( $seed->months as $month) {
         $monthsTable[$month->month - 1] = true;
       }
     };

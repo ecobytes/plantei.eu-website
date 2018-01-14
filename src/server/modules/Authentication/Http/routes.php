@@ -20,6 +20,16 @@ foreach($languages as $l){
 
 \View::share('langs', $lang);
 
+Route::group(['prefix' => 'auth', 'namespace' => 'Modules\Authentication\Http\Controllers'], function()
+{
+	Route::get('/logout', 'AuthController@getLogout')->name('logout');
+	Route::group(['middleware' => 'csrf'], function(){
+		Route::post('/register', 'AuthController@postRegister')->name('register');
+		Route::post('/login', 'AuthController@postLogin')->name('login');
+	});
+});
+
+
 Route::group(array('prefix' => $locale), function(){
 
 	Route::group(['prefix' => 'auth', 'namespace' => 'Modules\Authentication\Http\Controllers'], function()
