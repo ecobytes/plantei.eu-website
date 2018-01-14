@@ -58,7 +58,6 @@ class Authenticate {
         $lang[] = $l;
       }
     }
-    $lang[] = 'Outro';
 
     \App::setLocale($locale);
     \View::share('langs', $lang);
