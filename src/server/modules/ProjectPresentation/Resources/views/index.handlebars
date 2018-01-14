@@ -3,10 +3,14 @@
   <div class="intro-box container-fluid">
     <div class="lang">
       <p class="langbtn">
-      pt
-      <span class="caret"></span></p>
+          {{ langs.0 }}<span class="caret"></span>
+      </p>
       <div class="lang-choices">
-      <a href="/en">en</a>
+        {{#each langs}}
+          {{#unless @first}}
+        <a href="/{{ this }}">{{ this }}</a>
+        {{/unless}}
+      {{/each}}
       </div>
     </div>
     <div class="row align-middle">

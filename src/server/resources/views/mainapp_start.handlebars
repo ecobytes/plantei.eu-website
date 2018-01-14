@@ -12,9 +12,14 @@
         <li class="navbar-right">
           <div style="text-align: center;">
             <div class="lang text-center">
-              <p class="langbtn">pt<span class="caret"></span></p>
+              <p class="langbtn">
+                {{langs.0}}<span class="caret"></span></p>
               <div class="lang-choices">
-                <a href="/en">en</a>
+                {{#each langs}}
+                  {{#unless @first}}
+                <a href="/{{ this }}">{{ this }}</a>
+                  {{/unless}}
+                {{/each}}
               </div>
             </div>
             <a href="/auth/logout"><img class="img-responsive" src="/images/logout.svg" width=100px>

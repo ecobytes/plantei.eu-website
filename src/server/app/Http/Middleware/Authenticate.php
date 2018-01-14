@@ -52,8 +52,15 @@ class Authenticate {
       $locale = config('app.locale');
     }
 
+    $lang[] = $locale;
+    foreach(config('app.availableLanguages') as $l) {
+      if (! $l == $locale ){
+        $lang[] = $l;
+      }
+    }
+
     \App::setLocale($locale);
-    \View::share('lang', [$locale => true]);
+    \View::share('lang', $lang);
     \View::share('langString', $locale);
     \View::share('admin', $user->is_admin());
     \View::share('username', $user->name);
