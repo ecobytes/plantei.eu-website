@@ -44,7 +44,7 @@ return [
     'medicine' => 'Fins terapeuticos',
     'delete' => 'Apagar',
     'farming' => 'Cultivo',
-    'seed' => 'semente',
+    'seed' => 'Semente|Sementes',
     'registernew' => 'Regista nova',
     'update' => 'Actualiza',
     'sitecollected' => 'Local da recolha',

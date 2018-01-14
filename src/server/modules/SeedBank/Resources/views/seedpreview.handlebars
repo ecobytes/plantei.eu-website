@@ -54,9 +54,15 @@
   </div>
   <div class="row" style="padding-top: 24px; padding-bottom:24px">
     <div class="col-md-12">
+      {{#if viewonly }}
+      <button type="button" class="btn btn-danger btn-lg center-block">
+        {{messages.close}}
+      </button>
+      {{ else }}
       <button type="button" class="btn btn-warning btn-lg center-block">
         {{messages.change}}
       </button>
+      {{/if}}
       <!-- button type="button" class="btn btn-primary btn-lg">
         {{messages.confirm}}
       </button -->

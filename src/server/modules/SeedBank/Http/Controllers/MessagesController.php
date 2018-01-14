@@ -37,6 +37,7 @@ class MessagesController extends Controller {
     $view = view('seedbank::messenger', compact('threads', 'contacts', 'part'))
       ->with('active', ['messages' => true])
       ->with('modal', true)
+      ->with('modal_content', ' ')
       ->with('bodyId', 'mainapp');
 
     $message_id = $request->input('message_id', null);

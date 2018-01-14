@@ -37,7 +37,7 @@ $('form').on('submit', function (){
         "?seed_id=" + data.id;
     }
     return false;
-    
+
     //console.log(data);
     previewseed(parameters, data);
 
@@ -51,7 +51,7 @@ $( function () {
 
 
 
-  $('tbody tr').on('click', function () {
+  $('.seeds tbody tr').on('click', function () {
     var seed_id = $(this).data('seed_id');
     $.get("/seedbank/seedm/" + seed_id, function (data) {
       if (data.length == 0){

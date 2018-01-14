@@ -83,7 +83,7 @@ var previewseed = function (parameters, data){
     if (data.months.length) {
       pdiv.find('[data-name="months"]').parent('div').show();
       data.months.forEach(function (month) {
-        monthsTr[month.month - 1].style = "background-color: rgb(243, 234, 59)"
+        monthsTr[parseInt(month.month) - 1].style = "background-color: rgb(243, 234, 59)"
       });
     } else {
       pdiv.find('[data-name="months"]').parent('div').hide();
@@ -95,8 +95,9 @@ var previewseed = function (parameters, data){
     if ( (v.type != 'textarea') && ( v.type) ) {
       if (v.type == 'file' ) {
         $('.pictures').empty();
-        //console.log(v);
-        //console.log(data);
+        if (! data[v.value.replace('[]', '')]) {
+          return false;
+        }
         data[v.value.replace('[]','')].forEach(
           function(img){
             var image = '<img class="img-responsive img-rounded cell" data-file-id="'
@@ -107,8 +108,11 @@ var previewseed = function (parameters, data){
         });
       }
       //console.log(v.name);
-      if ( v.name == 'months[]' ) {
+      if ( v.name == 'months[]' && data.months ) {
         setupMonths();
+      }
+      if (! data.months) {
+        pdiv.find('[data-name="months"]').parent('div').hide();
       }
       return;
     }
@@ -145,23 +149,24 @@ var clearform = function() {
    $('#identification').collapse('show');
  };
 
- $('form').find('input').each(function (i) {
-   if ( this.name == '_token') {
+ $('form').find('input').each(function (i, el) {
+   if ( el.name == '_token') {
      return;
    }
-   if ( (this.type == 'checkbox') ||
-        (this.type == 'radio') ) {
-     let $parent = $(this).closest('label');
-     $(this).removeProp('checked');
+   if ( (el.type == 'checkbox') ||
+        (el.type == 'radio') ) {
+     let $parent = $(el).closest('label');
+     //console.log(el.type);
+     $(el).prop('checked', false);
      $parent.removeClass('active');
      return;
    }
-   if (this.type == 'file') {
+   if (el.type == 'file') {
      $('#fileupload').off();
      $('#files').empty();
      return;
    }
-   $(this).val("");
+   $(el).val("");
  });
  $('form').find('textarea').each(function (i) {
    tinymce.activeEditor.setContent("");
@@ -175,8 +180,8 @@ var populateform = function(parameters, data) {
   }
 
  let setCheckbox = function (n, v) {
-   console.log(n);
-   console.log(v);
+   //console.log(n);
+   //console.log(v);
    let inputG = $('input[name="' + n + '"]')[0];
    if ( ! inputG ) { return; };
    var parent = inputG.closest('[data-toggle="buttons"]');
@@ -189,13 +194,13 @@ var populateform = function(parameters, data) {
      }
      vs.forEach( function(e) {
        //console.log(parent);
-       console.log(e);
+       //console.log(e);
        if ( e.constructor === Boolean ) {
          if ( e ) { e = 1; } else { e = 0; }
        }
        $input = $(parent)
          .find('input[value="' + e + '"]');
-       console.log($input);
+       //console.log($input);
        if ( ! $input.length ) {
          parent = $(parent.parentElement)
            .next('.form-group')
@@ -275,7 +280,7 @@ var populateform = function(parameters, data) {
      return;
 
    }
-   console.log("name: " + p.name + "; value: " + getFieldValues(p, data));
+   //console.log("name: " + p.name + "; value: " + getFieldValues(p, data));
    $('form')
      .find('input[name="' + p.name + '"]')
      .val(getFieldValues(p, data));

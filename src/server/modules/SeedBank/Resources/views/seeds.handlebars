@@ -1,15 +1,15 @@
 {{> mainapp_start}}
     <div class="row">
-      <h1>SEMENTES</h1>
+      <h1>{{lang 'seedbank::messages.seed'}}s</h1>
     </div>
     <div class="row content seeds">
       {{# each paginated.data }}
       <div class="col-sm-4">
-        <div>
+        <div data-seed_id="{{id}}">
         <img class="responsive" style="width: 100px; float:left; display:block;margin-right:12px;" src="{{#if pictures}}{{pictures.0.url}}{{else}}/images/planteieulogocinza.png{{/if}}" alt="">
                 <p style="font-weight: bold; font-size:14px;">{{common_name}}</p>
                 <p style="font-style: oblique;">{{latin_name}}</p>
-                <p style="font-style: oblique;">Família: {{family.name}}</p>
+                <p style="font-style: oblique;">{{../messages.family}}: {{family.name}}</p>
         </div>
       </div>
       {{ else }}
@@ -18,18 +18,44 @@
     </div>
     {{> mainapp_end}}
 
+    <script src="/js/utils.js"></script>
+
 <script>
-$('#seeds tr').on('click', function () {
+{{#if modal }}
+$("#modal").modal('show');
+{{/if}}
+let parameters = [
+  {"name": "seed_id", "value": "id"},
+  {"name": "_id", "value": "id"},
+  {"name": "common_name", "value": "common_name"},
+  {"name": "local", "value": "local"},
+  {"name": "year", "value": "year"},
+  {"name": "public", "value": "public", "type": "checked"},
+  {"name": "description", "value": "description", "type": "textarea"},
+  {"name": "pictures[]", "value": "pictures[]", "type": "file" },
+  {"name": "latin_name", "value": "latin_name"},
+  {"name": "species", "value": "species.name"},
+  {"name": "species_id", "value": "species.id"},
+  {"name": "family", "value": "family.name"},
+  {"name": "family_id", "value": "family.id"},
+  {"name": "variety", "value": "variety.name"},
+  {"name": "variety_id", "value": "variety.id"},
+  {"name": "months[]", "value": "months[].month", "type": "checked"},
+  {"name": "available", "value": "available", "type": "checked"},
+  {"name": "polinization", "value": "polinization", "type": "checked"},
+  {"name": "direct", "value": "direct", "type": "checked"}
+];
+$('.seeds div.col-sm-4 div').on('click', function () {
   //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
   var seed_id = $(this).data('seed_id');
-  $.get("/seedbank/seedm/" + seed_id, function (data) {
+  $.get("/seedbank/seed/" + seed_id, function (data) {
+    //console.log(data)
     if (data.length == 0){
       return false;
     }
-    $('#info_modal .modal-content').empty();
-    $('#info_modal .modal-content').append(data);
-
-    $('#info_modal').modal('show');
+    previewseed(parameters, data);
+    $('#seed-preview').show();
+    $('#modal').modal('show');
   });
 }).mouseover(function () {
   $(this).addClass('active');
@@ -37,7 +63,13 @@ $('#seeds tr').on('click', function () {
   $(this).removeClass('active');
 });
 
-$('#info_modal').on('click', '.modal-footer .footer-left button', function(){
+$('#modal').on('click', '#seed-preview button', function(){
+  $('#modal').modal('hide');
+
+});
+
+
+/*$('#info_modal').on('click', '.modal-footer .footer-left button', function(){
   var seed_id = $('#info_modal .modal-title').data("seed_id");
   window.open('/seedbank/register/' + seed_id, '_self');
 });

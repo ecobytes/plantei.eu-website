@@ -103,11 +103,8 @@ class SeedBankController extends Controller {
     $myseed = $myseed ?: "";
     if ($myseed){
       $myseed->load(['months', 'species', 'variety', 'family', 'pictures']);
-      foreach (range(0, 11) as $number) {
-        $monthsTable[$number] = false;
-        if ( $myseed->months->where('month', $number + 1)->count() ) {
-          $monthsTable[$number] = true;
-        }
+      foreach ( $myseed->months as $month) {
+        $monthsTable[$month->month - 1] = true;
       }
     };
 
@@ -196,11 +193,11 @@ class SeedBankController extends Controller {
     return $view;
   }
 
-  public function getAllSeeds()
+  public function getAllSeeds(Request $request)
   {
     // View for seeds
     $user = \Auth::user();
-    $seeds = \Caravel\Seed::where('public', true)->orderBy('updated_at', 'desc');
+    $seeds = \Caravel\Seed::where('user_id', '<>', $user->id)->where('public', true)->orderBy('updated_at', 'desc');
     //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
     //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
     $paginated = $seeds->paginate(15)->setPath('/seedbank/seeds');
@@ -211,11 +208,38 @@ class SeedBankController extends Controller {
       $seed->load('pictures');
     }
     $part = [ 'myseeds' => true ];
-    return view('seedbank::seeds', compact('part'))
+
+    $seed_id = $request->input('seed_id', null);
+    $seed = \Caravel\Seed::find($seed_id);
+
+    $monthsTable = [];
+    foreach (range(0, 11) as $number) {
+      $monthsTable[$number] = false;
+    }
+    if ($seed) {
+      $seed->load(['months', 'species', 'variety', 'family', 'pictures']);
+      foreach ( $myseed->months as $month) {
+        $monthsTable[$month->month - 1] = true;
+      }
+    };
+
+    $modal_content = view('seedbank::seedpreview')
+      ->with('preview', true)
+      ->with('seed', $seed )
+      ->with('monthstable', $monthsTable)
+      ->with('messages', \Lang::get('seedbank::messages'))
+      ->with('viewonly', true)
+      ->with('csrfToken', csrf_token())->render();
+
+
+
+    return view('seedbank::seeds', compact('part', 'modal_content'))
       ->with('pagination', \Lang::get('pagination'))
       ->with('paginated', $paginated)
+      ->with('messages', \Lang::get('seedbank::messages'))
       ->with('links', $paginated->render())
       //->with('myseeds', $seeds->get())
+      ->with('modal', ($seed) )
       ->with('bodyId', 'mainapp')
       ->with('active', ['seeds' => true]);
   }

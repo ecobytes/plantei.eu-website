@@ -24,11 +24,19 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
       $seed = \Caravel\Seed::findOrFail($id);
       if (($seed->public) && ($seed->user_id != $user->id))
       {
-        $seed->variety;
+        $seed->load(
+          ['variety', 'species', 'family', 'months']
+        );
+        if ($seed->pictures->count()){
+          $picture = $seed->pictures->first();
+        } else {
+          $picture = false;
+        }
+        /*$seed->variety;
         $seed->species;
         $seed->family;
         $seed->cookings();
-        $seed->medicines();
+        $seed->medicines();*/
 
         return $seed;
       }
