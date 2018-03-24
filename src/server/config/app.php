@@ -214,6 +214,6 @@ return [
 
 	],
 
-	'availableLanguages' => ['en', 'pt'],
+	'availableLanguages' => ['pt', 'en'],
 	'availableLanguagesFull' => ['en' => 'English', 'pt' => 'Português'],
 ];

@@ -10,6 +10,15 @@ export NVM_DIR="/home/vagrant/.nvm"
 # Install node
 nvm install v6.12.0
 
+# Check fo cached npm and composer files
+if [ -f /vagrant/cache/npm_cache.tar ]; then
+  tar xf /vagrant/cache/npm_cache.tar -C /
+fi
+
+if [ -f /vagrant/cache/composer_cache.tar ]; then
+  tar xf /vagrant/cache/composer_cache.tar -C /
+fi
+
 # Install bower
 npm install -g bower
 

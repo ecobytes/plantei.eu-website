@@ -78,27 +78,27 @@
         <div id="pictures" class="panel-collapse collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="headingPictures">
           <div class="panel-body">
             <div class="form-group">
-            <span class="btn btn-success fileinput-button">
-              <i class="glyphicon glyphicon-plus"></i>
-              <span>Adiciona imagens...</span>
-              <!-- The file input field used as target for the file upload widget -->
-              <input id="fileupload" type="file" name="pictures[]" multiple>
-            <br>
-            <br>
-            <!-- The global progress bar -->
-            <div id="progress" class="progress" style="display:none;">
-            </span>
-              <div class="progress-bar progress-bar-success"></div>
-            </div>
-            <!-- The container for the uploaded files -->
-            <div id="files" class="files">
-              {{#each pictures}}
-              <div class="col-md-4" style="padding-bottom: 24px;">
-                <img src="{{url}}" alt="{{label}}" data-file-id="{{id}}" class="img-responsive img-rounded cell">
-                <button type="button" class="btn btn-danger delete" data-type="GET" data-md5sum="{{md5sum}}" data-delete-url="/seedbank/pictures/delete/{{id}}">{{../../messages.delete}}</button>
-              </div>
-              {{/each}}
-            </div>
+              <span class="btn btn-success fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>Adiciona imagens...</span>
+                <!-- The file input field used as target for the file upload widget -->
+                <input id="fileupload" type="file" name="pictures[]" multiple>
+                <br>
+                <br>
+                <!-- The global progress bar -->
+                <div id="progress" class="progress" style="display:none;">
+                  <div class="progress-bar progress-bar-success"></div>
+                </div>
+                <!-- The container for the uploaded files -->
+                <div id="files" class="files">
+                  {{#each pictures}}
+                  <div class="col-md-4" style="padding-bottom: 24px;">
+                    <img src="{{url}}" alt="{{label}}" data-file-id="{{id}}" class="img-responsive img-rounded cell">
+                    <button type="button" class="btn btn-danger delete" data-type="GET" data-md5sum="{{md5sum}}" data-delete-url="/seedbank/pictures/delete/{{id}}">{{../../messages.delete}}</button>
+                  </div>
+                  {{/each}}
+                </div>
+              </span>
             </div>
           </div>
         </div>
