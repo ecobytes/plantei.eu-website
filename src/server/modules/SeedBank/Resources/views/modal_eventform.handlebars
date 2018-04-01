@@ -1,0 +1,79 @@
+{{> formErrors}}
+{{#if event}}
+<div class="modal-header text-center">
+  <!-- col-md-12 text-center" -->
+  <h1 class="modal-title">{{#if oldInput.title}}{{messages.update}} - {{oldInput.title}}{{else}}!!NOVO EVENTO!!{{/if}}</h1>
+</div>
+{{/if}}
+{{> modal_eventpreview }}
+<div id="event-form" class="col-md-8 col-md-offset-2" style="display: none;">
+  <form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/seedbank/register">
+    <input type="hidden" name="_token" value="{{ csrfToken }}">
+    <input type="hidden" name="_id" value="{{ oldInput.id }}">
+    <input type="hidden" name="event_id" value="{{ oldInput.id }}">
+    {{#with oldInput }}
+    <div class="row">
+      <div class="form-group">
+        <div class="col-md-2">
+          <label class="control-label">{{../messages.title}}*<label>
+        </div>
+        <div class="col-md-10">
+          <span class="cell">
+            <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="title" value="{{title}}" autocomplete="off">
+            <span class="help-block"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+      <div class="col-md-2">
+        <div class="form-group">
+          <label class="control-label">{{../messages.location}}</label>
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div class="form-group">
+          <span class="cell">
+            <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="location" value="{{location}}" autocomplete="off">
+            <span class="help-block"></span>
+          </span>
+        </div>
+        <div class="form-group">
+          <span class="cell">
+            <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="address" value="{{address}}" autocomplete="off">
+            <span class="help-block"></span>
+          </span>
+        </div>
+        <div class="form-group">
+          <span class="cell">
+            <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="postal" value="{{postal}}" autocomplete="off">
+            <span class="help-block"></span>
+          </span>
+        </div>
+      </div>
+      </div>
+      <div class="col-md-4">
+        <p>TIPO de EVENTO</p>
+      </div>
+    </div>
+    <div class="row">
+      <span class="cell">
+        <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{../messages.description}}" name="description">{{description}}</textarea>
+      </span>
+    </div>
+    {{/with}}
+    <div class="row">
+      <div class="form-group lmt">
+        <div class="col-md-12 text-center">
+          <button type="button" class="btn btn-danger btn-lg" id="cancel_seed">
+            {{messages.registercancel}}
+          </button>
+          <button type="submit" class="btn btn-primary btn-lg">
+            {{#if update}}{{messages.updateseed}}{{ else }}{{messages.registerseed}}{{/if}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -34,16 +34,37 @@ $(function () {
       $(this).removeClass('active');
     });
 
-  $('#calendar').fullCalendar({
+  $('#calendar-horta').fullCalendar({
     // put your options and callbacks here
     defaultView: 'month',
-    header: false,
+    header: { left: false, right: false, center: "prev title next"},
     themeSystem: 'bootstrap3',
-    //contentHeight: 400,
+    contentHeight: 'auto',
+    fixedWeekCount: false,
     lang: "pt",
     timeFormat: 'HH:mm',
+    viewRender: function (view, el) {
+      $.each($("#calendar-horta .fc-content-skeleton thead td"),
+        function (index, el) {
+          //if ( ! $(el).hasClass('fc-other-month') ) {
+            let dd = $(el).data('date').split('-');
+            let image = getMoonPhase(parseInt(dd[0]), parseInt(dd[1]), parseInt(dd[2]));
+            el.innerHTML += '<br/><img src="' + image + '" width=25px>';
+          //}
+        }
+      );
+    },
+
     eventClick: function(calEvent, jsEvent, view) {
-      window.open('/events?id=' + calEvent.id, '_self')
+      console.log(calEvent);
+      $.get("/events/get/" + calEvent.id, function (data) {
+        if (data.length == 0){
+          return false;
+        }
+        $('#event_info .modal-content').empty();
+        $('#event_info .modal-content').append(data);
+        $('#event_info').modal('show');
+      });
     },
     eventSources: [
       {

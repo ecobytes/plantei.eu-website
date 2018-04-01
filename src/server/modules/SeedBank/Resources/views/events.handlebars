@@ -6,111 +6,23 @@
   <div id='mycalendar'></div>
 </div>
 {{> mainapp_end}}
-{{>scripts}}
 <script type="text/javascript" src="/js/fullcalendar/moment.min.js"></script>
 <script type="text/javascript" src="/js/fullcalendar/fullcalendar.min.js"></script>
 <script type="text/javascript" src="/js/fullcalendar/lang/pt.js"></script>
 <script type="text/javascript" src="/js/utils.js"></script>
+<script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="/js/event_scripts.js"></script>
+
 <script>
+
 $(document).ready(function() {
   // page is now ready, initialize the calendar...
-  $('#mycalendar').fullCalendar({
-    // put your options and callbacks here
-    //defaultView: 'agendaWeek',
-    themeSystem: 'bootstrap3',
-    contentHeight: 400,
-    fixedWeekCount: false,
-    lang: "pt",
-    timeFormat: 'HH:mm',
-    viewRender: function (view, el) {
-      $.each($("#mycalendar .fc-content-skeleton thead td"),
-        function (index, el) {
-          if ( ! $(el).hasClass('fc-other-month') ) {
-            let dd = $(el).data('date').split('-');
-            let image = getMoonPhase(parseInt(dd[0]), parseInt(dd[1]), parseInt(dd[2]));
-            el.innerHTML = '<img src="' + image + '" width=15px>' + el.innerHTML;
-          }
-        }
-      );
-    },
-    eventClick: function(calEvent, jsEvent, view) {
-      $.get("/events/get/" + calEvent.id, function (data) {
-        if (data.length == 0){
-          return false;
-        }
-        $('#modal .modal-content').empty();
-        $('#modal .modal-content').append(data);
-        $('#modal').modal('show');
-      });
-
-    },
-    dayClick: function (date, ev, view){
-      if ( ( ! ( $(ev.target).hasClass('fc-today') ||
-          $(ev.target).hasClass('fc-future') ) )
-          || ( $(ev.target).hasClass('fc-other-month')) )  {
-        return;
-      }
-      $('#modal .modal-content').empty();
-      $('#modal .modal-content').append(
-        '<div class="modal-header"> \
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"> \
-            <span aria-hidden="true"> \
-              &times; \
-            </span> \
-          </button> \
-          <h1 class="modal-title">Um novo evento <span>' + date.toString() + '</span></h1> \
-        </div> \
-        <div class="modal-body"> \
-          <form> \
-            <div class="row"> \
-              <div class="col-md-6"> \
-                <p>Starting at: {{event.start}}</p> \
-              </div> \
-              <div class="col-md-6"> \
-                <p>Ending at: {{event.end}}</p> \
-              </div> \
-            </div> \
-            <div class="row"> \
-              <div class="col-md-6"> \
-                <p>Categoria: {{event.category}}</p> \
-                <input name="title"> \
-              </div> \
-            </div> \
-            <div class="row"> \
-              <div class="col-md-6"> \
-                <p>Location: {{event.location}}</p> \
-              </div> \
-            </div> \
-            <div class="row"> \
-              <div class="col-md-6"> \
-                <p>Address: {{event.address}}</p> \
-              </div> \
-            </div> \
-            <div class="row"> \
-              <div class="col-md-6"> \
-                <p>Description:</p> \
-                {{{event.description}}} \
-              </div> \
-            </div> \
-          </form> \
-        </div> \
-        <div class="modal-footer"> \
-        </div>'
-      );
-      $('#modal').modal('show');
-      $('#mycalendar').fullCalendar('renderEvent',
-        {id: 123456, title: "O título", color: "red", start: date},
-        true);
-    },
-    eventSources: [
-    {
-      url: '/api/calendar',
-      type: 'POST',
-      color: 'yellow',
-      textColor: 'black'
-    }
-    ],
-  });
+  /*let default_event_id = parseInt(findGetParameter('id'));
+  console.log(default_event_id);
+  if (default_event_id) {
+    var event = $("#mycalendar").fullCalendar('clientEvents', default_event_id)[0];
+    console.log(event);
+  };*/
 });
 </script>
 {{>footer}}

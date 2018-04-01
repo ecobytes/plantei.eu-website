@@ -22,7 +22,7 @@
                 {{/each}}
               </div>
             </div>
-            <a href="{{ urls.logout}}""><img class="img-responsive" src="/images/logout.svg" width=100px>
+            <a href="{{ urls.logout}}"><img class="img-responsive" src="/images/logout.svg" width=100px>
             </a>
           </div>
         </li>
@@ -64,7 +64,7 @@
   </nav>
 </div>
 <!-- End Horizontal Menu -->
-<div class="container-fluid">
+<div class="container-fluid" style="padding-bottom: 15px">
   <div class="row main">
     <!-- Vertical Left Menu -->
     <nav class="side-nav">
@@ -73,7 +73,7 @@
           <li{{#if active.home}} class="active"{{/if}}><a class="iconified home" href="/seedbank"></a></li>
           <li{{#if active.myseeds}} class="active"{{/if}}><a class="iconified seed" href="/seedbank/myseeds"></a></li>
           <li{{#if active.messages}} class="active"{{/if}}><a class="iconified mess" href="/messages"></a></li>
-          <li{{#if active.horta}} class="active"{{/if}}><a class="iconified hort" href="#/seedbank/horta"><span>a minha horta</span></a></li>
+          <li{{#if active.horta}} class="active"{{/if}}><a class="iconified hort" href="/seedbank/horta"></a></li>
           <li{{#if active.settings}} class="active"{{/if}}><a class="iconified sett" href="/seedbank/preferences"></a></li>
         </ul>
       </div>

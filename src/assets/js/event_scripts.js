@@ -1,3 +1,4 @@
+var showevent_id = parseInt(findGetParameter('id'));
 $(function () {
 
   var districts = [];
@@ -137,5 +138,71 @@ $(function () {
     }
   });
 
-
+  $('#mycalendar').fullCalendar({
+    // put your options and callbacks here
+    //defaultView: 'agendaWeek',
+    defaultView: 'month',
+    header: { left: 'prev title next today', right: false, center: false},
+    themeSystem: 'bootstrap3',
+    contentHeight: 400,
+    fixedWeekCount: false,
+    lang: "pt",
+    timeFormat: 'HH:mm',
+    viewRender: function (view, el) {
+      $.each($("#mycalendar .fc-content-skeleton thead td"),
+        function (index, el) {
+          if ( ! $(el).hasClass('fc-other-month') ) {
+            let dd = $(el).data('date').split('-');
+            let image = getMoonPhase(parseInt(dd[0]), parseInt(dd[1]), parseInt(dd[2]));
+            el.innerHTML = '<img src="' + image + '" width=15px>' + el.innerHTML;
+          }
+        }
+      );
+    },
+    eventRender: function(event, element) {
+      $(element).tooltip({title: event.title});
+    },
+    eventAfterAllRender: function( view ) {
+      // show event if available
+      if (showevent_id) {
+        showevent_id = null;
+        var event = $("#mycalendar").fullCalendar('clientEvents', showevent_id)[0];
+        if (event) {
+          $.each(["title", "description", "start", "end", "location", "address", "postal"], function (i, d) {
+            $('#event-preview').find('[data-name="' + d + '"]').text(event[d]);
+          });
+          $('#event-preview').show();
+          $('#event-form').hide();
+          $('#modal').modal('show');
+        }
+      };
+    },
+    eventClick: function(calEvent, jsEvent, view) {
+      $.each(["title", "description", "start", "end", "location", "address", "postal"], function (i, d) {
+        $('#event-preview').find('[data-name="' + d + '"]').text(calEvent[d]);
+      });
+      $('#event-preview').show();
+      $('#event-form').hide();
+      $('#modal').modal('show');
+    },
+    dayClick: function (date, ev, view){
+      if ( ( ! ( $(ev.target).hasClass('fc-today') ||
+          $(ev.target).hasClass('fc-future') ) )
+          || ( $(ev.target).hasClass('fc-other-month')) )  {
+        return;
+      }
+      $('#event-preview').hide();
+      $('#event-form').show();
+      $('#modal').modal('show');
+      return;
+    },
+    eventSources: [
+    {
+      url: '/api/calendar',
+      type: 'POST',
+      //color: 'yellow',
+      textColor: 'black'
+    }
+    ],
+  });
 });

@@ -1,0 +1,49 @@
+// Breaks at: screen-xs 480px; @screen-sm: 768px; @screen-md: 992px; @screen-lg: 1200px;
+
+#event-preview, #event-form {
+  background-color: rgba(255,255,255,0.9);
+  border: 2px solid black;
+  .row {
+    margin: 0px;
+    border-bottom: 2px solid black;
+    padding-bottom: 8px;
+    margin-top: 24px;
+  }
+  h1 {
+    color: @brand-green;
+    font-weight: 800;
+  }
+  [data-name="latin_name"] {
+    font-style: italic;
+  }
+  [data-name="quantity"] {
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  [data-name="availability"] {
+    color: @brand-green;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  [data-name="location"] {
+    font-style: italic;
+  }
+  table tbody {
+    td {
+      padding: 0px;
+      text-align: center;
+      text-transform: uppercase;
+      border: 1px solid black;
+    }
+    td.active {
+      background-color: @brand-green;
+      border-color: white;
+      color: white;
+    }
+
+  }
+  .pictures .col-md-4,  .cover .col-md-4 {
+    padding: 0px;
+    margin: 4px;
+  }
+}

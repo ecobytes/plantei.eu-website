@@ -302,6 +302,38 @@ class User extends Model implements AuthenticatableContract,
 
     return $colmessages;
   }
+
+  /**
+   * Complete transaction.
+   *
+   * @return void
+   */
+  public function getEvents($start=Null, $end=Null)
+  {
+    $faker = \Faker\Factory::create();
+
+    $events = [];
+    //$date = \Carbon\Carbon::now()->addDays($n)->hour(random_int(10,21))->minute(0)->second(0);
+    $now = \Carbon\Carbon::createFromFormat('Y-m-d', $start);
+    foreach(range(1,5) as $n) {
+      $date = $now->addDays(random_int(1,5))->hour(random_int(10,21))->minute(0)->second(0);
+      $events[$n - 1] = [
+          'id' => $n,
+          'user_id' => $this->id,
+          'start' => $date->toDateTimeString(),
+          'end' => $date->addHours(random_int(1,5))->toDateTimeString(),
+          'title' => "[FAKE] " . $faker->name(),
+          'description' => $faker->text(200),
+          'category' => 'Evento',
+          'color' => 'red',
+          'location' => $faker->city(),
+          'postal' => $faker->postcode(),
+          'address' => $faker->streetAddress()
+        ];
+    };
+    return $events;
+  }
+
 }
 
 /*class Contact extends Model

@@ -95,6 +95,41 @@ class SeedBankController extends Controller {
       ->with('active', ['home' => true]);
   }
 
+  public function horta()
+  {
+    $user = \Auth::user();
+
+    $seeds = \Caravel\Seed::where('public', true)
+      ->where('user_id', '<>', $user->id)
+      ->orderBy('seeds.updated_at', 'desc')
+      ->limit(3)->join('users', 'users.id', '=', 'user_id')
+      ->select('seeds.id', 'seeds.common_name',
+        'users.name', 'users.email', 'user_id')
+        ->get();
+
+    $myseeds = \Caravel\Seed::where('user_id', $user->id)
+      ->orderBy('seeds.updated_at', 'desc')
+      ->limit(3)
+      ->select('seeds.id', 'seeds.common_name')
+      ->get();
+
+    //$newMessagesCount = $user->newThreadsCount();
+    $posts = \Riari\Forum\Models\Post::orderBy('updated_at', 'DESC')->limit(4)->get();
+    foreach ($posts as $post)
+    {
+      $post->load('thread', 'author');
+    }
+    $messages = $user->lastMessages();
+    $calendarNow = \Caravel\Calendar::now()->get();
+    $calendarNext = \Caravel\Calendar::nextDays()->get();
+
+    return view('seedbank::horta', compact('posts', 'messages', 'calendarNow', 'calendarNext'))
+      ->with('seeds', $seeds)
+      ->with('myseeds', $myseeds)
+      ->with('bodyId', 'mainapp')
+      ->with('active', ['horta' => true]);
+  }
+
   private function getMySeedForm ( $myseed = Null, $formErrors = Null) {
     $monthsTable = [];
     foreach (range(0, 11) as $number) {
@@ -109,7 +144,7 @@ class SeedBankController extends Controller {
     };
 
     $formErrors = $formErrors ?: "";
-    return view('seedbank::seedform_modal')
+    return view('seedbank::modal_seedform')
       ->with('formErrors', $formErrors)
       ->with('update', true)
       ->with('preview', true)
@@ -200,7 +235,7 @@ class SeedBankController extends Controller {
     $seeds = \Caravel\Seed::where('user_id', '<>', $user->id)->where('public', true)->orderBy('updated_at', 'desc');
     //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
     //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
-    $paginated = $seeds->paginate(15)->setPath('/seedbank/seeds');
+    $paginated = $seeds->paginate(15)->setPath('/seedbank/allseeds');
     //return view('seedbank::myseeds')
     foreach ($paginated->getCollection() as $seed)
     {
@@ -223,7 +258,7 @@ class SeedBankController extends Controller {
       }
     };
 
-    $modal_content = view('seedbank::seedpreview')
+    $modal_content = view('seedbank::modal_seedpreview')
       ->with('preview', true)
       ->with('seed', $seed )
       ->with('monthstable', $monthsTable)
@@ -663,14 +698,62 @@ class SeedBankController extends Controller {
     return [ 'files' => [['error' => 'No files sent']]];
   }
 
-  public function getEvents () {
+  private function getEventForm ( $event = Null, $formErrors = Null) {
+    $event = $event ?: "";
+    $formErrors = $formErrors ?: "";
+    return view('seedbank::modal_eventform')
+      ->with('formErrors', $formErrors)
+      ->with('update', true)
+      ->with('preview', $event)
+      ->with('oldInput', $event )
+      ->with('messages', \Lang::get('seedbank::messages'))
+      ->with('csrfToken', csrf_token())->render();
+    }
+
+  public function getEvents (Request $request) {
+
     $user = \Auth::user();
+
+    $event_id = $request->input('event_id', null);
+
+    //FIXME TEST TODO
+    //$event = $user->seeds->find($event_id);
+    if ($request->input('events', null)) {
+      $events = $user->getEvents();
+      return $events;
+    }
+
+    if ( $event_id ) {
+      $event = [
+        'id' => 1,
+        'title' => 'Um título',
+        'location' => 'Lisboa',
+        'postal' => '1900-177 Lisboa',
+        'description' => 'Uma descrição do evento',
+        'type' => 'AllTypes'
+      ];
+    } else {
+      $event = Null;
+    }
+
+    // Just to create the div for the submition errors
+    $formErrors = true;
+
+
+    $modal_content = self::getEventForm(
+      $event = $event,
+      $formErrors = $formErrors
+    );
+
     return view('seedbank::events')
       ->with('bodyId', 'mainapp')
       ->with('modal', true)
+      ->with('update', true)
+      ->with('modal_content', $modal_content)
       ->with('user', $user)
       ->with('active', ['events' => true]);
   }
+
   public function getAdminEvents () {
     return view('seedbank::admin-events')
       ->with('active', ['events' => true]);

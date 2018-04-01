@@ -29,7 +29,7 @@ var paths = {
   vendorFiles: [
     {
       dir: '/leaflet',
-      src: "/dist/leaflet.min.js",
+      src: "/dist/leaflet.js",
       dst: publicDir + 'js/leaflet'
     },
     {

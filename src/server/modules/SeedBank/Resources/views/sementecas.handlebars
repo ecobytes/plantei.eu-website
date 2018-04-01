@@ -11,20 +11,19 @@
 <div class="row content">
   <div class="container-fluid">
     <div class="col-md-12 text-center">
-      <div id="map" style="min-height: 400px; width:100%;">
+      <div id="map" style="min-height: 600px; width:100%;">
       </div>
     </div>
   </div>
 </div>
 
 {{> mainapp_end}}
-{{>scripts}}
 <script type="text/javascript" src="/js/leaflet/leaflet.js"></script>
 <script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="/js/sementecas.js"></script>
 <script>
 window.onload = function () {
-  initmap({{lat}}{{#if lon}}, {{lon}}{{/if}});
+  initmap2({{lat}}{{#if lon}}, {{lon}}{{/if}});
   map.on('click', onMapClick);
 };
 </script>

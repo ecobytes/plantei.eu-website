@@ -77,13 +77,13 @@ var previewseed = function (parameters, data){
     let monthsTr = pdiv.find('tbody td');
 
     monthsTr.each(function(i, el){
-      el.style = "";
+      $(el).removeClass('active');
     });
 
     if (data.months.length) {
       pdiv.find('[data-name="months"]').parent('div').show();
       data.months.forEach(function (month) {
-        monthsTr[parseInt(month.month) - 1].style = "background-color: rgb(243, 234, 59)"
+        $(monthsTr[parseInt(month.month) - 1]).addClass('active');
       });
     } else {
       pdiv.find('[data-name="months"]').parent('div').hide();
@@ -91,20 +91,35 @@ var previewseed = function (parameters, data){
 
   };
 
+  let setupCover = function (v) {
+    if ( v.length == 0 ){
+      v = [{id: null, url: '/images/planteieulogocinza.png', label: ''}];
+    }
+    console.log(v);
+    img = v[0];
+    let image = '<img class="img-responsive img-rounded cell" data-file-id="' +
+      img.id + '" src="' + img.url + '" alt="' + img.label + '" />';
+    /*let pictureDiv = '<div class="col-md-4 cover">' +
+      image + '</div>';*/
+    $('.cover').append(image);
+  };
+
   let setupField = function (v) {
     if ( (v.type != 'textarea') && ( v.type) ) {
       if (v.type == 'file' ) {
-        $('.pictures').empty();
+        $('.pictures').empty().hide();
+        $('.cover').empty();
         if (! data[v.value.replace('[]', '')]) {
           return false;
         }
+        setupCover(data[v.value.replace('[]', '')]);
         data[v.value.replace('[]','')].forEach(
           function(img){
             var image = '<img class="img-responsive img-rounded cell" data-file-id="'
             + img.id + '" src="' + img.url + '" alt="' + img.label + '" />';
             var pictureDiv = '<div class="col-md-4">' +
               image + '</div>';
-            $('.pictures').append(pictureDiv);
+            $('.pictures').append(pictureDiv).show();
         });
       }
       //console.log(v.name);
@@ -327,4 +342,16 @@ var populateform = function(parameters, data) {
    setInputfields(v);
  });
 
+};
+
+function findGetParameter(parameterName) {
+  // https://stackoverflow.com/a/5448595
+  var result = null,
+    tmp = [];
+  var items = location.search.substr(1).split("&");
+  for (var index = 0; index < items.length; index++) {
+    tmp = items[index].split("=");
+    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+  }
+  return result;
 };

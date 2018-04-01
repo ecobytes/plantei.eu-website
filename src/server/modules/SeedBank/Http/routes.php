@@ -7,6 +7,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
 {
   Route::group(['middleware' => 'auth'], function(){
     Route::get('/', 'SeedBankController@index');
+    Route::get('/horta', 'SeedBankController@horta');
     Route::get('/myseeds', 'SeedBankController@getMySeeds');
     Route::get('/allseeds', 'SeedBankController@getAllSeeds');
     Route::get('/messages', 'SeedBankController@getMessages');
@@ -289,6 +290,12 @@ Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controlle
     });
     Route::post('/calendar', function (Request $request) {
       $events = \Caravel\Calendar::interval($request)->get();
+
+      // FAKE events if none exists
+      if ( ! $events->count()) {
+        $events = \Auth::user()->getEvents($start=$request->input('start'), $end=$request->input('end'));
+      }
+
       return $events;
     });
     Route::post('/sementecas', function (Request $request) {
