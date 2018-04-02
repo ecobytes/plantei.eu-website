@@ -94,38 +94,19 @@ class SeedBankController extends Controller {
       ->with('active', ['home' => true]);
   }
 
-  public function horta()
+  public function getEnciclopedia()
   {
     $user = \Auth::user();
 
-    $seeds = \Caravel\Seed::where('public', true)
-      ->where('user_id', '<>', $user->id)
-      ->orderBy('seeds.updated_at', 'desc')
-      ->limit(3)->join('users', 'users.id', '=', 'user_id')
-      ->select('seeds.id', 'seeds.common_name',
-        'users.name', 'users.email', 'user_id')
-        ->get();
+    return view('seedbank::enciclopedia')
+      ->with('active', ['enciclopedia' => true]);
+  }
 
-    $myseeds = \Caravel\Seed::where('user_id', $user->id)
-      ->orderBy('seeds.updated_at', 'desc')
-      ->limit(3)
-      ->select('seeds.id', 'seeds.common_name')
-      ->get();
+  public function getHorta()
+  {
+    $user = \Auth::user();
 
-    //$newMessagesCount = $user->newThreadsCount();
-    $posts = \Riari\Forum\Models\Post::orderBy('updated_at', 'DESC')->limit(4)->get();
-    foreach ($posts as $post)
-    {
-      $post->load('thread', 'author');
-    }
-    $messages = $user->lastMessages();
-    $calendarNow = \Caravel\Calendar::now()->get();
-    $calendarNext = \Caravel\Calendar::nextDays()->get();
-
-    return view('seedbank::horta', compact('posts', 'messages', 'calendarNow', 'calendarNext'))
-      ->with('seeds', $seeds)
-      ->with('myseeds', $myseeds)
-      ->with('bodyId', 'mainapp')
+    return view('seedbank::horta')
       ->with('active', ['horta' => true]);
   }
 

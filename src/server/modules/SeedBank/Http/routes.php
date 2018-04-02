@@ -30,7 +30,7 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
   Route::group(['middleware' => 'auth'], function(){
     Route::get('/setlocale/{locale?}', 'SeedBankController@setLocale');
     Route::get('/', 'SeedBankController@index');
-    Route::get('/horta', 'SeedBankController@horta');
+    Route::get('/horta', 'SeedBankController@getHorta');
     Route::get('/myseeds', 'SeedBankController@getMySeeds');
     Route::get('/allseeds', 'SeedBankController@getAllSeeds');
     Route::get('/messages', 'SeedBankController@getMessages');
@@ -181,6 +181,14 @@ Route::group(['prefix' => 'events', 'namespace' => 'Modules\SeedBank\Http\Contro
     Route::get('/get/{id}', 'SeedBankController@getEventById');
     Route::get('/', 'SeedBankController@getEvents');
     Route::post('/', 'SeedBankController@postEvents');
+  });
+});
+Route::group(['prefix' => 'enciclopedia', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
+{
+  Route::group(['middleware' => 'auth'], function(){
+    //Route::get('/get/{id}', 'SeedBankController@getEventById');
+    Route::get('/', 'SeedBankController@getEnciclopedia');
+    //Route::post('/', 'SeedBankController@postEvents');
   });
 });
 Route::group(['prefix' => 'sementecas', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()

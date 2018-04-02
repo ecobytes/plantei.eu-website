@@ -1,0 +1,28 @@
+{{> mainapp_start}}
+    <div class="row">
+      <h1>{{lang 'seedbank::messages.encyclopedia'}}</h1>
+    </div>
+    <div class="row content seeds">
+      {{# each paginated.data }}
+      <div class="col-sm-4">
+        <div data-seed_id="{{id}}">
+          <img class="responsive" style="width: 100px; float:left; display:block;margin-right:12px;" src="{{#if pictures}}{{pictures.0.url}}{{else}}/images/planteieulogocinza.png{{/if}}" alt="">
+          <p style="font-weight: bold; font-size:14px;">{{common_name}}</p>
+          <p style="font-style: oblique;">{{latin_name}}</p>
+          <p style="font-style: oblique;">{{../messages.family}}: {{family.name}}</p>
+        </div>
+      </div>
+      {{ else }}
+      <h1>No Content</h1>
+      {{/each}}
+    </div>
+    {{> paginator}}
+    {{> mainapp_end}}
+    <script src="/js/utils.js"></script>
+
+<script>
+{{#if modal }}
+$("#modal").modal('show');
+{{/if}}
+</script>
+{{>footer}}
