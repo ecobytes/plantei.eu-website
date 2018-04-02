@@ -1,15 +1,53 @@
 {{> header}}
 <!-- Horizontal Menu -->
-<div class="container-fluid" style="margin-top: 15px;">
+<div class="container-fluid">
   <nav class="navbar navbar-default">
+    <!-- div class="navbar-header" style="height:100px;">
+      <a class="navbar-brand" href="/seedbank">
+      </a>
+    </div -->
     <div class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li class="navbar-right">
-          <a href="/search"><img class="img-responsive size iconified" src="/images/pesquisa.svg" width=100px>
-            <span>MENU ICON</span>
+      <!-- a class="navbar-brand navbar-left" href="/seedbank">
+        <img style="height:70px; margin:auto" src="/images/planteieulogobranco.png">
+      </a -->
+      <ul class="nav navbar-nav navbar-left">
+        <li>
+      <a href="/seedbank">
+        <img style="height:70px; padding-right: 46%" src="/images/planteieulogobranco.png">
+      </a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li{{#if active.seeds}} class="active"{{/if}}>
+          <a href="/seedbank/allseeds" class="iconified sem">
+            <span>{{menu.seeds}}</span>
           </a>
         </li>
-        <li class="navbar-right">
+        <li{{#if active.forum}} class="active"{{/if}}>
+          <a href="/forum" class="iconified forum">
+            <span style="padding-left: 16px">{{menu.forum}}</span>
+          </a>
+        </li>
+        <li{{#if active.events}} class="active"{{/if}}>
+          <a href="/events" class="iconified cal">
+            <span>{{menu.events}}</span>
+          </a>
+        </li>
+        <li{{#if active.sementecas}} class="active"{{/if}}>
+          <a href="/sementecas" class="iconified seedbank">
+            <span>{{menu.seedbank}}Sementecas</span>
+          </a>
+        </li>
+        <li{{#if active.enciclopedia}} class="active"{{/if}}>
+          <a href="#/encyclopedia" class="iconified enc">
+            <span>{{menu.encyclopedia}}</span>
+          </a>
+        </li>
+        <li{{#if active.search}} class="active"{{/if}}>
+          <a href="/seedbank/search" class="iconified search">
+          </a>
+        </li>
+        <li>
           <div style="text-align: center;">
             <div class="lang text-center">
               <p class="langbtn">
@@ -17,7 +55,7 @@
               <div class="lang-choices">
                 {{#each langs}}
                   {{#unless @first}}
-                <a href="/{{ this }}">{{ this }}</a>
+                <a href="/seedbank/setlocale/{{ this }}">{{ this }}</a>
                   {{/unless}}
                 {{/each}}
               </div>
@@ -26,38 +64,11 @@
             </a>
           </div>
         </li>
-        <li class="navbar-right{{#if active.search}} active{{/if}}">
-          <a href="/seedbank/search" class="iconified search">
+        <!--li>
+          <a href="/search"><img class="img-responsive size iconified" src="/images/pesquisa.svg" width=100px>
+            <span>MENU ICON</span>
           </a>
-        </li>
-        <li class="navbar-right{{#if active.enciclopedia}} active{{/if}}">
-          <a href="#/encyclopedia" class="iconified enc">
-            <span>{{menu.encyclopedia}}</span>
-          </a>
-        </li>
-        <li class="navbar-right{{#if active.sementecas}} active{{/if}}">
-          <a href="/sementecas" class="iconified seedbank">
-            <span>{{menu.seedbank}}Sementecas</span>
-          </a>
-        </li>
-        <li class="navbar-right{{#if active.events}} active{{/if}}">
-          <a href="/events" class="iconified cal">
-            <span>{{menu.events}}</span>
-          </a>
-        </li>
-        <li class="navbar-right{{#if active.forum}} active{{/if}}">
-          <a href="/forum" class="iconified forum">
-            <span style="padding-left: 16px">{{menu.forum}}</span>
-          </a>
-        </li>
-        <li class="navbar-right{{#if active.seeds}} active{{/if}}">
-          <a href="/seedbank/allseeds" class="iconified sem">
-            <span>{{menu.seeds}}</span>
-          </a>
-        </li>
-        <li class="navbar-right">
-          <img class="img-responsive" style="height:100px;" src="/images/planteieulogobranco.png">
-        </li>
+        </li -->
       </ul>
 
     </div>

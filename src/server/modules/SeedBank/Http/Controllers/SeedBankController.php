@@ -75,7 +75,7 @@ class SeedBankController extends Controller {
     $myseeds = \Caravel\Seed::where('user_id', $user->id)
       ->orderBy('seeds.updated_at', 'desc')
       ->limit(3)
-      ->select('seeds.id', 'seeds.common_name')
+      ->select('seeds.id', 'seeds.common_name', 'seeds.updated_at')
       ->get();
 
     //$newMessagesCount = $user->newThreadsCount();
@@ -84,14 +84,13 @@ class SeedBankController extends Controller {
     {
       $post->load('thread', 'author');
     }
-    $messages = $user->lastMessages();
+    $messenger = $user->lastMessages();
     $calendarNow = \Caravel\Calendar::now()->get();
     $calendarNext = \Caravel\Calendar::nextDays()->get();
 
-    return view('seedbank::home', compact('posts', 'messages', 'calendarNow', 'calendarNext'))
+    return view('seedbank::home', compact('posts', 'messenger', 'calendarNow', 'calendarNext'))
       ->with('seeds', $seeds)
       ->with('myseeds', $myseeds)
-      ->with('bodyId', 'mainapp')
       ->with('active', ['home' => true]);
   }
 
@@ -151,7 +150,6 @@ class SeedBankController extends Controller {
       ->with('oldInput', $myseed )
       ->with('seed', $myseed )
       ->with('monthstable', $monthsTable)
-      ->with('messages', \Lang::get('seedbank::messages'))
       ->with('csrfToken', csrf_token())->render();
     }
 
@@ -209,20 +207,19 @@ class SeedBankController extends Controller {
       $formErrors = $formErrors
     );
 
+
     $part = [ 'myseeds' => true ];
 
     $view = view('seedbank::myseeds', compact('part'))
       ->with('pagination', \Lang::get('pagination'))
       ->with('paginated', $paginated)
       ->with('links', $paginated->render())
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('bodyId', 'mainapp')
       ->with('modal_content', $modal_content)
       ->with('active', ['myseeds' => true])
       ->with('preview', true);
 
     if ($myseed) {
-      $view = $view->with('modal', true);
+      $view = $view->with('modal', true)->with('title', $myseed->common_name);
     }
 //dd($paginated);
     return $view;
@@ -262,7 +259,6 @@ class SeedBankController extends Controller {
       ->with('preview', true)
       ->with('seed', $seed )
       ->with('monthstable', $monthsTable)
-      ->with('messages', \Lang::get('seedbank::messages'))
       ->with('viewonly', true)
       ->with('csrfToken', csrf_token())->render();
 
@@ -271,11 +267,9 @@ class SeedBankController extends Controller {
     return view('seedbank::seeds', compact('part', 'modal_content'))
       ->with('pagination', \Lang::get('pagination'))
       ->with('paginated', $paginated)
-      ->with('messages', \Lang::get('seedbank::messages'))
       ->with('links', $paginated->render())
       //->with('myseeds', $seeds->get())
       ->with('modal', ($seed) )
-      ->with('bodyId', 'mainapp')
       ->with('active', ['seeds' => true]);
   }
 
@@ -513,7 +507,6 @@ class SeedBankController extends Controller {
       ->with('user', $user)
       ->with('updatelocation', $updatelocation)
       ->with('location', $location)
-      ->with('bodyId', 'mainapp')
       ->with('active', ['settings' => true]);
   }
 
@@ -546,8 +539,7 @@ class SeedBankController extends Controller {
   public function getSearch()
   {
     return view('seedbank::search')
-      ->with('active', ['search' => true])
-      ->with('bodyId', 'mainapp');
+      ->with('active', ['search' => true]);
   }
 
   public function postSearch(Request $request)
@@ -706,7 +698,6 @@ class SeedBankController extends Controller {
       ->with('update', true)
       ->with('preview', $event)
       ->with('oldInput', $event )
-      ->with('messages', \Lang::get('seedbank::messages'))
       ->with('csrfToken', csrf_token())->render();
     }
 
@@ -746,7 +737,6 @@ class SeedBankController extends Controller {
     );
 
     return view('seedbank::events')
-      ->with('bodyId', 'mainapp')
       ->with('modal', true)
       ->with('update', true)
       ->with('modal_content', $modal_content)
@@ -842,6 +832,23 @@ class SeedBankController extends Controller {
     ], \Lang::get('seedbank::validation'));
     $sementeca = \Caravel\Sementeca::create($request->input());
     return $sementeca;
+  }
+  public function setLocale($locale = null)
+  {
+    $availableLanguages = config('app.availableLanguages');
+    $request = app('request');
+
+    if (in_array($locale, $availableLanguages )){
+      $user = \Auth::user();
+      if (isset($user->locale)){
+        if ($locale != $user->locale) {
+          $user->locale = $locale;
+          $user->save();
+        };
+      }
+    };
+
+    return redirect($request->header('referer'));
   }
 }
 /* public function getRegister($id = null)

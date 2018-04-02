@@ -1,9 +1,9 @@
-  <h2>Sementes</h2>
+<h2>{{messages.seed}}s</h2>
   <table class="table" id="seeds">
     <!-- All seeds -->
     <thead>
       <tr>
-        <h4>Adicionadas recentemente</h4>
+        <h4>{{messages.recentlyAdded}}recentlyAdded</h4>
       </tr>
     </thead>
     <tbody>
@@ -15,7 +15,7 @@
       </tr>
       {{else}}
       <tr>
-        <h4>No content</h4>
+        <h4>{{messages.noContent}}noContent</h4>
       </tr>
       {{/each}}
     </tbody>
@@ -24,18 +24,18 @@
     <!-- My seeds -->
     <thead>
       <tr>
-        <h4>O meu banco</h4>
+        <h4>{{messages.myseedBank}}myseedBank</h4>
       </tr>
     </thead>
     <tbody>
       {{#each myseeds}}
       <tr data-seed_id="{{id}}">
         <td>{{common_name}}</td>
-        <td>YYYY/MM/DD</td>
+        <td>{{updated_at}}</td>
       </tr>
       {{else}}
       <tr>
-        <h4>No content</h4>
+        <h4>{{messages.noContent}}noContent</h4>
       </tr>
       {{/each}}
     </tbody>

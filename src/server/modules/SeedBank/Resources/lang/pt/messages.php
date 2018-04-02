@@ -38,6 +38,7 @@ return [
     'confirmed' => 'Confirmado',
     'finished' => 'Feita',
     'message' => 'Mensagem',
+    'messages' => 'Mensagens',
     'pictures' => 'Imagens',
     'taxonomy' => 'Taxonomia',
     'cooking' => 'Culinária',

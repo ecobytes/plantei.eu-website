@@ -34,6 +34,7 @@ $(function () {
       $(this).removeClass('active');
     });
 
+    console.log(lang);
   $('#calendar-horta').fullCalendar({
     // put your options and callbacks here
     defaultView: 'month',
@@ -41,7 +42,7 @@ $(function () {
     themeSystem: 'bootstrap3',
     contentHeight: 'auto',
     fixedWeekCount: false,
-    lang: "pt",
+    locale: lang,
     timeFormat: 'HH:mm',
     viewRender: function (view, el) {
       $.each($("#calendar-horta .fc-content-skeleton thead td"),

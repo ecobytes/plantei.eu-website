@@ -161,7 +161,7 @@ class AuthController extends Controller {
         $oldInput['subscribeNewsletter'][1] = true;
       }
 
-      if (isset($data['saveLocatio'])) {
+      if (isset($data['saveLocation'])) {
         if ($oldInput['saveLocation'] == "0") {
           $oldInput['saveLocation'] = false;
         } else {

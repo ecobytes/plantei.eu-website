@@ -146,7 +146,7 @@ $(function () {
     themeSystem: 'bootstrap3',
     contentHeight: 400,
     fixedWeekCount: false,
-    lang: "pt",
+    lang: lang,
     timeFormat: 'HH:mm',
     viewRender: function (view, el) {
       $.each($("#mycalendar .fc-content-skeleton thead td"),

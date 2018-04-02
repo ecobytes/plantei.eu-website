@@ -38,6 +38,7 @@ return [
     'confirmed' => 'Confirmed',
     'finished' => 'Finished',
     'message' => 'Message',
+    'messages' => 'Messages',
     'pictures' => 'Pictures',
     'taxonomy' => 'Taxonomy',
     'cooking' => 'Cooking',

@@ -2,10 +2,33 @@
 
 use Illuminate\Http\Request;
 
+/*
+ * $languages = Config::get('app.availableLanguages');
+$locale = \Request::segment(1);
+
+if(in_array($locale, $languages)){
+  \App::setLocale($locale);
+  \View::share('langString', $locale);
+}else{
+  $locale = Config::get('app.locale');
+  \App::setLocale($locale);
+  \View::share('langString', $locale);
+}
+
+$lang[] = $locale;
+foreach($languages as $l){
+  if ($l != $locale){
+    $lang[] = $l;
+  }
+}
+
+\View::share('langs', $lang);
+**/
 
 Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
   Route::group(['middleware' => 'auth'], function(){
+    Route::get('/setlocale/{locale?}', 'SeedBankController@setLocale');
     Route::get('/', 'SeedBankController@index');
     Route::get('/horta', 'SeedBankController@horta');
     Route::get('/myseeds', 'SeedBankController@getMySeeds');

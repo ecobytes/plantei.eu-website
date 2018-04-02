@@ -1,10 +1,4 @@
 {{> formErrors}}
-{{#if seed}}
-<div class="modal-header text-center" style="display: none;">
-  <!-- col-md-12 text-center" -->
-  <h1 class="modal-title">{{#if oldInput.common_name}}{{messages.update}} - {{oldInput.common_name}}{{/if}}</h1>
-</div>
-{{/if}}
 {{> modal_seedpreview }}
 <form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/seedbank/register" {{#if preview}}style="display: none;"{{/if}}>
   <input type="hidden" name="_token" value="{{ csrfToken }}">

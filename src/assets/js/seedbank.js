@@ -40,7 +40,7 @@ $(function () {
     header: false,
     themeSystem: 'bootstrap3',
     //contentHeight: 400,
-    lang: "pt",
+    lang: lang,
     timeFormat: 'HH:mm',
     eventClick: function(calEvent, jsEvent, view) {
       window.open('/events?id=' + calEvent.id, '_self')

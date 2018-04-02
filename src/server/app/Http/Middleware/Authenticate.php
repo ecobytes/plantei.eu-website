@@ -45,12 +45,13 @@ class Authenticate {
     }
 
     $user = $this->auth->user();
+    $availableLanguages = config('app.availableLanguages');
 
     if (isset($user->locale)){
       $locale = $user->locale;
     } else {
       $locale = config('app.locale');
-    }
+    };
 
     $lang[] = $locale;
     foreach(config('app.availableLanguages') as $l) {
@@ -58,6 +59,7 @@ class Authenticate {
         $lang[] = $l;
       }
     }
+
 
     \App::setLocale($locale);
     \View::share('langs', $lang);
@@ -67,9 +69,9 @@ class Authenticate {
     \View::share('username', $user->name);
     \View::share('menu', \Lang::get('seedbank::menu'));
     \View::share('messages', \Lang::get('seedbank::messages'));
+    \View::share('bodyId', 'mainapp');
     if ( substr($request->path(), 0, 5) == "forum" ){
       \View::share('active', [ "forum" => true ]);
-      \View::share('bodyId', 'mainapp');
     }
 
     return $next($request);

@@ -37,6 +37,7 @@ class RedirectIfAuthenticated {
     {
       return new RedirectResponse(url('/seedbank'));
     }
+    \View::share('bodyId', 'mainapp');
 
     return $next($request);
   }

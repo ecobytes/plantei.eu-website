@@ -61,6 +61,7 @@ $( function () {
       populateform(parameters, data);
       initRegisterSeed();
       previewseed(parameters, data);
+      $("#modal").find('.modal-title').text(data.common_name);
       $('#seed-preview').show();
       $('form').hide();
 
@@ -77,7 +78,7 @@ $( function () {
     $('#seed-preview').hide();
     $('form').show();
     initRegisterSeed();
-    $("#modal").find('.modal-header').show();
+    $("#modal").find('.modal-title').text(Lang.get('seedbank::messages.add_new_seed'));
 
     $('#modal').modal('show');
   });
@@ -85,7 +86,7 @@ $( function () {
   $('#modal').on('click', '#seed-preview button', function(){
     $('#seed-preview').hide();
     initRegisterSeed();
-    $("#modal").find('.modal-header').show();
+    $("#modal").find('.modal-title').prepend(Lang.get('seedbank::messages.change') + ' - ');
 
     $('form').show();
   });
@@ -141,7 +142,7 @@ $( function () {
       that = this;
       console.log(file);
       $.getJSON(file.deleteUrl, function (data){
-        if (data.files[0][file.md5sum]){
+       if (data.files[0][file.md5sum]){
           that.closest('.col-md-4').remove();
           upload_counter = upload_counter - 1;
         }
