@@ -1,6 +1,19 @@
 {{> mainapp_start}}
     <div class="row">
-      <h1>{{lang 'seedbank::messages.encyclopedia'}}</h1>
+      <h1>{{lang 'seedbank::menu.encyclopedia'}}</h1>
+    </div>
+    <div class="row enciclopedia">
+      <table>
+        <tbody>
+          <tr>
+          {{#each alphabet}}
+          <td{{#if active}} class="active"{{/if}}>
+            <a href="/enciclopedia/letter/{{letter}}">{{letter}}</a>
+          </td>
+          {{/each}}
+        </tr>
+        </tbody>
+      </table>
     </div>
     <div class="row content seeds">
       {{# each paginated.data }}

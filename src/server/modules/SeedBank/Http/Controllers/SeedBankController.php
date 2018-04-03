@@ -98,7 +98,18 @@ class SeedBankController extends Controller {
   {
     $user = \Auth::user();
 
+    $alphabet = [];
+    $active = 'b';
+    foreach(str_split('abcdefghijklmnopqrstuvwxuxz') as $l){
+      $letter = ['letter' => $l];
+      if ($active == $l) {
+        $letter['active'] = true;
+      };
+      $alphabet[] = $letter;
+    }
+
     return view('seedbank::enciclopedia')
+      ->with('alphabet', $alphabet)
       ->with('active', ['enciclopedia' => true]);
   }
 
@@ -832,80 +843,3 @@ class SeedBankController extends Controller {
     return redirect($request->header('referer'));
   }
 }
-/* public function getRegister($id = null)
-{
-  $user = \Auth::user();
-  $update = false;
-  // Authorization
-  if($id){
-    $seed = \Caravel\Seed::findOrFail($id);
-    if (Gate::denies('update-seed', $seed)){
-      abort(403);
-    }
-  }
-  //$errors = \Session::get('errors');
-  if(\Session::hasOldInput()){
-    $oldInput =  \Session::getOldInput();
-    if(!empty($errors)){
-      \View::share('errors', $errors->default->toArray());
-    }
-    foreach(['variety', 'family', 'species'] as $field)
-    {
-      if (isset($oldInput[$field]))
-      {
-        $field_a = (array)\DB::table($field)
-          ->select('name', 'id')
-          ->where('name', $oldInput[$field])
-          ->first();
-        if ($field_a) {
-          $oldInput[$field] = $field_a;
-        } else {
-          $oldInput[$field] = ['id'=>'', 'name'=>$oldInput[$field] ];
-        }
-      }
-    };
-  }
-  if ($id){
-    if (! isset($oldInput)) {
-      $seed->variety;
-      $seed->family;
-      $seed->species;
-      $seed->pictures;
-      $oldInput = $seed->toArray();
-      $oldInput['months'] = $seed->months()->lists('month')->toArray();
-    } else {
-
-    }
-    $oldInput['id'] = $id;
-    $update = true;
-  }
-  //$t = [];
-  foreach(['origin', 'polinization', 'direct'] as $key){
-    if(isset($oldInput[$key])){
-      $oldInput[$key] = [$oldInput[$key] => true];
-    }
-  }
-  dd($oldInput);
-  if(isset($oldInput['months'])){
-    $monthsTable = [];
-    foreach (range(0, 11) as $number) {
-      $monthTable[$number] = false;
-      if ( $myseed->months->where('month', $number + 1)->count() ) {
-        $monthsTable[$number] = true;
-      }
-    }
-    $o = array();
-    foreach($oldInput['months'] as $i){
-      $o[$i] = true;
-    }
-    $oldInput['months'] = $o;
-  }
-  if (! isset($oldInput)){
-    $oldInput = [];
-  }
-  $part = [ 'register' => true ];
-  return view('seedbank::modal-register', compact('part', 'update'))
-    ->with('oldInput', $oldInput);
-  // return view('seedbank::registerseed', ['update' => $update])
-  //   ->with('active', ['myseeds' => true])
-}*/
