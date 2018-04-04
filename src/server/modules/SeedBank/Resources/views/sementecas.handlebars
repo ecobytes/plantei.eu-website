@@ -1,10 +1,4 @@
 {{> mainapp_start}}
-<div class="modal fade" id="sementeca">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 <div class="row">
   <h1>Sementecas</h1>
 </div>
@@ -23,7 +17,7 @@
 <script type="text/javascript" src="/js/sementecas.js"></script>
 <script>
 window.onload = function () {
-  initmap2({{lat}}{{#if lon}}, {{lon}}{{/if}});
+  initmap({{#if lat}}{{lat}}{{/if}}{{#if lon}}, {{lon}}{{/if}});
   map.on('click', onMapClick);
 };
 </script>

@@ -94,9 +94,27 @@ class SeedBankController extends Controller {
       ->with('active', ['home' => true]);
   }
 
+  private function getEnciclopediaForm ( $item = Null, $formErrors = Null)
+  {
+    $formErrors = $formErrors ?: "";
+    $item = $item ?: "";
+
+    return view('seedbank::modal_enciclform')
+      ->with('formErrors', $formErrors)
+      ->with('update', true)
+      ->with('preview', true)
+      ->with('oldInput', $item )
+      ->with('item', $item )
+      ->with('csrfToken', csrf_token())->render();
+  }
+
   public function getEnciclopedia()
   {
     $user = \Auth::user();
+
+    $formErrors = "";
+    $seed = "";
+
 
     $alphabet = [];
     $active = 'b';
@@ -108,7 +126,11 @@ class SeedBankController extends Controller {
       $alphabet[] = $letter;
     }
 
+    $modal_content = self::getEnciclopediaForm();
+
+
     return view('seedbank::enciclopedia')
+      ->with('modal_content', $modal_content)
       ->with('alphabet', $alphabet)
       ->with('active', ['enciclopedia' => true]);
   }

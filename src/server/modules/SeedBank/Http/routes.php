@@ -200,7 +200,11 @@ Route::group(['prefix' => 'sementecas', 'namespace' => 'Modules\SeedBank\Http\Co
       $lon = sprintf("%.5F", $user->lon);
       //dd(compact('lat', 'lon'));
       return view('seedbank::sementecas', compact('lat', 'lon'))
+      //return view('seedbank::sementecas')
         ->with('active', [ 'sementecas' => true ])
+        ->with('modal_content', view('seedbank::modal_sementecaform')
+          ->with('sementeca', \Caravel\Sementeca::first())
+          ->with('preview', true)->render())
         ->with('bodyId', 'mainapp');
     });
     Route::get('new', function () {
@@ -306,6 +310,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Modules\SeedBank\Http\Control
 Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
   Route::group(['middleware' => 'auth'], function(){
+
+    Route::get('/seeds', 'APIController@getSeeds');
+    Route::get('/sementecasgeo', 'APIController@getSementecasGeo');
+
     Route::get('/location', function (Request $request) {
       return array_keys(config('concelhos_portugal'));
       $response = [];
