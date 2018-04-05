@@ -15,14 +15,15 @@
         </tbody>
       </table>
     </div>
-    <div class="row content seeds">
+    <div class="row content enciclopedia">
       {{# each paginated.data }}
       <div class="col-sm-4">
         <div data-seed_id="{{id}}">
           <img class="responsive" style="width: 100px; float:left; display:block;margin-right:12px;" src="{{#if pictures}}{{pictures.0.url}}{{else}}/images/planteieulogocinza.png{{/if}}" alt="">
           <p style="font-weight: bold; font-size:14px;">{{common_name}}</p>
           <p style="font-style: oblique;">{{latin_name}}</p>
-          <p style="font-style: oblique;">{{../messages.family}}: {{family.name}}</p>
+          <!-- p style="font-style: oblique;">{{../messages.description}}: {{description}}</p -->
+          <p style="float: right">+MORE</p>
         </div>
       </div>
       {{ else }}
@@ -31,7 +32,8 @@
     </div>
     {{> paginator}}
     {{> mainapp_end}}
-    <script src="/js/utils.js"></script>
+<script src="/js/utils.js"></script>
+<script src="/js/enciclopedia.js" charset="utf-8"></script>
 
 <script>
 {{#if modal }}

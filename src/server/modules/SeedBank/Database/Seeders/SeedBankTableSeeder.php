@@ -21,7 +21,7 @@ class SeedBankTableSeeder extends Seeder {
 		// Fake 10 sementecas
 		// limites do mapa
     // norte: 44.074958, -9.997559
-		// sul: 36.689565, -6.04248
+		// sul: 36.689565, -6.04248fff
 		$latRange = [36.689565, 44.074958];
 		$lonRange = [-9.997559, -6.04248];
 		$a = 0;

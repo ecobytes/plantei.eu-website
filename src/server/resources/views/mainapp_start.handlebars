@@ -10,14 +10,14 @@
       <!-- a class="navbar-brand navbar-left" href="/seedbank">
         <img style="height:70px; margin:auto" src="/images/planteieulogobranco.png">
       </a -->
-      <ul class="nav navbar-nav navbar-left">
+      <ul class="nav navbar-nav navbar-left logo">
         <li>
-      <a href="/seedbank">
-        <img style="height:70px; padding-right: 46%" src="/images/planteieulogobranco.png">
-      </a>
+          <a href="/seedbank">
+            <img src="/images/planteieulogobranco.png">
+          </a>
         </li>
       </ul>
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right menu">
         <li{{#if active.seeds}} class="active"{{/if}}>
           <a href="/seedbank/allseeds" class="iconified sem">
             <span>{{menu.seeds}}</span>
@@ -25,7 +25,7 @@
         </li>
         <li{{#if active.forum}} class="active"{{/if}}>
           <a href="/forum" class="iconified forum">
-            <span style="padding-left: 16px">{{menu.forum}}</span>
+            <span>{{menu.forum}}</span>
           </a>
         </li>
         <li{{#if active.events}} class="active"{{/if}}>

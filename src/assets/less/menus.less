@@ -1,0 +1,203 @@
+// Breaks at: screen-xs 480px; @screen-sm: 768px; @screen-md: 992px; @screen-lg: 1200px;
+
+/* Language selection button */
+.langbtn {
+  padding-top: 16px;
+  margin: 0px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.lang {
+  font-family: 'Helvetica';
+  text-transform: uppercase;
+  font-weight: bold;
+  color: @brand-green;
+  font-size: 14px;
+  position: relative;
+  display: inline-block;
+  .lang-choices {
+    display: none;
+    position: relative;
+    /* z-index: 1; */
+    background-color: #f9f9f9;
+    /*margin-left: 40px;*/
+  }
+  .lang-choices a {
+    color: #808080;
+    padding: 0px;
+    text-decoration: none;
+    display: block;
+  }
+  .lang-choices a:hover {
+    background-color: #f1f1f1
+  }
+}
+.lang:hover .lang-choices {
+  display: block;
+  background-color: #f9f9f9;
+  position: absolute;
+  padding: 0 5px;
+  z-index: 5;
+}
+
+/* Menu icons */
+#mainapp nav {
+  a.iconified {
+    //padding: 2px 0px 2px 20px;
+    padding-left: 1em !important;
+    display: block;
+    height: 100px;
+    width: 150px;
+    span {
+      position: absolute;
+      left: 0px;
+      bottom: 16px;
+      text-align: center;
+      width: 100%;
+    }
+  }
+  a.iconified.search {
+    background: transparent url('/images/pesquisa.svg') scroll no-repeat center center;
+  }
+  a.iconified.enc {
+    background: transparent url('/images/enciclopedia.svg') scroll no-repeat center center;
+  }
+  a.iconified.seedbank {
+    background: transparent url('/images/sementeca.svg') scroll no-repeat center center;
+  }
+  a.iconified.cal {
+    background: transparent url('/images/calendario.svg') scroll no-repeat left center;
+  }
+  a.iconified.sem {
+    background: transparent url('/images/sementes.svg') scroll no-repeat left center;
+  }
+  a.iconified.forum {
+    background: transparent url('/images/forum.svg') scroll no-repeat left center;
+  }
+  a.iconified.home {
+    background: transparent url('/images/home.svg') scroll no-repeat left center;
+  }
+  a.iconified.mess {
+    background: transparent url('/images/mensagens.svg') scroll no-repeat left center;
+  }
+  a.iconified.sett {
+    background: transparent url('/images/settings.svg') scroll no-repeat left center;
+  }
+  a.iconified.seed {
+    background: transparent url('/images/minhassementes.svg') scroll no-repeat left center;
+  }
+  a.iconified.hort {
+    background: transparent url('/images/horta.svg') scroll no-repeat left center;
+  }
+}
+
+/* Horizontal navigation menus */
+#mainapp nav.navbar {
+  ul.logo {
+    width: calc(~"100% - 1007px");
+    li {
+      /* float: right !important; */
+      width: 100%;
+      text-align: center;
+      > a > img {
+        height: 70px;
+      }
+    }
+  }
+  ul.menu {
+    /* breaks at 1214px width */
+    max-width: 1007px;
+    li {
+      border-left: white solid 1px;
+    }
+  }
+}
+
+@media only screen and (min-width: 904px) {
+  #mainapp {
+    ul.nav {
+      background: #707070;
+    }
+    ul.nav > li.active > a {
+      background-color: white;
+    }
+    .side-nav ul.nav > li.active > a {
+      background-color: white;
+      z-index: 999;
+      margin-top: 1px;
+    }
+    .side-nav ul.nav > li {
+      color: white;
+      border-bottom: solid thin;
+    }
+    .side-nav {
+      background: white;
+      margin: 0px;
+      padding: 0px;
+      width: 98px;
+      position: relative;
+      display:block;
+      float:left;
+    }
+
+    .side-nav a.iconified {
+      width: 98px;
+    }
+    .side-nav .col-md-12 {
+      margin: 0px;
+      padding: 0px;
+    }
+    .navbar {
+      margin-bottom: 0px;
+      text-transform: uppercase;
+    }
+  }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 904px) {
+  #mainapp {
+    ul.nav {
+      background: #808080;
+    }
+    .side-nav {
+      ul.nav > li.active > a {
+        background-color: white;
+        z-index: 10;
+        margin-top: 1px;
+      }
+      ul.nav > li {
+        color: white;
+        border-bottom: solid thin;
+      }
+      ul li {
+        float: right;
+      }
+      background: white;
+      margin: 0px;
+      padding: 0px;
+      height: 100px;
+      position: relative;
+      .col-md-12 {
+        width: 100%;
+        position: absolute;
+        margin: 0px;
+        padding: 0px;
+      }
+    }
+    .col-md-2.side-nav {
+      width: 100%;
+      z-index: 100;
+      position: relative;
+      margin: 0px;
+      padding: 0px;
+      display: block;
+      float: left;
+    }
+    .navbar {
+      margin-bottom: 0px;
+      text-transform: uppercase;
+    }
+  }
+}

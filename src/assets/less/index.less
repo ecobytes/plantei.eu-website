@@ -79,289 +79,90 @@
     }
   }
 }
-.langbtn {
-  padding-top: 16px;
-  margin: 0px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.lang {
-  font-family: 'Helvetica';
-  text-transform: uppercase;
-  font-weight: bold;
-  color: @brand-green;
-  font-size: 14px;
-  position: relative;
-  display: inline-block;
-  .lang-choices {
-    display: none;
-    position: relative;
-    /* z-index: 1; */
-    background-color: #f9f9f9;
-    /*margin-left: 40px;*/
-  }
-  .lang-choices a {
-    color: #808080;
-    padding: 0px;
-    text-decoration: none;
-    display: block;
-  }
-  .lang-choices a:hover {
-    background-color: #f1f1f1
-  }
-}
-.lang:hover .lang-choices {
-  display: block;
-  background-color: #f9f9f9;
-  position: absolute;
-  padding: 0 5px;
-  z-index: 5;
-}
-
-a.iconified {
-  //padding: 2px 0px 2px 20px;
-  padding-left: 1em !important;
-  display: block;
-  height: 100px;
-  width: 150px;
-}
-a.iconified.search {
-  background: transparent url('/images/pesquisa.svg') scroll no-repeat center center;
-}
-a.iconified.enc {
-  background: transparent url('/images/enciclopedia.svg') scroll no-repeat center center;
-}
-a.iconified.seedbank {
-  background: transparent url('/images/sementeca.svg') scroll no-repeat center center;
-}
-a.iconified.cal {
-  background: transparent url('/images/calendario.svg') scroll no-repeat left center;
-}
-a.iconified.sem {
-  background: transparent url('/images/sementes.svg') scroll no-repeat left center;
-}
-a.iconified.forum {
-  background: transparent url('/images/forum.svg') scroll no-repeat left center;
-}
-a.iconified.home {
-  background: transparent url('/images/home.svg') scroll no-repeat left center;
-}
-a.iconified.mess {
-  background: transparent url('/images/mensagens.svg') scroll no-repeat left center;
-}
-a.iconified.sett {
-  background: transparent url('/images/settings.svg') scroll no-repeat left center;
-}
-a.iconified.seed {
-  background: transparent url('/images/minhassementes.svg') scroll no-repeat left center;
-}
-a.iconified.hort {
-  background: transparent url('/images/horta.svg') scroll no-repeat left center;
-}
-a.iconified span {
-  position: absolute;
-  bottom: 16px;
-  margin-left: 16px;
-}
-a.sem span {
-  margin-left: 22px;
-}
-
 #mainapp {
   max-width: 1400px;
   margin: 0 auto;
   padding: 16px;
   .row.main {
-    .col-md-10 .col-sm-4 div {
+    .col-md-10 .col-sm-4  > div {
       border-top: solid thin;
       padding: 6px;
     }
   }
 }
 @media only screen and (min-width: 904px) {
-  #mainapp {
-    /*ul.nav.navbar-nav {
-        width: 100%;
-        li:last-child {
-          padding-right: 4%;
-          margin: 16px auto;
-
-        }
-        /*li:first-child {
-          float: clear;
-          display: none;
-        }
-    }
-    .navbar-right{
-
-    }*/
-    ul.nav {
-      background: #707070;
-    }
-    ul.nav > li.active > a {
-      background-color: white;
-    }
-    .side-nav ul.nav > li.active > a {
-      background-color: white;
-      z-index: 999;
-      margin-top: 1px;
-    }
-    .side-nav ul.nav > li {
-      color: white;
-      border-bottom: solid thin;
-    }
-    .row.main {
-      margin-left: auto;
-      margin-right: auto;
-      padding: 0px;
-      .row {
-        padding-left: 15px;
-        padding-right: 15px;
-        h1 {
-          margin-left: 15px;
-          margin-top: 25px;
-          margin-bottom: 20px;
-          text-transform: uppercase;
-          font-size: 26px;
-          color: #ADC77F;
-          font-weight: bold;
-        }
-        h2{
-          text-transform: uppercase;
-          font-size: 20px;
-          color: #ADC77F;
-          font-weight: bold;
-          padding: 10px 0 5px 5px;
-          border-top: 2px solid #808080;
-          border-bottom: 2px solid #808080;
-        }
-        h4 {
-          text-transform: uppercase;
-          font-size: 16px;
-          padding-left: 5px;
-        }
+  .row.main {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px;
+    .row {
+      padding-left: 15px;
+      padding-right: 15px;
+      h1 {
+        margin-left: 15px;
+        margin-top: 25px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        font-size: 26px;
+        color: #ADC77F;
+        font-weight: bold;
+      }
+      h2{
+        text-transform: uppercase;
+        font-size: 20px;
+        color: #ADC77F;
+        font-weight: bold;
+        padding: 10px 0 5px 5px;
+        border-top: 2px solid #808080;
+        border-bottom: 2px solid #808080;
+      }
+      h4 {
+        text-transform: uppercase;
+        font-size: 16px;
+        padding-left: 5px;
       }
     }
-    .row.main .col-md-10 {
-      min-height: 450px;
-      background: white;
-      padding-right: 16px;
-      padding-bottom: 16px;
-      float:none;
-      width: auto;
-      border: solid thin;
-      overflow: hidden;
-      table {
-        td, th {
-          padding-left: 16px;
-          padding-right: 16px;
-          font-size: 12px;
-        }
-        img {
-          margin: 12px;
-        }
+  }
+  .row.main .col-md-10 {
+    min-height: 450px;
+    background: white;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    float:none;
+    width: auto;
+    border: solid thin;
+    overflow: hidden;
+    table {
+      td, th {
+        padding-left: 16px;
+        padding-right: 16px;
+        font-size: 12px;
       }
-      .seeds table  {
-        td, th {
-          padding-left: 16px;
-          padding-right: 16px;
-          border-bottom: solid 1px #80808;
-          border-top: 1px solid #808080;
-          font-size: 12px;
-          padding: 5px 0 5px 0;
-        }
-        th{
-          color: #ADC77F;
-        }
-        img {
-          margin: 12px;
-        }
+      img {
+        margin: 12px;
       }
     }
-    .side-nav {
-      background: white;
-      margin: 0px;
-      padding: 0px;
-      width: 98px;
-      position: relative;
-      display:block;
-      float:left;
-    }
-
-    .side-nav a.iconified {
-      width: 98px;
-    }
-    .side-nav .col-md-12 {
-      margin: 0px;
-      padding: 0px;
-    }
-    .navbar {
-      margin-bottom: 0px;
-      text-transform: uppercase;
+    .seeds table  {
+      td, th {
+        padding-left: 16px;
+        padding-right: 16px;
+        border-bottom: solid 1px #80808;
+        border-top: 1px solid #808080;
+        font-size: 12px;
+        padding: 5px 0 5px 0;
+      }
+      th{
+        color: #ADC77F;
+      }
+      img {
+        margin: 12px;
+      }
     }
   }
 }
 
 @media only screen and (min-width: 480px) and (max-width: 904px) {
   #mainapp {
-    /*ul.nav.navbar-nav {
-      float: right;
-        li:last-child {
-          margin: 16px auto;
-          display: block;
-        }
-        li:first-child {
-          float: clear;
-          display: block;
-        }
-
-        li {
-          display: none;
-        }
-
-    }*/
-    ul.nav {
-      background: #808080;
-    }
-    /* ul.nav li.active a {
-      background: white;
-    } */
-    .side-nav {
-      ul.nav > li.active > a {
-        background-color: white;
-        z-index: 10;
-        margin-top: 1px;
-      }
-      ul.nav > li {
-        color: white;
-        border-bottom: solid thin;
-      }
-      ul li {
-        float: right;
-      }
-      background: white;
-      margin: 0px;
-      padding: 0px;
-      height: 100px;
-      position: relative;
-      .col-md-12 {
-        width: 100%;
-        position: absolute;
-        margin: 0px;
-        padding: 0px;
-      }
-    }
-    .col-md-2.side-nav {
-      width: 100%;
-      z-index: 100;
-      position: relative;
-      margin: 0px;
-      padding: 0px;
-      display: block;
-      float: left;
-    }
     .row.main {
       margin-left: auto;
       margin-right: auto;
@@ -393,30 +194,5 @@ a.sem span {
         }
       }
     }
-    .navbar {
-      margin-bottom: 0px;
-      text-transform: uppercase;
-    }
   }
 }
-
-/*
-@media (max-width: @screen-sm) {
-  #index {
-    .jumbotron.intro .mainActions {
-      position: relative;
-      margin-left: 0;
-      margin-right: 0;
-      margin-top: @lm;
-      text-align: center;
-      .btn, .btn-group {
-        margin-left: 0;
-        margin-right: 0;
-      }
-      .moreinfo {
-        margin-bottom: @mm;
-      }
-    }
-  }
-}
-*/

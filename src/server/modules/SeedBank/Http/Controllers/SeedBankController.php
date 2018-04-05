@@ -113,12 +113,23 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
 
     $formErrors = "";
-    $seed = "";
+    $item = "";
+
+    $items = \Caravel\Seed::where('user_id', '<>', $user->id)->where('public', true)->orderBy('updated_at', 'desc');
+    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
+    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
+    $paginated = $items->paginate(15)->setPath('/enciclopedia');
+    //return view('seedbank::myseeds')
+    foreach ($paginated->getCollection() as $seed)
+    {
+      $seed->load('family');
+      $seed->load('pictures');
+    }
 
 
     $alphabet = [];
     $active = 'b';
-    foreach(str_split('abcdefghijklmnopqrstuvwxuxz') as $l){
+    foreach(str_split('abcdefghijklmnopqrstuvwxyz') as $l){
       $letter = ['letter' => $l];
       if ($active == $l) {
         $letter['active'] = true;
@@ -132,6 +143,8 @@ class SeedBankController extends Controller {
     return view('seedbank::enciclopedia')
       ->with('modal_content', $modal_content)
       ->with('alphabet', $alphabet)
+      ->with('item', $item)
+      ->with('paginated', $paginated)
       ->with('active', ['enciclopedia' => true]);
   }
 
