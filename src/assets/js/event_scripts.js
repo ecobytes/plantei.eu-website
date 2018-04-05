@@ -144,9 +144,11 @@ $(function () {
     defaultView: 'month',
     header: { left: 'prev title next today', right: false, center: false},
     themeSystem: 'bootstrap3',
-    contentHeight: 400,
+    //contentHeight: 500,
     fixedWeekCount: false,
     lang: lang,
+    //aspectRatio: 1.3,
+    eventLimit: 3,
     timeFormat: 'HH:mm',
     viewRender: function (view, el) {
       $.each($("#mycalendar .fc-content-skeleton thead td"),
@@ -165,7 +167,7 @@ $(function () {
     eventAfterAllRender: function( view ) {
       // show event if available
       if (showevent_id) {
-        showevent_id = null;
+        //showevent_id = null;
         var event = $("#mycalendar").fullCalendar('clientEvents', showevent_id)[0];
         if (event) {
           $.each(["title", "description", "start", "end", "location", "address", "postal"], function (i, d) {

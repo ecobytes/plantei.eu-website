@@ -1,12 +1,6 @@
 {{> formErrors}}
-{{#if event}}
-<div class="modal-header text-center">
-  <!-- col-md-12 text-center" -->
-  <h1 class="modal-title">{{#if oldInput.title}}{{messages.update}} - {{oldInput.title}}{{else}}!!NOVO EVENTO!!{{/if}}</h1>
-</div>
-{{/if}}
 {{> modal_eventpreview }}
-<div id="event-form" class="col-md-8 col-md-offset-2" style="display: none;">
+<div id="event-form" style="display: none;">
   <form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/seedbank/register">
     <input type="hidden" name="_token" value="{{ csrfToken }}">
     <input type="hidden" name="_id" value="{{ oldInput.id }}">

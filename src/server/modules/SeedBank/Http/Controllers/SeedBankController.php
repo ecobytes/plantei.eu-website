@@ -732,7 +732,7 @@ class SeedBankController extends Controller {
 
     $user = \Auth::user();
 
-    $event_id = $request->input('event_id', null);
+    $event_id = $request->input('id', null);
 
     //FIXME TEST TODO
     //$event = $user->seeds->find($event_id);
@@ -742,21 +742,23 @@ class SeedBankController extends Controller {
     }
 
     if ( $event_id ) {
-      $event = [
+      $event = \Caravel\Calendar::find($event_id);
+      /*  )[
         'id' => 1,
         'title' => 'Um título',
         'location' => 'Lisboa',
         'postal' => '1900-177 Lisboa',
         'description' => 'Uma descrição do evento',
         'type' => 'AllTypes'
-      ];
+      ];*/
+      $title = $event->title;
     } else {
+      $title = Null;
       $event = Null;
     }
 
     // Just to create the div for the submition errors
     $formErrors = true;
-
 
     $modal_content = self::getEventForm(
       $event = $event,
@@ -766,6 +768,7 @@ class SeedBankController extends Controller {
     return view('seedbank::events')
       ->with('modal', true)
       ->with('update', true)
+      ->with('title', $title)
       ->with('modal_content', $modal_content)
       ->with('user', $user)
       ->with('active', ['events' => true]);
