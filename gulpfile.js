@@ -283,4 +283,16 @@ gulp.task('bowercopy', function(){
   cmd.on('close', function(code) {
     console.log('Done rebooting Database... exit code: ' + code);
   });
+  var cmd2 = spawn(
+    'php',
+    ['artisan', 'view:clear'],
+    {cwd: base_path + 'src/server', stdio: 'inherit'}
+  );
+  cmd2.on('close', function(code) {
+    console.log('Done clearing view... exit code: ' + code);
+    reload();
+  });
+
+
+
 });
