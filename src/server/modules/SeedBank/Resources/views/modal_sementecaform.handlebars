@@ -1,11 +1,13 @@
 {{> formErrors}}
 {{> modal_sementecapreview}}
 
-<form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/seedbank/register" {{#if preview}}style="display: none;"{{/if}}>
+<form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/api/sementecas" {{#if preview}}style="display: none;"{{/if}}>
   <input type="hidden" name="_token" value="{{ csrfToken }}">
   <input type="hidden" name="sementeca_id" value="{{ sementeca.id }}">
+  <input type="hidden" name="_save" value="1">
   <input type="hidden" name="lon" value="{{ sementeca.lon }}">
-  <input type="hidden" name="lat" value="{{ sementeca.lat }}">  {{#with oldInput }}
+  <input type="hidden" name="lat" value="{{ sementeca.lat }}">
+  {{#with oldInput }}
   <div class="row">
     <div class="form-group row">
       <div class="col-md-12">

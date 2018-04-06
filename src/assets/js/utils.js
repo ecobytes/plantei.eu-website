@@ -359,3 +359,13 @@ function findGetParameter(parameterName) {
   }
   return result;
 };
+
+function formErrors(errors, $form)
+{
+
+  let errorsDiv = $('.row.validationErrors').empty();
+  $.each(errors, function (key, value) {
+    errorsDiv.append('<div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert">' + value[0] + '</div>');
+  });
+  $('#modal').animate({ scrollTop: 0});
+}

@@ -5,7 +5,12 @@
     {{> formErrors}}
 </div>
 <div class="row content">
-  <form class="form-horizontal" role="form" method="POST" action="/seedbank/preferences" enctype="multipart/form-data">
+  <div class="row validationErrors">
+    {{#each formErrors}}
+      <div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert">{{this}}</div>
+    {{/each}}
+  </div>
+  <form class="form-horizontal" role="form" method="POST" action="/api/preferences" enctype="multipart/form-data">
     <input type="hidden" name="_token" value="{{ csrfToken }}">
     <input type="hidden" name="updatelocation" value=""/>
     <div class="row">
@@ -145,6 +150,7 @@
 </div>
 {{>mainapp_end }}
 {{> scripts }}
+<script src="/js/utils.js" charset="utf-8"></script>
 <script>
 $(function () {
   $("[rel='tooltip']").tooltip();
@@ -154,6 +160,39 @@ $('#updatelocation').on('click', function() {
     $('input[name="'+f+'"]').val($('#sug_'+f).val());
   });
   $('#updatelocation').val('update');
+});
+
+$('form').on('submit', function (e) {
+  e.preventDefault(); //keeps the form from behaving like a normal (non-ajax) html form
+  var $form = $(this);
+  /*tinymce.triggerSave();*/
+  var url = $form.attr('action');
+  var formData = $form.serialize();
+  //submits an array of key-value pairs to the form's action URL
+  $.post(url, formData, function(response)
+  {
+    //handle successful validation
+    // console.log('POST validated');
+    // return false;
+    window.open("/", "_self");
+
+
+  }).fail(function(response)
+  {
+      //handle failed validation
+      if (response.status == 422) {
+        formErrors(response.responseJSON, $form);
+      }
+      if (response.status == 500) {
+        // probably csrf mismatch
+        // window.open("/seedbank/preferences", "_self");
+        location.reload(true);
+      }
+
+  });
+  console.log('FORM was submitted');
+
+  return false;
 });
 </script>
 {{> footer}}

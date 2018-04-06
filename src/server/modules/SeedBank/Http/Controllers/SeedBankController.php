@@ -10,6 +10,7 @@ use GeoIp2\Database\Reader;
 
 
 class SeedBankController extends Controller {
+
   private function save_image($uploadedimage) {
     $file_md5 = md5_file($uploadedimage);
     $file_name = $file_md5;
@@ -182,32 +183,6 @@ class SeedBankController extends Controller {
 
   public function getMySeeds(Request $request)
   {
-    // Transactions
-    /*
-    $seeds = $user->seeds()->orderBy('updated_at', 'desc')->paginate(5)->setPath('/seedbank/seeds');
-    $t = $seeds;
-    $transactions = $user->transactionsPending();
-    foreach(['asked_by', 'asked_to'] as $asked){
-      foreach($transactions[$asked] as &$tr) {
-        $ta=[];
-        $tc=[];
-        foreach (["0","1","2"] as $i){
-          $ta[$i]= ($tr['accepted'] == $i);
-          $tc[$i]= ($tr['accepted'] == $i);
-        }
-        $tr['accepted'] = $ta;
-        $tr['accepted'] = $tc;
-      }
-    }
-    //return view('seedbank::myseeds')
-    $part = [ 'myseeds' => true ];
-    return view('seedbank::userarea', compact('part'))
-      ->with('pagination', \Lang::get('pagination'))
-      ->with('seeds', $t)
-      ->with('bodyId', 'myseeds')
-      ->with('transactionsBy', $transactions['asked_by'])
-      ->with('transactionsTo', $transactions['asked_to'])
-      ->with('active', ['myseeds' => true]); */
 
     $user = \Auth::user();
     //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
@@ -288,8 +263,6 @@ class SeedBankController extends Controller {
       ->with('monthstable', $monthsTable)
       ->with('viewonly', true)
       ->with('csrfToken', csrf_token())->render();
-
-
 
     return view('seedbank::seeds', compact('part', 'modal_content'))
       ->with('pagination', \Lang::get('pagination'))
@@ -373,36 +346,6 @@ class SeedBankController extends Controller {
       //'origin' => 'required',
     ]);
 
-    /* if (!($request->input('confirmed') == "1")){
-      $farming = false;
-      $pictures = true;
-      $taxonomy = false;
-      $formInput = $request->input();
-      if (isset($formInput['months'])) {
-        $farming = true;
-        $months = array();
-        foreach (range(1, 12) as $i) {
-          if (in_array($i, $formInput['months'])) {
-            $months[$i] = ['month' => true];
-          } else {
-            $months[$i] = ['month' => false];
-          }
-        }
-      } else { $months = false; }
-
-      if (($formInput['variety']) || ($formInput['species']) || ($formInput['family']) || ($formInput['latin_name'])){
-        $taxonomy = true;
-      }
-      return view('seedbank::snippet')
-        ->with('title', 'some nice title')
-        ->with('months', $months)
-        ->with('seed', $formInput)
-        ->with('pictures', $pictures)
-        ->with('farming', $farming)
-        ->with('taxonomy', $taxonomy)
-        ->with('messages', \Lang::get('seedbank::messages'))
-        ->with('deletebutton', \Lang::get('seedbank::messages')['delete']);
-    }*/
     $seed_keys = ['quantity','year', 'local', 'description', 'public', 'available', 'description',
       'latin_name','common_name','polinization','direct',
     ];
@@ -531,15 +474,41 @@ class SeedBankController extends Controller {
 
     return view('seedbank::preferences', compact('oldInput', 'availableLangs'))
       ->with('messages', \Lang::get('authentication::messages'))
+      ->with('csrfToken', csrf_token())
       ->with('user', $user)
       ->with('updatelocation', $updatelocation)
       ->with('location', $location)
       ->with('active', ['settings' => true]);
   }
 
+  private function prefValidationRules($data) {
+
+    $user = \Auth::user();
+    $rules = [
+      'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+      'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+      'place_name' => 'max:255|required_with:lon,lat',
+    ];
+    if (! $user->name == $data['name']){
+      $rules['name'] = 'required|max:255|unique:users';
+    }
+    if (( $user->email !== $data['email']) && ($data['email'])) {
+      $rules['email'] = 'sometimes|required|email|max:255|unique:users';
+    }
+    if ($data['password']){
+      $rules['password'] = 'required|confirmed|min:6';
+    }
+    return $rules;
+
+  }
+
   public function postPreferences(Request  $request)
   {
     $user = \Auth::user();
+
+    $this->validate($request, $this->prefValidationRules($request->all()));
+
+    /*
     $validator = $this->prefValidator($request->all(), [],\Lang::get('auth::validation'));
     if($validator->fails())
     {
@@ -547,6 +516,8 @@ class SeedBankController extends Controller {
         $request, $validator
       );
     }
+    */
+
     if (!$request->input('password')){
       unset($request['password']);
     } else {
@@ -774,95 +745,22 @@ class SeedBankController extends Controller {
       ->with('active', ['events' => true]);
   }
 
-  public function getAdminEvents () {
-    return view('seedbank::admin-events')
-      ->with('active', ['events' => true]);
-  }
-  public function getEventById ($id) {
-    $event = \Caravel\Calendar::findOrFail($id);
-    return view('seedbank::event-modal')
-      ->with('event', $event);
-  }
-  public function postEvents (Request $request) {
-    // TODO: Limit number of picture by seed?
+  public function getSementecas (Request $request) {
     $user = \Auth::user();
-    if ($request->has('seed_id')){
-      $seed = \Caravel\Seed::findOrFail($request->input('seed_id'));
-    } else {
-      $seed = false;
-    }
-    if ($request->hasFile('pictures')) {
-      $picture = $request->file('pictures')[0];
-      $status = SeedBankController::save_image($picture);
-      if (isset($status['error'])) {
-        return [ 'files' => [ ['error' => $status['error']]]];
-      } else {
-        if ($seed) {
-          if (!$seed->user_id == $user->id){
-            return [ 'files' => [ ['error' => 'File is owned by other user']]];
-          } else {
-            $seed->pictures()->save($status['picture']);
-          }
-        }
-        return [ 'files' => [
-          ['md5sum' => $status['picture']->md5sum,
-          'id' => $status['picture']->id,
-          'url' => $status['picture']->url,
-          'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
-          'deleteType' => 'GET'
-        ]]
-      ];
-      }
-    }
-    return [ 'files' => [['error' => 'No files sent']]];
-  }
-  //	Route::post('/add', function (Request $request) {
-  public function postAddEvent (Request $request) {
+    $lat = sprintf("%.5F", $user->lat);
+    $lon = sprintf("%.5F", $user->lon);
+
+    return view('seedbank::sementecas', compact('lat', 'lon'))
+      ->with('active', [ 'sementecas' => true ])
+      ->with('modal_content', view('seedbank::modal_sementecaform')
+        ->with('sementeca', \Caravel\Sementeca::first())
+        ->with('preview', true)->render())
+      ->with('bodyId', 'mainapp');
     $user = \Auth::user();
-    //TODO: Check that user can add events
-    $this->validate($request, [
-      'startdate' => 'required',
-      'starttime' => 'required',
-      'enddate' => 'required',
-      'endtime' => 'required',
-      'title' => 'required',
-      'city' => 'required',
-      'category' => 'required',
-    ]);
-    $event_id = $request->input('event_id') ?: false;
-    if ( ! $event_id ) {
-      $new_event = [];
-      foreach(['category', 'location', 'title',
-        'description', 'address'] as $key){
-      /*foreach(['category', 'location', 'start', 'end', 'title',
-      'description', 'address', 'image'] as $key){*/
-        $new_event[$key] = $request->input($key) ?: "";
-      };
-      $new_event['location'] = vsprintf("%s/%s", $request->only(['district', 'city']));
 
-      $start = \Carbon\Carbon::parse($request->input('startdate') . ' ' . $request->input('starttime'));
-      $end = \Carbon\Carbon::parse($request->input('enddate') . ' ' . $request->input('endtime'));
-      $new_event["start"] = $start;
-      $new_event["end"] = $end;
-      $new_event["user_id"] = $user->id;
-
-      $event = \Caravel\Calendar::create($new_event);
-    }
-    //return redirect('/events');
-    return '';
   }
 
-  public function postSementecasNew (Request $request) {
-    $user = \Auth::user();
-    //TODO: Check that user can create sementecas
-    $this->validate($request, [
-      'name' => 'required',
-      'lat' => 'required',
-      'lon' => 'required',
-    ], \Lang::get('seedbank::validation'));
-    $sementeca = \Caravel\Sementeca::create($request->input());
-    return $sementeca;
-  }
+
   public function setLocale($locale = null)
   {
     $availableLanguages = config('app.availableLanguages');

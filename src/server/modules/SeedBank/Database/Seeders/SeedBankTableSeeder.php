@@ -20,10 +20,10 @@ class SeedBankTableSeeder extends Seeder {
 
 		// Fake 10 sementecas
 		// limites do mapa
-    // norte: 44.074958, -9.997559
-		// sul: 36.689565, -6.04248fff
-		$latRange = [36.689565, 44.074958];
-		$lonRange = [-9.997559, -6.04248];
+    // norte: 44.074958, -9.997559 // 41.81718, -8.723145
+		// sul: 36.689565, -6.04248 // 37.244323, -7.492676
+		$latRange = [37.244323, 41.81718];
+		$lonRange = [-8.723145, -7.492676];
 		$a = 0;
 		while ($a <= 10) {
 			$lon = mt_rand($lonRange[0]*1000000,$lonRange[1]*1000000)/1000000;

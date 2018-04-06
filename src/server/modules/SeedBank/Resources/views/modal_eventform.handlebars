@@ -1,10 +1,13 @@
 {{> formErrors}}
 {{> modal_eventpreview }}
 <div id="event-form" style="display: none;">
-  <form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/seedbank/register">
+  <form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/api/calendar">
     <input type="hidden" name="_token" value="{{ csrfToken }}">
+    <input type="hidden" name="_save" value="1">
     <input type="hidden" name="_id" value="{{ oldInput.id }}">
     <input type="hidden" name="event_id" value="{{ oldInput.id }}">
+    <input type="hidden" name="start" value="{{ oldInput.start }}">
+    <input type="hidden" name="end" value="{{ oldInput.end }}">
     {{#with oldInput }}
     <div class="row">
       <div class="form-group">

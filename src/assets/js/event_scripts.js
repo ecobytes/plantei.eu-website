@@ -96,9 +96,10 @@ $(function () {
     }).fail(function(response)
     {
         //handle failed validation
-        associate_errors(response.responseJSON, $form);
+        formErrors(response.responseJSON, $form);
     });
-      return false;
+
+    return false;
   });
 
   function associate_errors(errors, $form)
@@ -193,6 +194,11 @@ $(function () {
           || ( $(ev.target).hasClass('fc-other-month')) )  {
         return;
       }
+
+      $('#event-form').find('input[name=start]').val(date.format('YYYY-MM-d hh:mm'));
+      $('#event-form').find('input[name=end]').val(date.add(4, 'hour').format('YYYY-MM-d hh:mm'));
+
+
       $('#event-preview').hide();
       $('#event-form').show();
       $('#modal').modal('show');

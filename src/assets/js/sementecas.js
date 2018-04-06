@@ -1,22 +1,62 @@
 var layerSementecas;
 
-var map;
+var map, markers;
 var ajaxRequest;
 var plotlist;
 var plotlayers=[];
 var onMapClick = function (e) {
   console.log("You clicked the map at " + e.latlng);
-  $.get('/sementecas/new', function(data) {
-        $('#sementeca .modal-content').empty();
-        $('#sementeca .modal-content').append(data);
+  $("form input[name='lat']").val(e.latlng.lat);
+  $("form input[name='lon']").val(e.latlng.lng);
+  $('#modal').modal('show');
+  $('#sementeca-preview').hide();
+  $('form').show();
+  $('form').submit(function(e){
+    e.preventDefault();
+    $.ajax({
+        url: $('form').attr('action'),
+        type:'post',
+        data:$('form').serialize(),
+        success:function(data){
+          console.log(this);
+          $('#modal').modal('hide');
+          $('#sementeca-preview').show();
+          $('form').hide();
+          getSementecas();
 
-        $('#sementeca').modal('show');
-      $("#sementeca input[name='lat']").val(e.latlng.lat);
-      $("#sementeca input[name='lon']").val(e.latlng.lng);
-      });
-  /*L.marker(e.latlng)
-    .bindPopup('<strong>new marker</strong>').addTo(map);*/
-  //map.removeLayer(layerSementecas);
+        },
+        error:function(data) {
+          if ( data.status == 422 ) {
+            console.log(data.responseJSON);
+            formErrors(data.responseJSON, $('form'))
+
+
+          }
+          return false;
+
+        }
+    });
+  });
+}
+
+var getSementecas = function () {
+  $.get('/api/sementecasgeo', function(data) {
+    if (map.hasLayer(markers)) {
+      map.removeLayer(markers);
+    }
+    markers = [];
+    $.each(data, function (i, s) {
+      var popup_text = '<a href="mailto:' + s.contact + '"><strong>' + s.name + '</strong></a><br>';
+      if ( s.image ) {
+        popup_text += '<img src="' + s.image + '"/>';
+      }
+      popup_text += s.description;
+      markers.push(L.marker({ lng: s.lon, lat: s.lat})
+        .bindPopup(popup_text));
+    });
+    layerSementecas = L.layerGroup(markers);
+    map.addLayer(layerSementecas);
+  });
 }
 
 function initmap(lat, lon) {
@@ -40,7 +80,6 @@ function initmap(lat, lon) {
     "maxZoom": 10,
     "maxBounds": bounds,
   });
-  //map = new L.Map('map');
 
   // create the tile layer with correct attribution
   var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -55,24 +94,6 @@ function initmap(lat, lon) {
   //map.addLayer(layer);
 
   // Add marker layer on load
-  $.get('/api/sementecasgeo', function(data) {
-    var markers = [];
-    //var sementecas = data;
-    $.each(data, function (i, s) {
-      var popup_text = '<a href="mailto:' + s.contact + '"><strong>' + s.name + '</strong></a><br>';
-      if ( s.image ) {
-        popup_text += '<img src="' + s.image + '"/>';
-      }
-      popup_text += s.description;
+  getSementecas();
 
-      markers.push(L.marker({ lng: s.lon, lat: s.lat})
-      .bindPopup(popup_text));
-    });
-    layerSementecas = L.layerGroup(markers);
-    map.addLayer(layerSementecas);
-  });
-
-  /*$('.leaflet-marker-pane img').on('click', function(e) {
-    console.log(e);
-  });*/
 }

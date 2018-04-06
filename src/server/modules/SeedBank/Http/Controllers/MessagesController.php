@@ -55,7 +55,7 @@ class MessagesController extends Controller {
       $view->with('message_id', $message_id)
         ->with(
           'modal_content',
-          view('seedbank::message_show_modal')
+          view('seedbank::modal_messenger')
             ->with('message_id', $message_id)
             ->with('tmessages', $messages)
   			    ->with('messages', \Lang::get('seedbank::messages'))

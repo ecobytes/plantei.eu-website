@@ -36,13 +36,11 @@
           <h4 class="modal-title">{{title}}</h4>
         </div>
         <div class="modal-body">
-          {{#if formErrors }}
           <div class="row validationErrors">
             {{#each formErrors}}
               <div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert">{{this}}</div>
             {{/each}}
           </div>
-          {{/if}}
           {{{ modal_content }}}
         </div>
       </div><!-- /.modal-content -->

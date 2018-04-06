@@ -313,6 +313,14 @@ Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controlle
 
     Route::get('/seeds', 'APIController@getSeeds');
     Route::get('/sementecasgeo', 'APIController@getSementecasGeo');
+    Route::post('/sementecas', 'APIController@getSementecas');
+    Route::get('/calendar', 'APIController@getEvents');
+    Route::post('/calendar', 'APIController@getEvents');
+    Route::group(['middleware' => 'csrf'], function(){
+      Route::post('/preferences', 'APIController@postPreferences');
+    });
+
+
 
     Route::get('/location', function (Request $request) {
       return array_keys(config('concelhos_portugal'));
@@ -326,23 +334,6 @@ Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controlle
     });
     Route::get('/location/{concelho}', function ($concelho) {
       return config('concelhos_portugal.' . $concelho);
-    });
-    Route::post('/calendar', function (Request $request) {
-      $events = \Caravel\Calendar::interval($request)->get();
-
-      // FAKE events if none exists
-      if ( ! $events->count()) {
-        $events = \Auth::user()->getEvents($start=$request->input('start'), $end=$request->input('end'));
-      }
-
-      return $events;
-    });
-    Route::post('/sementecas', function (Request $request) {
-      //$response = \Caravel\Sementeca::get();
-      //return $response;
-      //
-      //TODO: sort by date; request->interval
-      return \Caravel\Sementeca::paginate(5);
     });
     Route::post('/contacts/add', function (Request $request) {
       // Receive contact name; Return name and id

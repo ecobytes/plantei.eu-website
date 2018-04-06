@@ -98,17 +98,33 @@ class APIController extends Controller {
 	 *
 	 * @return Collection
 	 */
-	public function getEvents (Request $request) {
+	 public function getEvents (Request $request) {
+ 		/* TODO: Only return events for specific user */
 
-		$events = \Caravel\Calendar::interval($request)->get();
-
-		// FAKE events if none exists
-		if ( ! $events->count()) {
-			$events = \Auth::user()->getEvents($start=$request->input('start'), $end=$request->input('end'));
+		if ($request->input('_save', Null)) {
+			/* TODO: Validate form */
+			return "ok";
 		}
 
-		return $events;
+ 		if ( $request->input('id', Null) ) {
+ 			$event = \Caravel\Calendar::findOrFail($id);
+ 			return $event;
+ 		}
+
+		if ($request->input('start', Null) && $request->input('end', Null)) {
+			$events = \Caravel\Calendar::interval($request)->get();
+			return $events;
+		}
+
+		// TODO: Remove function in \Caravel\User::getEvents : FAKE events if none exists
+		/*if ( ! $events->count()) {
+			$events = \Auth::user()->getEvents($start=$request->input('start'), $end=$request->input('end'));
+		}*/
+
+		abort(404);
+
 	}
+
 
 	/**
 	 * GET: Reply to queries for Sementecas.
@@ -121,6 +137,13 @@ class APIController extends Controller {
       //return $response;
       //
       //TODO: sort by date; request->interval
+			if ($request->input('_save', Null)) {
+				$this->validate($request, [
+		      'name' => 'required',
+		      'lat' => 'required',
+		      'lon' => 'required',
+		    ], \Lang::get('seedbank::validation'));
+			}
       return \Caravel\Sementeca::paginate(5);
 
 	}
@@ -142,7 +165,52 @@ class APIController extends Controller {
 		}
 
 
+		private function prefValidationRules($data) {
 
+	    $user = \Auth::user();
+	    $rules = [
+	      'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+	      'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+	      'place_name' => 'max:255|required_with:lon,lat',
+	    ];
+	    if (! $user->name == $data['name']){
+	      $rules['name'] = 'required|max:255|unique:users';
+	    }
+	    if (( $user->email !== $data['email']) && ($data['email'])) {
+	      $rules['email'] = 'sometimes|required|email|max:255|unique:users';
+	    }
+	    if ($data['password']){
+	      $rules['password'] = 'required|confirmed|min:6';
+	    }
+	    return $rules;
 
+	  }
+		/**
+		 * POST: update user preferences
+		 * GeoLocation.
+		 *
+		 * @return Collection
+		 */
+		public function postPreferences(Request  $request)
+	  {
+	    $user = \Auth::user();
+
+	    $this->validate($request, $this->prefValidationRules($request->all()));
+
+	    if (!$request->input('password')){
+	      unset($request['password']);
+	    } else {
+	      $request['password'] = bcrypt($request->password);
+	    };
+	    foreach(['email', 'lat', 'lon', 'place_name'] as $field)
+	    {
+	      if (!$request->input($field))
+	      {
+	        unset($request[$field]);
+	      }
+	    }
+	    $user->update($request->all());
+	    return $user;
+		}
 
 }
