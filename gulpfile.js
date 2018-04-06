@@ -48,7 +48,7 @@ var paths = {
         "**/themes**/**",
         "**/ui**/**"
       ],
-      dst: "js" },
+      dst: publicDir + "js" },
     {
       dir: '/fullcalendar',
       src: "/dist/fullcalendar.min.css",
