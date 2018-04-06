@@ -39,8 +39,12 @@
 }
 
 #mainapp .content.seeds, #mainapp .content.enciclopedia {
+
+  div.col-sm-4 > div {
+    min-height: 150px;
+  }
+
   > div.col-sm-4:nth-last-child(-n+3) > div {
     border-bottom: solid thin;
-    min-height: 100px;
   }
 }
