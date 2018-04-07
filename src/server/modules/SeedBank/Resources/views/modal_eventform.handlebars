@@ -9,65 +9,122 @@
     <input type="hidden" name="start" value="{{ oldInput.start }}">
     <input type="hidden" name="end" value="{{ oldInput.end }}">
     {{#with oldInput }}
-    <div class="row">
-      <div class="form-group">
+    <div class="row" style="border: none; border-top:2px solid black; border-bottom: 2px solid black;">
+      <div class="col-md-12">
+        <div class="col-md-2" style="width: 8%;">
+          <div class="form-group">
+            <label class="control-label">{{../messages.title}}*</label>
+          </div>
+        </div>
+        <div class="col-md-10" style="width: 92%;">
+          <div class="form-group">
+            <span class="cell">
+              <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="title" value="{{title}}" autocomplete="off">
+              <span class="help-block"></span>
+            </span>
+         </div>
+        </div>
+      </div>
+      <div class="col-md-6">
         <div class="col-md-2">
-          <label class="control-label">{{../messages.title}}*<label>
+          <div class="form-group">
+            <label class="control-label">{{../messages.location}}</label>
+          </div>
         </div>
         <div class="col-md-10">
+          <div class="form-group">
+            <span class="cell">
+              <input type="text" class="form-control district" aria-describedby="helpBlock" placeholder="" name="location" value="{{location}}" autocomplete="off">
+              <span class="help-block"></span>
+            </span>
+          </div>
+          <div class="form-group">
+            <span class="cell">
+              <input type="text" class="form-control city" aria-describedby="helpBlock" placeholder="" name="address" value="{{address}}" autocomplete="off">
+              <span class="help-block"></span>
+            </span>
+          </div>
+          <div class="form-group">
+            <span class="cell">
+              <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="postal" value="{{postal}}" autocomplete="off">
+              <span class="help-block"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <select name="event-type" value="0" class="form-control">
+          <option value="0">TIPO de EVENTO</option>
+          <option value="1">Workshop</option>
+          <option value="2">Agricultura</option>
+          <option value="3">Encontro</option>
+        </select>
+        <div class="row" style="border: none;">
+          <div class="col-md-2">
+            <div class="form-group">
+              <span class="cell">
+              <label class="control-label">{{../messages.start}}</label>
+            </span>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <div class="form-group">
+              <span class="cell">
+                <div class="col-md-6">
+                  <input type="text" class="form-control date" aria-describedby="helpBlock" placeholder="" name="start-date" value="{{location}}" autocomplete="off">
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control time" aria-describedby="helpBlock" placeholder="" name="start-time" value="{{location}}" autocomplete="off">
+                </div>
+                <span class="help-block"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="border: none;">
+          <div class="col-md-2">
+            <div class="form-group">
+              <span class="cell">
+                <label class="control-label">{{../messages.end}}</label>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <div class="form-group">
+              <span class="cell">
+                <div class="col-md-6">
+                  <input type="text" class="form-control date" aria-describedby="helpBlock" placeholder="" name="end-date" value="{{location}}" autocomplete="off">
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control time" aria-describedby="helpBlock" placeholder="" name="end-time" value="{{location}}" autocomplete="off">
+                </div>
+                <span class="help-block"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <span class="cell">
+          <label class="control-label">{{../messages.description}}</label>
+        </span>
+        <div class="form-group">
           <span class="cell">
-            <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="title" value="{{title}}" autocomplete="off">
+            <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{../messages.adddetailstoevent}}!Adiciona detalhes ao evento!" name="description">{{description}}</textarea>
             <span class="help-block"></span>
           </span>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-      <div class="col-md-2">
-        <div class="form-group">
-          <label class="control-label">{{../messages.location}}</label>
-        </div>
-      </div>
-      <div class="col-md-10">
-        <div class="form-group">
-          <span class="cell">
-            <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="location" value="{{location}}" autocomplete="off">
-            <span class="help-block"></span>
-          </span>
-        </div>
-        <div class="form-group">
-          <span class="cell">
-            <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="address" value="{{address}}" autocomplete="off">
-            <span class="help-block"></span>
-          </span>
-        </div>
-        <div class="form-group">
-          <span class="cell">
-            <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="postal" value="{{postal}}" autocomplete="off">
-            <span class="help-block"></span>
-          </span>
-        </div>
-      </div>
-      </div>
-      <div class="col-md-4">
-        <p>TIPO de EVENTO</p>
-      </div>
-    </div>
-    <div class="row">
-      <span class="cell">
-        <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{../messages.description}}" name="description">{{description}}</textarea>
-      </span>
     </div>
     {{/with}}
-    <div class="row">
+    <div class="row" style="border:none;">
       <div class="form-group lmt">
         <div class="col-md-12 text-center">
-          <button type="button" class="btn btn-danger btn-lg" id="cancel_seed">
-            {{messages.registercancel}}
+          <button type="button" class="btn btn-danger btn-lg">
+            {{messages.cancel}}
           </button>
           <button type="submit" class="btn btn-primary btn-lg">
-            {{#if update}}{{messages.updateseed}}{{ else }}{{messages.registerseed}}{{/if}}
+            {{#if update}}{{messages.update}}{{ else }}{{messages.send}}{{/if}}
           </button>
         </div>
       </div>

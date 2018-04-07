@@ -1,6 +1,6 @@
-<div id="sementeca-preview" {{#unless preview }}  style="display: none;"{{/unless}}>
+<div id="event-preview" {{#unless preview }}  style="display: none;"{{/unless}}>
   <div class="row">
-    <h1 data-name="title">!!Event preview!!</h1>
+    <h1 data-name="title"></h1>
   </div>
   <div class="row">
     <p data-name="start"></p>
@@ -16,11 +16,6 @@
   </div>
   <div class="row">
     <div class="col-md-12 text-center">
-      <!-- button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">
-        <span aria-hidden="true">
-          {{ messages.cancel }}
-        </span>
-      </button -->
       <button type="button" class="btn btn-primary btn-lg">
         {{ messages.change }}
       </button>

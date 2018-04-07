@@ -1,8 +1,15 @@
-var showevent_id = parseInt(findGetParameter('id'));
 $(function () {
+  var showevent_id = parseInt(findGetParameter('id'));
 
   var districts = [];
   var cities = [];
+
+  $('#modal').on('hidden.bs.modal', function () {
+    // Cleanup modal content on close
+    $(this).find('.modal-title').text('');
+    $('#event-preview').hide();
+    $('#event-form').hide();
+  })
 
   $.get("/api/location", function (data) {
     districts = data;
@@ -97,6 +104,9 @@ $(function () {
     {
         //handle failed validation
         formErrors(response.responseJSON, $form);
+        $('html,body').animate({
+          scrollTop: $(".row.validationErrors").offset().top
+        }, 'slow');
     });
 
     return false;
@@ -111,7 +121,6 @@ $(function () {
     });
     errorsHtml += '</ul></div>';
     $('.modal-body').prepend(errorsHtml)
-    $('#event_info').animate({ scrollTop: 0});
   }
 
   tinymce.init({
@@ -168,22 +177,40 @@ $(function () {
     eventAfterAllRender: function( view ) {
       // show event if available
       if (showevent_id) {
-        //showevent_id = null;
         var event = $("#mycalendar").fullCalendar('clientEvents', showevent_id)[0];
         if (event) {
           $.each(["title", "description", "start", "end", "location", "address", "postal"], function (i, d) {
             $('#event-preview').find('[data-name="' + d + '"]').text(event[d]);
           });
+          if ( event.permission) {
+            $('#event-preview button').show();
+            $('#event-preview button').on('click', function (e) {
+            });
+          } else {
+            $('#event-preview button').hide();
+            $('#event-preview button').unbind();
+          }
           $('#event-preview').show();
           $('#event-form').hide();
           $('#modal').modal('show');
         }
+        showevent_id = null;
       };
     },
     eventClick: function(calEvent, jsEvent, view) {
       $.each(["title", "description", "start", "end", "location", "address", "postal"], function (i, d) {
         $('#event-preview').find('[data-name="' + d + '"]').text(calEvent[d]);
       });
+      if ( calEvent.permission) {
+        $('#event-preview button').show();
+        $('#event-preview button').on('click', function (e) {
+          $('#event-form button[type=submit]').text(Lang.get('seedbank::messages.update'));
+        });
+      } else {
+        $('#event-preview button').hide();
+        $('#event-preview button').unbind();
+      }
+
       $('#event-preview').show();
       $('#event-form').hide();
       $('#modal').modal('show');
@@ -197,12 +224,16 @@ $(function () {
 
       $('#event-form').find('input[name=start]').val(date.format('YYYY-MM-d hh:mm'));
       $('#event-form').find('input[name=end]').val(date.add(4, 'hour').format('YYYY-MM-d hh:mm'));
-
-
+      $('form input.date[name=start-date]').val(date.format('YYYY-MM-d'));
+      $('form input.time[name=start-time]').val(date.format("9:00"));
+      $('form button.btn-danger').on('click', function (e) {
+        $('#modal').modal('hide');
+      });
+      $('#modal .modal-title').text('Novo Evento');
+      $('#event-form button[type=submit]').text(Lang.get('seedbank::messages.send'));
       $('#event-preview').hide();
       $('#event-form').show();
       $('#modal').modal('show');
-      return;
     },
     eventSources: [
     {

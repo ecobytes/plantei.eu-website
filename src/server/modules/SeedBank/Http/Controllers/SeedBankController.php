@@ -739,7 +739,6 @@ class SeedBankController extends Controller {
     return view('seedbank::events')
       ->with('modal', true)
       ->with('update', true)
-      ->with('title', $title)
       ->with('modal_content', $modal_content)
       ->with('user', $user)
       ->with('active', ['events' => true]);
