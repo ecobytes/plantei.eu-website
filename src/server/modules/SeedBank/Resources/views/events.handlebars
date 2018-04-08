@@ -14,7 +14,7 @@
 <script type="text/javascript" src="/js/event_scripts.js"></script>
 
 <script>
-
+{{#if user}}const user_id = {{ user.id }}{{ else }}var user_id{{/if}};
 $(document).ready(function() {
   // page is now ready, initialize the calendar...
   /*let default_event_id = parseInt(findGetParameter('id'));

@@ -1,6 +1,7 @@
 {{> mainapp_start}}
-    <div class="row">
-      <h1>{{lang 'seedbank::menu.encyclopedia'}}</h1>
+    <div class="row header">
+      <h1 style="float: left">{{lang 'seedbank::menu.encyclopedia'}}</h1>
+      <button type="button" class="btn btn-lg btn-success new-encicl" style="float: right; margin-right: 32px; margin-top: 16px;">{{ messages.newencicl }}!NOVA ENTRADA!</button>
     </div>
     <div class="row enciclopedia">
       <table>
@@ -33,6 +34,7 @@
     {{> paginator}}
     {{> mainapp_end}}
 <script src="/js/utils.js"></script>
+<script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
 <script src="/js/enciclopedia.js" charset="utf-8"></script>
 
 <script>

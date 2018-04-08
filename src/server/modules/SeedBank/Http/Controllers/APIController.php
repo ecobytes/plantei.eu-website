@@ -103,7 +103,25 @@ class APIController extends Controller {
 
 		if ($request->input('_save', Null)) {
 			/* TODO: Validate form */
-			return "ok";
+			$rules = [
+			  'title' => 'required',
+			  'start' => 'required',
+			  'end' => 'required',
+				'event-type' => 'required',
+		  ];
+			$this->validate($request, $rules, \Lang::get('seedbank::validation'));
+
+			if ( $request->input('id', Null) ) {
+				$event = \Caravel\Calendar::findOrFail($request->input('id'));
+				$event->update($request->input());
+			} else {
+				$event = new \Caravel\Calendar($request->input());
+				$event->user_id = \Auth::user()->id;
+			}
+
+			$event->save();
+
+			return [ "id" => $event->id ];
 		}
 
  		if ( $request->input('id', Null) ) {

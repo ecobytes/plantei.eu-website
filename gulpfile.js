@@ -1,12 +1,13 @@
 var base_path = '/vagrant/';
 var gulp = require('gulp');
 var less = require('gulp-less');
-var path = require('path');
+//var path = require('path');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
-var shell = require('gulp-shell');
+//var shell = require('gulp-shell');
 var spawn = require('child_process').spawn;
-var del = require('del');
+//var gspawn = require('gulp-spawn');
+//var del = require('del');
 var rename = require("gulp-rename");
 
 const publicDir = base_path + 'src/server/public/';
@@ -23,7 +24,9 @@ var paths = {
     base_path + 'src/assets/images/moons/**.svg',
   ],
   langFiles: [
-    base_path + 'src/server/resources/lang/*/*.php',
+    base_path + 'src/server/resources/lang/**/*.php'
+  ],
+  moduleLangFiles : [
     base_path + 'src/server/modules/*/Resources/lang/*/*.php'
   ],
   vendorFiles: [
@@ -108,7 +111,8 @@ gulp.task('vendorAssetCopy', function(){
     }
   }
 });
-gulp.task('clear_views', function(){
+
+gulp.task('clear_views', function(done){
   var cmd = spawn(
     'php',
     ['artisan', 'view:clear'],
@@ -117,31 +121,44 @@ gulp.task('clear_views', function(){
   cmd.on('close', function(code) {
     console.log('Done clearing view... exit code: ' + code);
     reload();
+    done();
   })
 });
+
 gulp.task('rebootdb', function(){
-  var cmd = spawn('bash', ['rebootdb.sh'], {cwd: base_path + 'scripts', stdio: 'inherit'});
-  cmd.on('close', function(code) {
-    console.log('Done rebooting Database... exit code: ' + code);
-  });
-  reload();
+  //var cmd = spawn('bash', ['rebootdb.sh'], {cwd: base_path + 'scripts', stdio: 'inherit'});
+  //cmd.on('close', function(code) {
+  //  console.log('Done rebooting Database... exit code: ' + code);
+  //});
+  //reload();
 });
-gulp.task('langs', function(){
+
+gulp.task('langs', function(done){
   var cmd = spawn(
     'php',
     ['artisan', 'lang:js', '-c', 'public/js/messages.js'],
     {cwd: base_path + 'src/server', stdio: 'inherit'}
   );
   cmd.on('close', function(code) {
-    console.log('Done rebooting Database... exit code: ' + code);
+    console.log('Done publishing js languages... exit code: ' + code);
+    reload();
+    done();
   });
+  
 });
+
+var moduleLangCopy = function (e) {
+  let l = e.path.replace(base_path + 'src/server/', '').split('/');
+  let dest = base_path + 'src/server/resources/lang/vendor/' + l[1].toLowerCase() + '/' + l[4];
+  gulp.src(e.path).pipe(gulp.dest(dest));
+};
 
 gulp.task('less', function() {
   return gulp.src(base_path + 'src/assets/less/style.less')
     .pipe(less())
     .pipe(gulp.dest(base_path + 'src/server/public/css/'));
 });
+
 gulp.task('less-watch', ['less'], function(done){
   reload();
   done();
@@ -151,6 +168,7 @@ gulp.task('js', function(){
   gulp.src(paths.jsFiles)
   .pipe(gulp.dest(publicDir + 'js'));
 });
+
 gulp.task('js-watch', ['js'], function(done){
   reload();
   done();
@@ -161,6 +179,7 @@ gulp.task('images', function(){
   .pipe(gulp.dest(publicDir + 'images'))
   .pipe(reload({stream:true})); //Browser Sync
 });
+
 gulp.task('images-watch', ['images'], function(done){
   reload();
   done();
@@ -174,6 +193,7 @@ gulp.task('browser-sync', function() {
         }
     });
 });
+
 gulp.task(
   'default',
   [
@@ -182,12 +202,14 @@ gulp.task(
     'less',
     'js',
     'images',
-    'clear_views'
+    'clear_views',
+    'langs'
   ],
   function() {
     gulp.watch(paths.lessFiles, { interval: 1000 }, ['less-watch']);
     gulp.watch(paths.jsFiles, { interval: 1000 }, ['js-watch']);
     gulp.watch(paths.tmplFiles, { interval: 1000 }, ['clear_views']);
+    gulp.watch(paths.moduleLangFiles, { interval: 1000 }, moduleLangCopy);
     gulp.watch(paths.langFiles, { interval: 1000 }, ['langs']);
     gulp.watch(
       base_path + 'src/bower_components/**',
@@ -195,19 +217,15 @@ gulp.task(
       ['vendorAssetCopy']
     );
     gulp.watch(paths.imgFiles, { interval: 1000 }, ['images-watch']);
-    /*
-    gulp.watch(htmlFiles, { interval: 1000 });
-    gulp.watch(appFiles, { interval: 1000 }, ['clear_views']);
-    */
   }
 );
+
 gulp.task('bowercopy', function(){
   gulp.src(base_path + 'src/assets/less/style.less')
     .pipe(less())
-    .pipe(gulp.dest(base_path + 'src/server/public/css/'))
+    .pipe(gulp.dest(base_path + 'src/server/public/css/'));
 
   gulp.src([
-    //base_path + 'src/assets/js/tinymce**/**',
     base_path + 'src/assets/js/tinymce**/**/**/plugin.min.js',
     base_path + 'src/assets/js/*.js',
     base_path + 'src/bower_components/bootstrap/dist/js/bootstrap.min.js',
@@ -240,12 +258,6 @@ gulp.task('bowercopy', function(){
   .pipe(rename('moment.min.js'))
   .pipe(gulp.dest(base_path + 'src/server/public/js/fullcalendar'));
 
-  //gulp.src([
-  //  base_path + 'src/bower_components/jquery-ui/themes/ui-lightness/jquery-ui.min.css',
-  //  base_path + 'src/bower_components/jquery-ui/themes/ui-lightness/images**/*'
-  //  ], {base: base_path + 'src/bower_components/jquery-ui/themes/ui-lightness'})
-  //.pipe(gulp.dest(base_path + 'src/server/public/css'));
-
   gulp.src([
     base_path + 'src/assets/css/jquery-ui.theme.min.css',
     base_path + 'src/assets/css/jquery-ui.min.css',
@@ -268,11 +280,6 @@ gulp.task('bowercopy', function(){
     ])
   .pipe(gulp.dest(base_path + 'src/server/public/fonts'));
 
-  //gulp.src([
-  //  base_path + 'src/assets/images/logo_plantei.svg',
-  //  base_path + 'src/assets/images/trigos.svg',
-  //  ])
-  //.pipe(gulp.dest(base_path + 'src/server/public/images'));
   gulp.src(paths.imgFiles).pipe(gulp.dest(base_path + 'src/server/public/images'));
 
   var cmd = spawn(
@@ -292,7 +299,4 @@ gulp.task('bowercopy', function(){
     console.log('Done clearing view... exit code: ' + code);
     reload();
   });
-
-
-
 });

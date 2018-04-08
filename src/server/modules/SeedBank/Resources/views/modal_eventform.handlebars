@@ -4,7 +4,7 @@
   <form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/api/calendar">
     <input type="hidden" name="_token" value="{{ csrfToken }}">
     <input type="hidden" name="_save" value="1">
-    <input type="hidden" name="_id" value="{{ oldInput.id }}">
+    <input type="hidden" name="id" value="{{ oldInput.id }}">
     <input type="hidden" name="event_id" value="{{ oldInput.id }}">
     <input type="hidden" name="start" value="{{ oldInput.start }}">
     <input type="hidden" name="end" value="{{ oldInput.end }}">
@@ -34,19 +34,19 @@
         <div class="col-md-10">
           <div class="form-group">
             <span class="cell">
-              <input type="text" class="form-control district" aria-describedby="helpBlock" placeholder="" name="location" value="{{location}}" autocomplete="off">
+              <input type="text" class="form-control district" aria-describedby="helpBlock" placeholder="{{ district }}!districto!" name="district" value="{{ district }}" autocomplete="off">
               <span class="help-block"></span>
             </span>
           </div>
           <div class="form-group">
             <span class="cell">
-              <input type="text" class="form-control city" aria-describedby="helpBlock" placeholder="" name="address" value="{{address}}" autocomplete="off">
+              <input type="text" class="form-control council" aria-describedby="helpBlock" placeholder="{{ council }}!Concelho!" name="council" value="{{ council }}" autocomplete="off">
               <span class="help-block"></span>
             </span>
           </div>
           <div class="form-group">
             <span class="cell">
-              <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="postal" value="{{postal}}" autocomplete="off">
+              <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="{{ place }}!sitio!" name="place" value="{{ place }}" autocomplete="off">
               <span class="help-block"></span>
             </span>
           </div>

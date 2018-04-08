@@ -17,7 +17,7 @@ $(function () {
 
   $("[rel='tooltip']").tooltip();
 
-  $('.time').timepicker({timeFormat: "G:i"});
+  $('.time').timepicker({timeFormat: "H:i"});
   $('.date').datepicker({minDate: -1, dateFormat: "yy-mm-dd"});
   $( ".district" ).autocomplete({
     source: function( request, response ) {
@@ -35,15 +35,16 @@ $(function () {
       {
         var v = ui.content[0].value
         $(this).val(v);
-        $('.city').prop('disabled', false).focus();
+        $('.council').prop('disabled', false).focus();
         $.get("/api/location/" + v, function (data) {
           cities = data;
         });
-        $('.city').focus();
+        $('.council').focus();
       }
     },
+    appendTo: "#modal",
   });
-  $( ".city" ).autocomplete({
+  $( ".council" ).autocomplete({
     source: function( request, response ) {
       var r = [];
       var term = request.term;
@@ -61,27 +62,31 @@ $(function () {
         $('textarea').focus();
       }
     },
+    appendTo: "#modal",
   });
   $('.district').on('change', function (e) {
-    $('.city').val("");
+    $('.council').val("");
     var district = $(e.target).val();
     if ( $.inArray(district, districts) !== -1) {
-      $('.city').prop('disabled', false).focus();
+      $('.council').prop('disabled', false).focus();
       $.get("/api/location/" + district, function (data) {
         cities = data;
       });
     } else {
-      $('.city').prop('disabled', true);
-      $('.city').val("");
+      $('.council').prop('disabled', true);
+      $('.council').val("");
       cities = []
     }
   });
 
-  $('.city').on('change', function (e) {
+  $('.council').on('change', function (e) {
     var city = $(e.target).val();
     if ( $.inArray(city, cities) == -1) {
-      $('.city').val("");
+      $('.council').val("");
     }
+  });
+  $('form input[name=start-date]').on('change', function (e) {
+    $('form input[name=end-date]').val($('form input[name=start-date]').val());
   });
 
   // Form Validation
@@ -90,12 +95,69 @@ $(function () {
     var $form = $(this);
     tinymce.triggerSave();
     e.preventDefault(); //keeps the form from behaving like a normal (non-ajax) html form
+
+    var getError = function (a,b,c,d) {
+      let parameters = {};
+      if (c) {
+        parameters['attribute'] = c;
+        if (d) {
+          parameters[a] = d;
+        }
+      }
+      return [Lang.get(b, parameters)];
+    }
+
     var url = $form.attr('action');
+
+    let start = moment(
+      $form.find('input[name=start-date]').val() + ' ' +
+      $form.find('input[name=start-time]').val(),
+      'YYYY-MM-DD hh:mm'
+    );
+    let end = moment(
+      $form.find('input[name=end-date]').val() + ' ' +
+      $form.find('input[name=end-time]').val(),
+      'YYYY-MM-DD hh:mm'
+    );
+
+
+    let errors = {};
+
+    if ( end > start ) {
+      $form.find('input[name=start]').val(start.format());
+      $form.find('input[name=end]').val(end.format());
+    } else {
+      errors['date'] = getError(
+        'date',
+        'validation.before',
+        Lang.get('seedbank::messages.startdate'),
+        Lang.get('seedbank::messages.enddate')
+      );
+    }
+
+    if ( ! $form.find('input[name=title]').val() ) {
+      errors['title'] = getError(
+        'title',
+        'validation.required',
+        Lang.get('seedbank::messages.title')
+      );
+    }
+
+    if ( Object.keys(errors).length ) {
+      formErrors(errors);
+      return false;
+    }
+
+
     var formData = $form.serialize();
     //submits an array of key-value pairs to the form's action URL
     $.post(url, formData, function(response)
     {
       //handle successful validation
+      if (response.id) {
+        console.log("saved with with: " + response.id);
+        $(".row.validationErrors").empty();
+      }
       $('#modal').modal('toggle');
       $('#mycalendar').fullCalendar('refetchEvents');
       return false;
@@ -111,17 +173,6 @@ $(function () {
 
     return false;
   });
-
-  function associate_errors(errors, $form)
-  {
-    $('.alert-danger').remove();
-    errorsHtml = '<div class="alert alert-danger"><ul>';
-    $.each( errors, function( key, value ) {
-      errorsHtml += '<li>' + value[0] + '</li>'; //showing only the first error.
-    });
-    errorsHtml += '</ul></div>';
-    $('.modal-body').prepend(errorsHtml)
-  }
 
   tinymce.init({
     selector: 'textarea',
@@ -147,6 +198,68 @@ $(function () {
       });
     }
   });
+
+  var eventPreview = function(event, element) {
+    if (! element) {
+      element = $('#event-preview');
+    }
+    eventForm(event, element);
+    $.each(["title", "start", "end", "location", "address", "postal"], function (i, d) {
+      element.find('[data-name="' + d + '"]').text(event[d]);
+    });
+    element.find('[data-name=description]').html(event['description']);
+    if ( event.user_id == user_id) {
+      $('#event-preview button').show();
+      $('#event-preview button').on('click', function (e) {
+        $('#event-form button[type=submit]').text(Lang.get('seedbank::messages.update'));
+        $('#event-preview').hide();
+        $('#event-form').show();
+      });
+    } else {
+      $('#event-preview button').hide();
+      $('#event-preview button').unbind();
+    }
+  }
+
+  var eventForm = function(event, element) {
+
+    if (! element) {
+      element = $('#event-form');
+    }
+
+    var submitText = Lang.get('seedbank::messages.send');
+    var titleText = Lang.get('seedbank::messages.newevent');
+
+    if ( event.title ) {
+      submitText = Lang.get('seedbank::messages.update');
+      titleText = '';
+      $.each(["title", "location", "address", "postal", "id"], function (i, d) {
+          element.find('input[name="' + d + '"]').val(event[d]);
+      });
+      tinyMCE.activeEditor.setContent(event.description);
+    } else {
+      $.each(["title", "location", "address", "postal", "id"], function (i, d) {
+        element.find('input[name="' + d + '"]').val('');
+        tinyMCE.activeEditor.setContent('');
+      });
+    }
+
+    $.each(["start", "end"], function (i, d) {
+      let date = event[d];
+      element.find('input[name="' + d + '"]').val(date.format());
+      element.find('input[name=' + d + '-date]').val(date.format('YYYY-MM-DD'));
+      element.find('input[name=' + d + '-time]').val(date.format('HH:mm'));
+    });
+
+    $('form button.btn-danger').on('click', function (e) {
+      $('#modal').modal('hide');
+    });
+
+    $('#event-form button[type=submit]').text(submitText);
+    $('#modal .modal-title').text(titleText);
+    $('#event-preview').hide();
+    $(".row.validationErrors").empty();
+  }
 
   $('#mycalendar').fullCalendar({
     // put your options and callbacks here
@@ -179,17 +292,8 @@ $(function () {
       if (showevent_id) {
         var event = $("#mycalendar").fullCalendar('clientEvents', showevent_id)[0];
         if (event) {
-          $.each(["title", "description", "start", "end", "location", "address", "postal"], function (i, d) {
-            $('#event-preview').find('[data-name="' + d + '"]').text(event[d]);
-          });
-          if ( event.permission) {
-            $('#event-preview button').show();
-            $('#event-preview button').on('click', function (e) {
-            });
-          } else {
-            $('#event-preview button').hide();
-            $('#event-preview button').unbind();
-          }
+          eventPreview(event);
+
           $('#event-preview').show();
           $('#event-form').hide();
           $('#modal').modal('show');
@@ -198,18 +302,7 @@ $(function () {
       };
     },
     eventClick: function(calEvent, jsEvent, view) {
-      $.each(["title", "description", "start", "end", "location", "address", "postal"], function (i, d) {
-        $('#event-preview').find('[data-name="' + d + '"]').text(calEvent[d]);
-      });
-      if ( calEvent.permission) {
-        $('#event-preview button').show();
-        $('#event-preview button').on('click', function (e) {
-          $('#event-form button[type=submit]').text(Lang.get('seedbank::messages.update'));
-        });
-      } else {
-        $('#event-preview button').hide();
-        $('#event-preview button').unbind();
-      }
+      eventPreview(calEvent);
 
       $('#event-preview').show();
       $('#event-form').hide();
@@ -222,15 +315,19 @@ $(function () {
         return;
       }
 
-      $('#event-form').find('input[name=start]').val(date.format('YYYY-MM-d hh:mm'));
-      $('#event-form').find('input[name=end]').val(date.add(4, 'hour').format('YYYY-MM-d hh:mm'));
-      $('form input.date[name=start-date]').val(date.format('YYYY-MM-d'));
-      $('form input.time[name=start-time]').val(date.format("9:00"));
-      $('form button.btn-danger').on('click', function (e) {
-        $('#modal').modal('hide');
+      let startend = {
+        'start': new moment(date.hours(9)),
+        'end': new moment(date.add(4, 'hour'))
+      };
+      eventForm(startend);
+
+
+      $.each(['start', 'end'], function (i, d){
+        $('#event-form').find('input[name=' + d +']').val(startend[d].format('YYYY-MM-DD HH:mm'));
+        $('form input.date[name=' + d +'-date]').val(startend[d].format('YYYY-MM-DD'));
+        $('form input.time[name=' + d +'-time]').val(startend[d].format("HH:mm"));
       });
-      $('#modal .modal-title').text('Novo Evento');
-      $('#event-form button[type=submit]').text(Lang.get('seedbank::messages.send'));
+
       $('#event-preview').hide();
       $('#event-form').show();
       $('#modal').modal('show');

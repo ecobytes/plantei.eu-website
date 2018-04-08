@@ -119,4 +119,5 @@ return [
     'name' => 'Nome',
     'contact' => 'Contacto',
     'createSementeca' => 'Regista sementeca',
+    'newevent' => 'Evento Novo',
 ];
