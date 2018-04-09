@@ -27,7 +27,7 @@ var paths = {
     base_path + 'src/server/resources/lang/**/*.php'
   ],
   moduleLangFiles : [
-    base_path + 'src/server/modules/*/Resources/lang/*/*.php'
+    base_path + 'src/server/modules/*/Resources/lang/**/*.php'
   ],
   vendorFiles: [
     {
@@ -149,8 +149,12 @@ gulp.task('langs', function(done){
 
 var moduleLangCopy = function (e) {
   let l = e.path.replace(base_path + 'src/server/', '').split('/');
-  let dest = base_path + 'src/server/resources/lang/vendor/' + l[1].toLowerCase() + '/' + l[4];
-  gulp.src(e.path).pipe(gulp.dest(dest));
+  let dest = base_path + 'src/server/resources/lang/vendor/' + l[1].toLowerCase();
+  if (e.contents) {
+    // called from gulp.dest
+    return dest;
+  }
+  return gulp.src(e.path).pipe(gulp.dest(dest + '/' + l[4]));
 };
 
 gulp.task('less', function() {
@@ -281,6 +285,15 @@ gulp.task('bowercopy', function(){
   .pipe(gulp.dest(base_path + 'src/server/public/fonts'));
 
   gulp.src(paths.imgFiles).pipe(gulp.dest(base_path + 'src/server/public/images'));
+
+  for (let x of ['SeedBank', 'ProjectPresentation', 'Authentication', 'Newsletter']){
+    gulp.src(base_path + 'src/server/modules/' + x + '/Resources/lang/**/*.php')
+      .pipe(gulp.dest(moduleLangCopy));
+            //(e)base_path + 'src/server/resources/lang/vendor/' + x.toLowerCase()));
+      console.log('Copied '+ x);
+
+    //moduleLangCopy({'path':  base_path + 'src/server/modules/' + x + 'Resources/lang/*/*.php'
+  };
 
   var cmd = spawn(
     'php',
