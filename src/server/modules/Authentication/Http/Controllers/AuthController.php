@@ -136,8 +136,9 @@ class AuthController extends Controller {
     return redirect('/')
       ->withInput($request->only('nameoremail', 'remember'))
       ->withErrors([
-        'email' => 'These credentials do not match our records or account not active.',
+        'email' => \Lang::get('auth::validation.login.error')
       ]);
+        // 'These credentials do not match our records or account not active.',
   }
 
   public function getLogout()
