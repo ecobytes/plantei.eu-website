@@ -15,8 +15,8 @@
 {{> mainapp_end}}
 <script type="text/javascript" src="/js/leaflet/leaflet.js"></script>
 <script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
-<script type="text/javascript" src="/js/utils.js"></script>
-<script type="text/javascript" src="/js/sementecas.js"></script>
+<script type="text/javascript" src="/js/utils.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
+<script type="text/javascript" src="/js/sementecas.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
 <script>
 window.onload = function () {
   initmap({{#if lat}}{{lat}}{{/if}}{{#if lon}}, {{lon}}{{/if}});

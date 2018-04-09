@@ -16,7 +16,10 @@ class GlobalVars {
     $isProduction = false;
     if(env('APP_ENV') == 'production'){
       $isProduction = true;
+    } else {
+      \View::share('uniqid', uniqid());
     }
+
     \View::share('isProduction', $isProduction);
     \View::share('siteName', env('SITE_NAME'));
     \View::share('footerText', \Lang::get('footer.text'));

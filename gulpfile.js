@@ -227,6 +227,7 @@ gulp.task(
 gulp.task('bowercopy', function(){
   gulp.src(base_path + 'src/assets/less/style.less')
     .pipe(less())
+    .pipe(buffer())
     .pipe(gulp.dest(base_path + 'src/server/public/css/'));
 
   gulp.src([
@@ -290,8 +291,6 @@ gulp.task('bowercopy', function(){
     gulp.src(base_path + 'src/server/modules/' + x + '/Resources/lang/**/*.php')
       .pipe(gulp.dest(moduleLangCopy));
             //(e)base_path + 'src/server/resources/lang/vendor/' + x.toLowerCase()));
-      console.log('Copied '+ x);
-
     //moduleLangCopy({'path':  base_path + 'src/server/modules/' + x + 'Resources/lang/*/*.php'
   };
 

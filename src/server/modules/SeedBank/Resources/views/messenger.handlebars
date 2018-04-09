@@ -47,11 +47,9 @@
   </table>
 </div>
 {{> mainapp_end }}
-<script type="text/javascript" src="/js/messenger.js"></script>
+
+<script type="text/javascript" src="/js/messenger.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
 <script>
-$("p.badge").on('click', function (e){
-  $(this).append('<strong>YOYOYO</strong>');
-});
 {{#if message_id }}
 $("#modal").modal('show');
 {{/if}}

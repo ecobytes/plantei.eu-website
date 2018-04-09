@@ -60,7 +60,6 @@ class Authenticate {
       }
     }
 
-
     \App::setLocale($locale);
     \View::share('langs', $lang);
     \View::share('langString', $locale);
