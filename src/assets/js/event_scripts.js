@@ -203,7 +203,6 @@ $(function () {
     if (! element) {
       element = $('#event-preview');
     }
-    eventForm(event, element);
     $.each(["title", "start", "end", "location", "address", "postal"], function (i, d) {
       element.find('[data-name="' + d + '"]').text(event[d]);
     });
@@ -211,6 +210,8 @@ $(function () {
     if ( event.user_id == user_id) {
       $('#event-preview button').show();
       $('#event-preview button').on('click', function (e) {
+        console.log('preview altera script');
+        eventForm(event);
         $('#event-form button[type=submit]').text(Lang.get('seedbank::messages.update'));
         $('#event-preview').hide();
         $('#event-form').show();
@@ -231,17 +232,22 @@ $(function () {
     var titleText = Lang.get('seedbank::messages.newevent');
 
     if ( event.title ) {
+      console.log("yes event tile: ");
+      console.log(event);
       submitText = Lang.get('seedbank::messages.update');
       titleText = '';
       $.each(["title", "location", "address", "postal", "id"], function (i, d) {
           element.find('input[name="' + d + '"]').val(event[d]);
+          console.log(element.find('input[name="' + d + '"]').val(event[d]));
       });
       tinyMCE.activeEditor.setContent(event.description);
     } else {
+      console.log("no event tile");
+      console.log(event);
       $.each(["title", "location", "address", "postal", "id"], function (i, d) {
         element.find('input[name="' + d + '"]').val('');
-        tinyMCE.activeEditor.setContent('');
       });
+      tinyMCE.activeEditor.setContent('');
     }
 
     $.each(["start", "end"], function (i, d) {

@@ -15,14 +15,5 @@
 
 <script>
 {{#if user}}const user_id = {{ user.id }}{{ else }}var user_id{{/if}};
-$(document).ready(function() {
-  // page is now ready, initialize the calendar...
-  /*let default_event_id = parseInt(findGetParameter('id'));
-  console.log(default_event_id);
-  if (default_event_id) {
-    var event = $("#mycalendar").fullCalendar('clientEvents', default_event_id)[0];
-    console.log(event);
-  };*/
-});
 </script>
 {{>footer}}
