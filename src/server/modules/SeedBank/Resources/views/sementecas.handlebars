@@ -1,31 +1,31 @@
 {{> mainapp_start}}
-<div class="modal fade" id="sementeca">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<div class="row">
-  <h1>Sementecas</h1>
+<div class="row header">
+  <h1 style="float: left">Sementecas</h1>
+  <button type="button" class="btn btn-lg btn-success new-sementeca" style="float: right; margin-right: 32px; margin-top: 16px;">{{ messages.new }}!NOVA!</button>
 </div>
 <div class="row content">
   <div class="container-fluid">
     <div class="col-md-12 text-center">
-      <div id="map" style="min-height: 400px; width:100%;">
+      <div id="map" style="min-height: 600px; width:100%;">
       </div>
     </div>
   </div>
 </div>
 
 {{> mainapp_end}}
-{{>scripts}}
 <script type="text/javascript" src="/js/leaflet/leaflet.js"></script>
 <script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="/js/utils.js"></script>
 <script type="text/javascript" src="/js/sementecas.js"></script>
 <script>
 window.onload = function () {
-  initmap({{lat}}{{#if lon}}, {{lon}}{{/if}});
+  initmap({{#if lat}}{{lat}}{{/if}}{{#if lon}}, {{lon}}{{/if}});
   map.on('click', onMapClick);
+  $('button.new-sementeca').css({'margin-right': '32px','margin-top': '16px'}).on('click', function (e) {
+    $('#modal form').show();
+    $('#sementeca-preview').hide();
+    $('#modal').modal('show');
+  });
 };
 </script>
 {{>footer}}

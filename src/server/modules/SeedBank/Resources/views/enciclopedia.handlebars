@@ -1,0 +1,45 @@
+{{> mainapp_start}}
+    <div class="row header">
+      <h1 style="float: left">{{lang 'seedbank::menu.encyclopedia'}}</h1>
+      <button type="button" class="btn btn-lg btn-success new-encicl" style="float: right; margin-right: 32px; margin-top: 16px;">{{ messages.newencicl }}!NOVA ENTRADA!</button>
+    </div>
+    <div class="row enciclopedia">
+      <table>
+        <tbody>
+          <tr>
+          {{#each alphabet}}
+          <td{{#if active}} class="active"{{/if}}>
+            <a href="/enciclopedia/letter/{{letter}}">{{letter}}</a>
+          </td>
+          {{/each}}
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row content enciclopedia">
+      {{# each paginated.data }}
+      <div class="col-sm-4">
+        <div data-seed_id="{{id}}">
+          <img class="responsive" style="width: 100px; float:left; display:block;margin-right:12px;" src="{{#if pictures}}{{pictures.0.url}}{{else}}/images/planteieulogocinza.png{{/if}}" alt="">
+          <p style="font-weight: bold; font-size:14px;">{{common_name}}</p>
+          <p style="font-style: oblique;">{{latin_name}}</p>
+          <!-- p style="font-style: oblique;">{{../messages.description}}: {{description}}</p -->
+          <p style="float: right">+MORE</p>
+        </div>
+      </div>
+      {{ else }}
+      <h1>No Content</h1>
+      {{/each}}
+    </div>
+    {{> paginator}}
+    {{> mainapp_end}}
+<script src="/js/utils.js"></script>
+<script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+<script src="/js/enciclopedia.js" charset="utf-8"></script>
+
+<script>
+{{#if modal }}
+$("#modal").modal('show');
+{{/if}}
+</script>
+{{>footer}}

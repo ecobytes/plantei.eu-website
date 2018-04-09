@@ -38,13 +38,14 @@ return [
     'confirmed' => 'Confirmed',
     'finished' => 'Finished',
     'message' => 'Message',
+    'messages' => 'Messages',
     'pictures' => 'Pictures',
     'taxonomy' => 'Taxonomy',
     'cooking' => 'Cooking',
     'medicine' => 'Medicine',
     'delete' => 'Delete',
     'farming' => 'Farming',
-    'seed' => 'seed',
+    'seed' => 'seed|seeds',
     'registernew' => 'Register new',
     'update' => 'Update',
     'sitecollected' => 'Local da recolha',
@@ -128,5 +129,6 @@ return [
     'name' => 'Name',
     'contact' => 'Contact',
     'createSementeca' => 'Register seed share point',
+    'newevent' => 'New Event',
 
 ];

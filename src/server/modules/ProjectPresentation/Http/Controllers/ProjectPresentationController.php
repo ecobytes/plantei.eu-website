@@ -19,15 +19,33 @@ class ProjectPresentationController extends Controller {
 			$showAuthentication = true;
 		}
 		$errors = \Session::get('errors');
+		$login = \Session::get('login');
+		$formErrors = '';
 		if(!empty($errors)){
-		\View::share('errors', $errors->default->toArray());
-		}
+			$formErrors = $errors;
+			\View::share('errors', $errors->default->toArray());
+	  }
+
+		$modal_content = join("\n", [
+			view('auth::login_modal')->with('formErrors', $formErrors)
+			  ->with('login', $login)
+			  ->with('messages', \Lang::get('auth::messages'))
+				->with('csrfToken', csrf_token())->render(),
+			view('auth::register_modal')->with('formErrors', $formErrors)
+			  ->with('login', $login)
+			  ->with('messages', \Lang::get('auth::messages'))
+				->with('csrfToken', csrf_token())->render(),
+		]);
+
+
 		return view('projectpresentation::index')
 		->with('messages', \Lang::get('projectpresentation::messages'))
 		->with('showSubscription', $showSubscription)
 		->with('showAuthentication', $showAuthentication)
 		->with('bodyId', 'index')
+		->with('modal', true)
+		->with('formErrors', $formErrors)
+		->with('modal_content', $modal_content)
 		->with('csrfToken', csrf_token());
 	}
-
 }

@@ -20,7 +20,7 @@ class CreateSementecasTable extends Migration
             $table->float('lon')->nullable();
             $table->float('lat')->nullable();
             $table->string('name')->nullable();
-            $table->text('descrition')->nullable();
+            $table->text('description')->nullable();
         });
         Schema::create('sementecas_calendar', function (Blueprint $table) {
             $table->integer('sementeca_id')->unsigned();

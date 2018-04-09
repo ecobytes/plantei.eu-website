@@ -1,0 +1,121 @@
+{{> mainapp_start}}
+    <div class="row">
+      <h1>{{messages.mygarden}}myGarden!</h1>
+    </div>
+    <div class="row content">
+      <div class="col-md-12">
+        <h2>{{messages.gardenBlueprint}}gardenBlueprint!</h2>
+        <div class="row">
+          <div class="col-md-6" style="background: yellow;">
+            <h4>Parcela1</h4>
+            <div class="col-md-6" style="background: lightgray;">
+              <h5>Planta1</h5>
+              <ul>
+                <li>estado:monda</li>
+                <li>dimensão:8x8</li>
+                <li>calendário
+                  <ul>
+                    <li>plantio
+                      <ul>
+                        <li>início:20180203</li>
+                        <li>fim:20180204</li>
+                      </ul>
+                    </li>
+                    <li>monda
+                      <ul>
+                        <li>início:20180205</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6" style="background: darkgray;">
+              <h5>Planta2</h5>
+              <ul>
+                <li>estado:plantio</li>
+                <li>dimensão:10x10</li>
+                <li>calendário
+                  <ul>
+                    <li>plantio
+                      <ul>
+                        <li>início:201802:10</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-8" style="background: cyan;">
+            <h4>Parcela2</h4>
+            <div class="col-md-6" style="background: lightgray;">
+              <h5>Planta1</h5>
+              <ul>
+                <li>estado:monda</li>
+                <li>dimensão:10x10</li>
+                <li>calendário
+                  <ul>
+                    <li>plantio
+                      <ul>
+                        <li>início:20180203</li>
+                        <li>fim:20180204</li>
+                      </ul>
+                    </li>
+                    <li>monda
+                      <ul>
+                        <li>início:20180205</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6" style="background: darkgray;">
+              <h5>Planta2</h5>
+              <ul>
+                <li>estado:plantio</li>
+                <li>dimensão:10x10</li>
+                <li>calendário
+                  <ul>
+                    <li>plantio
+                      <ul>
+                        <li>início:201802:10</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dir>
+    <div class="row content" style="margin-bottom: 16px;">
+      <div class="col-md-6">
+        <h2>{{messages.summary}}summary!</h2>
+      </div>
+      <div class="col-md-6">
+        <div id="calendar-horta"></div>
+        <table style="width:100%;">
+          <thead>
+            <tr>
+              <th style="font-size: 1.3em;">{{messages.seeding}}seeding!</th>
+              <th style="font-size: 1.3em;">{{messages.monda}}MONDA!</th>
+              <th style="font-size: 1.3em;">{{messages.collect}}APANHA!</th>
+              <th style="font-size: 1.3em;">{{messages.estrume}}ESTRUME!</th>
+              <th style="font-size: 1.3em;">{{messages.pousio}}POUSIO!</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    {{> mainapp_end}}
+<script type="text/javascript" src="/js/fullcalendar/moment.min.js"></script>
+<script type="text/javascript" src="/js/fullcalendar/fullcalendar.min.js"></script>
+<script type="text/javascript" src="/js/fullcalendar/lang/{{langString}}.js"></script>
+<script type="text/javascript" src="/js/utils.js"></script>
+<script type="text/javascript" src="/js/horta.js"></script>
+
+
+{{>footer}}

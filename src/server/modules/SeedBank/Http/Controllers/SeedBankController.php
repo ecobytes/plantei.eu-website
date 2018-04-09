@@ -10,7 +10,8 @@ use GeoIp2\Database\Reader;
 
 
 class SeedBankController extends Controller {
-  public static function save_image($uploadedimage) {
+
+  private function save_image($uploadedimage) {
     $file_md5 = md5_file($uploadedimage);
     $file_name = $file_md5;
     $picture = \Caravel\Picture::where('md5sum', $file_md5)->first();
@@ -75,7 +76,7 @@ class SeedBankController extends Controller {
     $myseeds = \Caravel\Seed::where('user_id', $user->id)
       ->orderBy('seeds.updated_at', 'desc')
       ->limit(3)
-      ->select('seeds.id', 'seeds.common_name')
+      ->select('seeds.id', 'seeds.common_name', 'seeds.updated_at')
       ->get();
 
     //$newMessagesCount = $user->newThreadsCount();
@@ -84,20 +85,105 @@ class SeedBankController extends Controller {
     {
       $post->load('thread', 'author');
     }
-    $messages = $user->lastMessages();
+    $messenger = $user->lastMessages();
     $calendarNow = \Caravel\Calendar::now()->get();
     $calendarNext = \Caravel\Calendar::nextDays()->get();
 
-    return view('seedbank::home', compact('posts', 'messages', 'calendarNow', 'calendarNext'))
+    return view('seedbank::home', compact('posts', 'messenger', 'calendarNow', 'calendarNext'))
       ->with('seeds', $seeds)
       ->with('myseeds', $myseeds)
-      ->with('bodyId', 'mainapp')
       ->with('active', ['home' => true]);
   }
 
-  public function getMySeeds()
+  private function getEnciclopediaForm ( $item = Null, $formErrors = Null)
   {
-    // View for my seeds
+    $formErrors = $formErrors ?: "";
+    $item = $item ?: "";
+
+    return view('seedbank::modal_enciclform')
+      ->with('formErrors', $formErrors)
+      ->with('update', true)
+      ->with('preview', true)
+      ->with('oldInput', $item )
+      ->with('item', $item )
+      ->with('csrfToken', csrf_token())->render();
+  }
+
+  public function getEnciclopedia()
+  {
+    $user = \Auth::user();
+
+    $formErrors = "";
+    $item = "";
+
+    $items = \Caravel\Seed::where('user_id', '<>', $user->id)->where('public', true)->orderBy('updated_at', 'desc');
+    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
+    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
+    $paginated = $items->paginate(15)->setPath('/enciclopedia');
+    //return view('seedbank::myseeds')
+    foreach ($paginated->getCollection() as $seed)
+    {
+      $seed->load('family');
+      $seed->load('pictures');
+    }
+
+
+    $alphabet = [];
+    $active = 'b';
+    foreach(str_split('abcdefghijklmnopqrstuvwxyz') as $l){
+      $letter = ['letter' => $l];
+      if ($active == $l) {
+        $letter['active'] = true;
+      };
+      $alphabet[] = $letter;
+    }
+
+    $modal_content = self::getEnciclopediaForm();
+
+
+    return view('seedbank::enciclopedia')
+      ->with('modal_content', $modal_content)
+      ->with('alphabet', $alphabet)
+      ->with('item', $item)
+      ->with('paginated', $paginated)
+      ->with('active', ['enciclopedia' => true]);
+  }
+
+  public function getHorta()
+  {
+    $user = \Auth::user();
+
+    return view('seedbank::horta')
+      ->with('active', ['horta' => true]);
+  }
+
+  private function getMySeedForm ( $myseed = Null, $formErrors = Null) {
+    $monthsTable = [];
+    foreach (range(0, 11) as $number) {
+      $monthsTable[$number] = false;
+    }
+    $myseed = $myseed ?: "";
+    if ($myseed){
+      $myseed->load(['months', 'species', 'variety', 'family', 'pictures']);
+      foreach ( $myseed->months as $month) {
+        $monthsTable[$month->month - 1] = true;
+      }
+    };
+
+    $formErrors = $formErrors ?: "";
+    return view('seedbank::modal_seedform')
+      ->with('formErrors', $formErrors)
+      ->with('update', true)
+      ->with('preview', true)
+      ->with('oldInput', $myseed )
+      ->with('seed', $myseed )
+      ->with('monthstable', $monthsTable)
+      ->with('csrfToken', csrf_token())->render();
+    }
+
+  public function getMySeeds(Request $request)
+  {
+
     $user = \Auth::user();
     //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
     //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
@@ -105,70 +191,90 @@ class SeedBankController extends Controller {
     //return view('seedbank::myseeds')
     foreach ($paginated->getCollection() as $seed)
     {
-      $seed->load('family');
+      // 'cookings', 'medicines',
+      $seed->load(
+        ['variety', 'species', 'family', 'months',
+        'pictures']
+      );
     }
+
+    $myseed_id = $request->input('seed_id', null);
+    $myseed = $user->seeds->find($myseed_id);
+
+    // Just to create the div for the submition errors
+    $formErrors = true;
+
+    $modal_content = self::getMySeedForm(
+      $myseed = $myseed,
+      $formErrors = $formErrors
+    );
+
+
     $part = [ 'myseeds' => true ];
-    return view('seedbank::myseeds', compact('part'))
+
+    $view = view('seedbank::myseeds', compact('part'))
       ->with('pagination', \Lang::get('pagination'))
       ->with('paginated', $paginated)
       ->with('links', $paginated->render())
-      //->with('myseeds', $seeds->get())
-      ->with('bodyId', 'mainapp')
-      ->with('active', ['myseeds' => true]);
-    
+      ->with('modal_content', $modal_content)
+      ->with('active', ['myseeds' => true])
+      ->with('preview', true);
+
+    if ($myseed) {
+      $view = $view->with('modal', true)->with('title', $myseed->common_name);
+    }
+//dd($paginated);
+    return $view;
   }
 
-  public function getAllSeeds()
+  public function getAllSeeds(Request $request)
   {
     // View for seeds
     $user = \Auth::user();
-    $seeds = \Caravel\Seed::where('public', true)->orderBy('updated_at', 'desc');
+    $seeds = \Caravel\Seed::where('user_id', '<>', $user->id)->where('public', true)->orderBy('updated_at', 'desc');
     //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
     //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
-    $paginated = $seeds->paginate(15)->setPath('/seedbank/seeds');
+    $paginated = $seeds->paginate(15)->setPath('/seedbank/allseeds');
     //return view('seedbank::myseeds')
     foreach ($paginated->getCollection() as $seed)
     {
       $seed->load('family');
+      $seed->load('pictures');
     }
     $part = [ 'myseeds' => true ];
-    return view('seedbank::seeds', compact('part'))
+
+    $seed_id = $request->input('seed_id', null);
+    $seed = \Caravel\Seed::find($seed_id);
+
+    $monthsTable = [];
+    foreach (range(0, 11) as $number) {
+      $monthsTable[$number] = false;
+    }
+    if ($seed) {
+      $seed->load(['months', 'species', 'variety', 'family', 'pictures']);
+      foreach ( $seed->months as $month) {
+        $monthsTable[$month->month - 1] = true;
+      }
+    };
+
+    $modal_content = view('seedbank::modal_seedpreview')
+      ->with('preview', true)
+      ->with('seed', $seed )
+      ->with('monthstable', $monthsTable)
+      ->with('viewonly', true)
+      ->with('csrfToken', csrf_token())->render();
+
+    return view('seedbank::seeds', compact('part', 'modal_content'))
       ->with('pagination', \Lang::get('pagination'))
       ->with('paginated', $paginated)
       ->with('links', $paginated->render())
       //->with('myseeds', $seeds->get())
-      ->with('bodyId', 'mainapp')
+      ->with('modal', ($seed) )
       ->with('active', ['seeds' => true]);
   }
 
   public function mySeeds()
   {
-    // View for my seeds
-    $user = \Auth::user();
-    $seeds = $user->seeds()->orderBy('updated_at', 'desc')->paginate(5)->setPath('/seedbank/seeds');
-    $t = $seeds;
-    $transactions = $user->transactionsPending();
-    foreach(['asked_by', 'asked_to'] as $asked){
-      foreach($transactions[$asked] as &$tr) {
-        $ta=[];
-        $tc=[];
-        foreach (["0","1","2"] as $i){
-          $ta[$i]= ($tr['accepted'] == $i);
-          $tc[$i]= ($tr['accepted'] == $i);
-        }
-        $tr['accepted'] = $ta;
-        $tr['accepted'] = $tc;
-      }
-    }
-    //return view('seedbank::myseeds')
-    $part = [ 'myseeds' => true ];
-    return view('seedbank::userarea', compact('part'))
-      ->with('pagination', \Lang::get('pagination'))
-      ->with('seeds', $t)
-      ->with('bodyId', 'myseeds')
-      ->with('transactionsBy', $transactions['asked_by'])
-      ->with('transactionsTo', $transactions['asked_to'])
-      ->with('active', ['myseeds' => true]);
   }
 
   public function getMessages()
@@ -233,79 +339,6 @@ class SeedBankController extends Controller {
   }
 
 
-  public function getRegister($id = null)
-  {
-    $user = \Auth::user();
-    $update = false;
-    // Authorization
-    if($id){
-      $seed = \Caravel\Seed::findOrFail($id);
-      if (Gate::denies('update-seed', $seed)){
-        abort(403);
-      }
-    }
-    //$errors = \Session::get('errors');
-    if(\Session::hasOldInput()){
-      $oldInput =  \Session::getOldInput();
-      if(!empty($errors)){
-        \View::share('errors', $errors->default->toArray());
-      }
-      foreach(['variety', 'family', 'species'] as $field)
-      {
-        if (isset($oldInput[$field]))
-        {
-          $field_a = (array)\DB::table($field)
-            ->select('name', 'id')
-            ->where('name', $oldInput[$field])
-            ->first();
-          if ($field_a) {
-            $oldInput[$field] = $field_a;
-          } else {
-            $oldInput[$field] = ['id'=>'', 'name'=>$oldInput[$field] ];
-          }
-        }
-      };
-    }
-    if ($id){
-      if (! isset($oldInput)) {
-        $seed->variety;
-        $seed->family;
-        $seed->species;
-        $seed->pictures;
-        $oldInput = $seed->toArray();
-        $oldInput['months'] = $seed->months()->lists('month')->toArray();
-      } else {
-
-      }
-      $oldInput['id'] = $id;
-      $update = true;
-    }
-    //$t = [];
-    foreach(['origin', 'polinization', 'direct'] as $key){
-      if(isset($oldInput[$key])){
-        $oldInput[$key] = [$oldInput[$key] => true];
-      }
-    }
-
-    if(isset($oldInput['months'])){
-      $o = array();
-      foreach($oldInput['months'] as $i){
-        $o[$i] = true;
-      }
-      $oldInput['months'] = $o;
-    }
-    if (! isset($oldInput)){
-      $oldInput = [];
-    }
-    $part = [ 'register' => true ];
-    return view('seedbank::modal-register', compact('part', 'update'))
-      ->with('bodyId', 'myseeds')
-      ->with('oldInput', $oldInput)
-      ->with('active', ['myseeds' => true]);
-    /*return view('seedbank::registerseed', ['update' => $update])
-      ->with('active', ['myseeds' => true])*/
-  }
-
   public function postRegister(Request $request)
   {
     $this->validate($request, [
@@ -313,36 +346,6 @@ class SeedBankController extends Controller {
       //'origin' => 'required',
     ]);
 
-    if (!($request->input('confirmed') == "1")){
-      $farming = false;
-      $pictures = true;
-      $taxonomy = false;
-      $formInput = $request->input();
-      if (isset($formInput['months'])) {
-        $farming = true;
-        $months = array();
-        foreach (range(1, 12) as $i) {
-          if (in_array($i, $formInput['months'])) {
-            $months[$i] = ['month' => true];
-          } else {
-            $months[$i] = ['month' => false];
-          }
-        }
-      } else { $months = false; }
-
-      if (($formInput['variety']) || ($formInput['species']) || ($formInput['family']) || ($formInput['latin_name'])){
-        $taxonomy = true;
-      }
-      return view('seedbank::snippet')
-        ->with('title', 'some nice title')
-        ->with('months', $months)
-        ->with('seed', $formInput)
-        ->with('pictures', $pictures)
-        ->with('farming', $farming)
-        ->with('taxonomy', $taxonomy)
-        ->with('messages', \Lang::get('seedbank::messages'))
-        ->with('deletebutton', \Lang::get('seedbank::messages')['delete']);
-    }
     $seed_keys = ['quantity','year', 'local', 'description', 'public', 'available', 'description',
       'latin_name','common_name','polinization','direct',
     ];
@@ -358,7 +361,12 @@ class SeedBankController extends Controller {
       if (in_array($key, $seed_keys)){
         if ( $value ) {
           $seed_new[$key] = $value;
+        } else {
+          if ($key == 'description') {
+            $seed_new[$key] = "";
+          }
         }
+
       }
       if (in_array($key, $seed_taxonomy)){
         // TODO: Should do a special function to work this out
@@ -366,8 +374,8 @@ class SeedBankController extends Controller {
           $t = $taxonomy_model[$key]::firstOrCreate(['name' => $value]);
           $seed_new[$key . '_id'] = $t->id;
         } else {
-          if ($request->input('_id')) {
-            $seedt = \Caravel\Seed::findOrFail($request->input('_id'));
+          if ($request->input('seed_id')) {
+            $seedt = \Caravel\Seed::findOrFail($request->input('seed_id'));
             $seedt->update([$key . '_id' => Null]);
           }
         }
@@ -377,14 +385,15 @@ class SeedBankController extends Controller {
       }
     }
 
-    if ($request->input('_id')){
-      $seed_id = $request->input('_id');
+    if ($request->input('seed_id')){
+      $seed_id = $request->input('seed_id');
       $seed = \Caravel\Seed::findOrFail($seed_id);
       if (Gate::denies('update-seed', $seed)){
         abort(403);
       }
-      $seed->update($seed_new);
       $seed->syncMonths($months_new);
+
+      $seed->update($seed_new);
     } else {
       $seed_new['user_id'] = $request->user()->id;
       $seed = \Caravel\Seed::create($seed_new);
@@ -397,10 +406,15 @@ class SeedBankController extends Controller {
           $seed->pictures()->save($picture);
         }
       }
-      // maybe flash an 'Added new seed' message
+      //FIXME: maybe flash an 'Added new seed' message
     }
 
-    return redirect('/seedbank/myseeds');
+    //return redirect('/seedbank/myseeds');
+    $seed->load(
+      ['variety', 'species', 'family', 'months',
+      'pictures']
+    );
+    return $seed;
   }
 
   public function getPreferences()
@@ -460,16 +474,41 @@ class SeedBankController extends Controller {
 
     return view('seedbank::preferences', compact('oldInput', 'availableLangs'))
       ->with('messages', \Lang::get('authentication::messages'))
+      ->with('csrfToken', csrf_token())
       ->with('user', $user)
       ->with('updatelocation', $updatelocation)
       ->with('location', $location)
-      ->with('bodyId', 'mainapp')
       ->with('active', ['settings' => true]);
+  }
+
+  private function prefValidationRules($data) {
+
+    $user = \Auth::user();
+    $rules = [
+      'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+      'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+      'place_name' => 'max:255|required_with:lon,lat',
+    ];
+    if (! $user->name == $data['name']){
+      $rules['name'] = 'required|max:255|unique:users';
+    }
+    if (( $user->email !== $data['email']) && ($data['email'])) {
+      $rules['email'] = 'sometimes|required|email|max:255|unique:users';
+    }
+    if ($data['password']){
+      $rules['password'] = 'required|confirmed|min:6';
+    }
+    return $rules;
+
   }
 
   public function postPreferences(Request  $request)
   {
     $user = \Auth::user();
+
+    $this->validate($request, $this->prefValidationRules($request->all()));
+
+    /*
     $validator = $this->prefValidator($request->all(), [],\Lang::get('auth::validation'));
     if($validator->fails())
     {
@@ -477,6 +516,8 @@ class SeedBankController extends Controller {
         $request, $validator
       );
     }
+    */
+
     if (!$request->input('password')){
       unset($request['password']);
     } else {
@@ -496,8 +537,7 @@ class SeedBankController extends Controller {
   public function getSearch()
   {
     return view('seedbank::search')
-      ->with('active', ['search' => true])
-      ->with('bodyId', 'mainapp');
+      ->with('active', ['search' => true]);
   }
 
   public function postSearch(Request $request)
@@ -612,6 +652,7 @@ class SeedBankController extends Controller {
     // maybe flash an 'Added new seed' message
     return redirect('/seedbank/search');
   }
+
   public function postAddPicture (Request $request) {
     // TODO: Limit number of picture by seed?
     $user = \Auth::user();
@@ -622,7 +663,8 @@ class SeedBankController extends Controller {
     }
     if ($request->hasFile('pictures')) {
       $picture = $request->file('pictures')[0];
-      $status = SeedBankController::save_image($picture);
+      //$status = SeedBankController::save_image($picture);
+      $status = self::save_image($picture);
       if (isset($status['error'])) {
         return [ 'files' => [ ['error' => $status['error']]]];
       } else {
@@ -645,99 +687,94 @@ class SeedBankController extends Controller {
     }
     return [ 'files' => [['error' => 'No files sent']]];
   }
-  public function getEvents () {
+
+  private function getEventForm ( $event = Null, $formErrors = Null) {
+    $event = $event ?: "";
+    $formErrors = $formErrors ?: "";
+    return view('seedbank::modal_eventform')
+      ->with('formErrors', $formErrors)
+      ->with('update', true)
+      ->with('preview', $event)
+      ->with('oldInput', $event )
+      ->with('csrfToken', csrf_token())->render();
+    }
+
+  public function getEvents (Request $request) {
+
     $user = \Auth::user();
-    return view('seedbank::events')
-      ->with('bodyId', 'mainapp')
-      ->with('active', ['events' => true]);
-  }
-  public function getAdminEvents () {
-    return view('seedbank::admin-events')
-      ->with('active', ['events' => true]);
-  }
-  public function getEventById ($id) {
-    $event = \Caravel\Calendar::findOrFail($id);
-    return view('seedbank::event-modal')
-      ->with('event', $event);
-  }
-  public function postEvents (Request $request) {
-    // TODO: Limit number of picture by seed?
-    $user = \Auth::user();
-    if ($request->has('seed_id')){
-      $seed = \Caravel\Seed::findOrFail($request->input('seed_id'));
+
+    $event_id = $request->input('id', null);
+
+    //FIXME TEST TODO
+    //$event = $user->seeds->find($event_id);
+    if ($request->input('events', null)) {
+      $events = $user->getEvents();
+      return $events;
+    }
+
+    if ( $event_id ) {
+      $event = \Caravel\Calendar::find($event_id);
+      /*  )[
+        'id' => 1,
+        'title' => 'Um título',
+        'location' => 'Lisboa',
+        'postal' => '1900-177 Lisboa',
+        'description' => 'Uma descrição do evento',
+        'type' => 'AllTypes'
+      ];*/
+      $title = $event->title;
     } else {
-      $seed = false;
+      $title = Null;
+      $event = Null;
     }
-    if ($request->hasFile('pictures')) {
-      $picture = $request->file('pictures')[0];
-      $status = SeedBankController::save_image($picture);
-      if (isset($status['error'])) {
-        return [ 'files' => [ ['error' => $status['error']]]];
-      } else {
-        if ($seed) {
-          if (!$seed->user_id == $user->id){
-            return [ 'files' => [ ['error' => 'File is owned by other user']]];
-          } else {
-            $seed->pictures()->save($status['picture']);
-          }
-        }
-        return [ 'files' => [
-          ['md5sum' => $status['picture']->md5sum,
-          'id' => $status['picture']->id,
-          'url' => $status['picture']->url,
-          'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
-          'deleteType' => 'GET'
-        ]]
-      ];
+
+    // Just to create the div for the submition errors
+    $formErrors = true;
+
+    $modal_content = self::getEventForm(
+      $event = $event,
+      $formErrors = $formErrors
+    );
+
+    return view('seedbank::events')
+      ->with('modal', true)
+      ->with('update', true)
+      ->with('modal_content', $modal_content)
+      ->with('user', $user)
+      ->with('active', ['events' => true]);
+  }
+
+  public function getSementecas (Request $request) {
+    $user = \Auth::user();
+    $lat = sprintf("%.5F", $user->lat);
+    $lon = sprintf("%.5F", $user->lon);
+
+    return view('seedbank::sementecas', compact('lat', 'lon'))
+      ->with('active', [ 'sementecas' => true ])
+      ->with('modal_content', view('seedbank::modal_sementecaform')
+        ->with('sementeca', \Caravel\Sementeca::first())
+        ->with('preview', true)->render())
+      ->with('bodyId', 'mainapp');
+    $user = \Auth::user();
+
+  }
+
+
+  public function setLocale($locale = null)
+  {
+    $availableLanguages = config('app.availableLanguages');
+    $request = app('request');
+
+    if (in_array($locale, $availableLanguages )){
+      $user = \Auth::user();
+      if (isset($user->locale)){
+        if ($locale != $user->locale) {
+          $user->locale = $locale;
+          $user->save();
+        };
       }
-    }
-    return [ 'files' => [['error' => 'No files sent']]];
-  }
-  //	Route::post('/add', function (Request $request) {
-  public function postAddEvent (Request $request) {
-    $user = \Auth::user();
-    //TODO: Check that user can add events
-    $this->validate($request, [
-      'startdate' => 'required',
-      'starttime' => 'required',
-      'enddate' => 'required',
-      'endtime' => 'required',
-      'title' => 'required',
-      'city' => 'required',
-      'category' => 'required',
-    ]);
-    $event_id = $request->input('event_id') ?: false;
-    if ( ! $event_id ) {
-      $new_event = [];
-      foreach(['category', 'location', 'title',
-        'description', 'address'] as $key){
-      /*foreach(['category', 'location', 'start', 'end', 'title',
-      'description', 'address', 'image'] as $key){*/
-        $new_event[$key] = $request->input($key) ?: "";
-      };
-      $new_event['location'] = vsprintf("%s/%s", $request->only(['district', 'city']));
+    };
 
-      $start = \Carbon\Carbon::parse($request->input('startdate') . ' ' . $request->input('starttime'));
-      $end = \Carbon\Carbon::parse($request->input('enddate') . ' ' . $request->input('endtime'));
-      $new_event["start"] = $start;
-      $new_event["end"] = $end;
-      $new_event["user_id"] = $user->id;
-
-      $event = \Caravel\Calendar::create($new_event);
-    }
-    //return redirect('/events');
-    return '';
-  }
-
-  public function postSementecasNew (Request $request) {
-    $user = \Auth::user();
-    //TODO: Check that user can create sementecas
-    $this->validate($request, [
-      'name' => 'required',
-      'lat' => 'required',
-      'lon' => 'required',
-    ], \Lang::get('seedbank::validation'));
-    $sementeca = \Caravel\Sementeca::create($request->input());
-    return $sementeca;
+    return redirect($request->header('referer'));
   }
 }

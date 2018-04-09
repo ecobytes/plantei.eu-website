@@ -1,0 +1,56 @@
+{{> formErrors}}
+{{> modal_sementecapreview}}
+
+<form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/api/sementecas" {{#if preview}}style="display: none;"{{/if}}>
+  <input type="hidden" name="_token" value="{{ csrfToken }}">
+  <input type="hidden" name="sementeca_id" value="{{ sementeca.id }}">
+  <input type="hidden" name="_save" value="1">
+  <input type="hidden" name="lon" value="{{ sementeca.lon }}">
+  <input type="hidden" name="lat" value="{{ sementeca.lat }}">
+  <div class="row">
+    <div class="form-group row">
+      <div class="col-md-12">
+        <!-- <label class="control-label" rel="tooltip" data-placement="bottom" title="{{ messages.sementecaNameHelp }}">
+          {{ messages.name }}
+          </label> -->
+        <input type="text" class="form-control" placeholder="{{ messages.name }}" name="name" value="{{ sementeca.name }}" autocomplete="off">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-12">
+        <!-- <label class="control-label" rel="tooltip" data-placement="bottom" title="{{ messages.sementecaContactHelp }}">
+          {{ messages.contact }}
+        </label> -->
+        <input type="text" class="form-control" placeholder="{{ messages.contact }}" name="contact" value="{{ sementeca.contact }}" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="form-group" rel="tooltip" data-placement="bottom" title="{{ messages.sementecaAddressHelp }}">
+      <!-- <div class="col-md-3">
+        <label class="control-label">{{ messages.address }}</label>
+        </div> -->
+      <div class="col-md-12">
+        <input type="text" class="form-control" placeholder="{{ messages.address }}" name="address" value="{{ sementeca.address }}" autocomplete="off">
+      </div>
+    </div>
+    <div class="form-group" rel="tooltip" data-placement="bottom" title="{{ messages.sementecaDescriptionHelp }}">
+      <span class="cell">
+        <textarea style="resize:none; overflow:hidden;" class="form-control" rows="5" autocomplete="off" placeholder="{{messages.description}}" name="description">{{ sementeca.description }}</textarea>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group lmt">
+      <div class="col-md-12 text-center">
+        <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">
+          <span aria-hidden="true">
+            {{ messages.cancel }}
+          </span>
+        </button>
+        <button type="submit" class="btn btn-primary btn-lg">
+          {{ messages.createSementeca }}
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

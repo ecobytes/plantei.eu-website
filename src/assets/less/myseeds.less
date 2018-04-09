@@ -21,7 +21,7 @@
   .col-md-3.myseeds
   {
     display: table-cell;
-    background: lightgreen;
+    //background: lightgreen;
     vertical-align: top;
     padding: 0px;
   }
@@ -32,4 +32,19 @@
     float:  none;
   }
 
+
+}
+.pagination {
+  float:right;
+}
+
+#mainapp .content.seeds, #mainapp .content.enciclopedia {
+
+  div.col-sm-4 > div {
+    min-height: 150px;
+  }
+
+  > div.col-sm-4:nth-last-child(-n+3) > div {
+    border-bottom: solid thin;
+  }
 }

@@ -1,19 +1,23 @@
 @include('mainapp_start')
 <!-- div class="pageWrap background-primary" style="padding-top: 24px;">
     <div class="container" -->
-<div class="col-md-12">
-        @if (isset($thread) && $thread)
-            <h1><a style="color: black" href="{{ Forum::route('thread.show', $thread) }}">{{ $thread->title }}</a></h1>
-        @elseif (isset($category) && $category)
-            <h1><a style="color: black" href="{{ Forum::route('category.show', $category) }}">{{ $category->title }}</a></h1>
-        @endif
-        @include ('forum::partials.breadcrumbs')
-        @include ('forum::partials.alerts')
-
-        @yield('content')
+<div class="row">
+  <h1>Forum</h1>
 </div>
+<div class="row content">
+  <div class="col-md-12">
+    @if (isset($thread) && $thread)
+        <h1><a style="color: black" href="{{ Forum::route('thread.show', $thread, false) }}">{{ $thread->title }}</a></h1>
+    @elseif (isset($category) && $category)
+        <h1><a style="color: black" href="{{ Forum::route('category.show', $category, false) }}">{{ $category->title }}</a></h1>
+    @endif
+    @include ('forum::partials.breadcrumbs')
+    @include ('forum::partials.alerts')
+    @yield('content')
+  </div>
     <!-- /div>
 </div -->
+</div>
 @include('mainapp_end')
 
 

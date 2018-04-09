@@ -68,6 +68,7 @@ class AuthController extends Controller {
       'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/',
       'place_name' => 'max:255|required_with:lon,lat',
     ]);
+
   }
 
   /**
@@ -80,7 +81,7 @@ class AuthController extends Controller {
   {
     if (isset($data['saveLocation'])) {
       if ($data['saveLocation'] == "0")  {
-        $data['place_name'] = false; $data['lon'] = false; $data['lat'] = false; 
+        $data['place_name'] = false; $data['lon'] = false; $data['lat'] = false;
       }
       unset($data['saveLocation']);
     }
@@ -112,6 +113,7 @@ class AuthController extends Controller {
 
   public function postLogin(Request $request)
   {
+    $request->session()->flash('login', true);
     $this->validate($request, [
       'nameoremail' => 'required', 'password' => 'required',
     ]);
@@ -130,7 +132,8 @@ class AuthController extends Controller {
       return redirect()->intended($this->redirectPath());
     }
 
-    return redirect($this->loginPath())
+    //return redirect($this->loginPath())
+    return redirect('/')
       ->withInput($request->only('nameoremail', 'remember'))
       ->withErrors([
         'email' => 'These credentials do not match our records or account not active.',
@@ -158,7 +161,7 @@ class AuthController extends Controller {
         $oldInput['subscribeNewsletter'][1] = true;
       }
 
-      if (isset($data['saveLocatio'])) {
+      if (isset($data['saveLocation'])) {
         if ($oldInput['saveLocation'] == "0") {
           $oldInput['saveLocation'] = false;
         } else {
@@ -238,7 +241,7 @@ class AuthController extends Controller {
       'body' => \Lang::get('auth::confirmationemail.text'),
       'user_id' => 1,
     ]);
-    $thread->addParticipants([1, $user->id]);
+    $thread->addParticipant([1, $user->id]);
 
     if (!$thread){ dd("Error Creating Message");};
 

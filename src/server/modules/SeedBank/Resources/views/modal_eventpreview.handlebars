@@ -1,0 +1,24 @@
+<div id="event-preview" {{#unless preview }}  style="display: none;"{{/unless}}>
+  <div class="row">
+    <h1 data-name="title"></h1>
+  </div>
+  <div class="row">
+    <p data-name="start"></p>
+    <p data-name="end"></p>
+  </div>
+  <div class="row">
+    <p data-name="location"></p>
+    <p data-name="address"></p>
+    <p data-name="postal"></p>
+  </div>
+  <div class="row">
+    <div data-name="description"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <button type="button" class="btn btn-primary btn-lg">
+        {{ messages.change }}
+      </button>
+    </div>
+  </div>
+</div>

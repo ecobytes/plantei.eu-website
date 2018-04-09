@@ -2,11 +2,35 @@
 
 use Illuminate\Http\Request;
 
+/*
+ * $languages = Config::get('app.availableLanguages');
+$locale = \Request::segment(1);
+
+if(in_array($locale, $languages)){
+  \App::setLocale($locale);
+  \View::share('langString', $locale);
+}else{
+  $locale = Config::get('app.locale');
+  \App::setLocale($locale);
+  \View::share('langString', $locale);
+}
+
+$lang[] = $locale;
+foreach($languages as $l){
+  if ($l != $locale){
+    $lang[] = $l;
+  }
+}
+
+\View::share('langs', $lang);
+**/
 
 Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
   Route::group(['middleware' => 'auth'], function(){
+    Route::get('/setlocale/{locale?}', 'SeedBankController@setLocale');
     Route::get('/', 'SeedBankController@index');
+    Route::get('/horta', 'SeedBankController@getHorta');
     Route::get('/myseeds', 'SeedBankController@getMySeeds');
     Route::get('/allseeds', 'SeedBankController@getAllSeeds');
     Route::get('/messages', 'SeedBankController@getMessages');
@@ -24,11 +48,19 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
       $seed = \Caravel\Seed::findOrFail($id);
       if (($seed->public) && ($seed->user_id != $user->id))
       {
-        $seed->variety;
+        $seed->load(
+          ['variety', 'species', 'family', 'months']
+        );
+        if ($seed->pictures->count()){
+          $picture = $seed->pictures->first();
+        } else {
+          $picture = false;
+        }
+        /*$seed->variety;
         $seed->species;
         $seed->family;
         $seed->cookings();
-        $seed->medicines();
+        $seed->medicines();*/
 
         return $seed;
       }
@@ -40,17 +72,16 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
       $update_seed = ($seed->user_id == $user->id);
       if (($seed->public) || ($update_seed))
       {
-        $seed->variety;
-        $seed->species;
-        $seed->family;
-        $seed->cookings();
-        $seed->medicines();
+        //'cookings', 'medicines'
+        $seed->load(
+          ['variety', 'species', 'family', 'months']
+        );
         if ($seed->pictures->count()){
           $picture = $seed->pictures->first();
         } else {
           $picture = false;
         }
-
+        return $seed;
         return view('seedbank::seed_modal')
           ->with('seed', $seed)
           ->with('picture', $picture)
@@ -152,6 +183,14 @@ Route::group(['prefix' => 'events', 'namespace' => 'Modules\SeedBank\Http\Contro
     Route::post('/', 'SeedBankController@postEvents');
   });
 });
+Route::group(['prefix' => 'enciclopedia', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
+{
+  Route::group(['middleware' => 'auth'], function(){
+    //Route::get('/get/{id}', 'SeedBankController@getEventById');
+    Route::get('/', 'SeedBankController@getEnciclopedia');
+    //Route::post('/', 'SeedBankController@postEvents');
+  });
+});
 Route::group(['prefix' => 'sementecas', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
   Route::group(['middleware' => 'auth'], function(){
@@ -161,7 +200,11 @@ Route::group(['prefix' => 'sementecas', 'namespace' => 'Modules\SeedBank\Http\Co
       $lon = sprintf("%.5F", $user->lon);
       //dd(compact('lat', 'lon'));
       return view('seedbank::sementecas', compact('lat', 'lon'))
+      //return view('seedbank::sementecas')
         ->with('active', [ 'sementecas' => true ])
+        ->with('modal_content', view('seedbank::modal_sementecaform')
+          ->with('sementeca', \Caravel\Sementeca::first())
+          ->with('preview', true)->render())
         ->with('bodyId', 'mainapp');
     });
     Route::get('new', function () {
@@ -267,6 +310,18 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Modules\SeedBank\Http\Control
 Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
   Route::group(['middleware' => 'auth'], function(){
+
+    Route::get('/seeds', 'APIController@getSeeds');
+    Route::get('/sementecasgeo', 'APIController@getSementecasGeo');
+    Route::post('/sementecas', 'APIController@getSementecas');
+    Route::get('/calendar', 'APIController@getEvents');
+    Route::post('/calendar', 'APIController@getEvents');
+    Route::group(['middleware' => 'csrf'], function(){
+      Route::post('/preferences', 'APIController@postPreferences');
+    });
+
+
+
     Route::get('/location', function (Request $request) {
       return array_keys(config('concelhos_portugal'));
       $response = [];
@@ -279,17 +334,6 @@ Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controlle
     });
     Route::get('/location/{concelho}', function ($concelho) {
       return config('concelhos_portugal.' . $concelho);
-    });
-    Route::post('/calendar', function (Request $request) {
-      $events = \Caravel\Calendar::interval($request)->get();
-      return $events;
-    });
-    Route::post('/sementecas', function (Request $request) {
-      //$response = \Caravel\Sementeca::get();
-      //return $response;
-      //
-      //TODO: sort by date; request->interval
-      return \Caravel\Sementeca::paginate(5);
     });
     Route::post('/contacts/add', function (Request $request) {
       // Receive contact name; Return name and id

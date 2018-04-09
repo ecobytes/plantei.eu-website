@@ -1,3 +1,4 @@
+<!--
 <ol class="breadcrumb">
     <li><a style="color: black;" href="{{ url(config('forum.routing.root')) }}">{{ trans('forum::general.index') }}</a></li>
     @if (isset($category) && $category)
@@ -10,3 +11,4 @@
         <li>{!! $breadcrumb_other !!}</li>
     @endif
 </ol>
+-->

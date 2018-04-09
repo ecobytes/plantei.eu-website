@@ -16,6 +16,10 @@ touch /home/vagrant/last-apt-update
 
 lastUpdate=$(</home/vagrant/last-apt-update)
 
+if [ -f /vagrant/cache/apt_cache.tar ]; then
+  tar xf /vagrant/cache/apt_cache.tar -C /
+fi
+
 apt-get update
 #
 #if [ $((start-lastUpdate)) -gt 86400 ];
@@ -82,6 +86,13 @@ fi
 rm -rf /etc/nginx/sites-available/default
 
 service nginx restart
+
+# Create swap file because composer asks for too much ram
+dd if=/dev/zero of=/tmp/swap bs=1024 count=1M
+mkswap /tmp/swap
+swapon /tmp/swap
+swapon -s
+
 
 sudo -i -u vagrant bash /vagrant/provision/config_vagrant.sh
 

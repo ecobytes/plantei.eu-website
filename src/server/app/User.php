@@ -87,16 +87,16 @@ class User extends Model implements AuthenticatableContract,
       ->join('seeds', 'seeds.id', '=', 'seeds_exchanges.seed_id')
       ->select('seeds_exchanges.*', 'common_name', 'users.name', 'users.place_name', 'users.lat', 'users.lon');
     if ($orderBy)
-    { 
-      $askedTo = $askedTo->orderBy($orderBy, 'desc'); 
-      $askedBy = $askedBy->orderBy($orderBy, 'desc'); 
+    {
+      $askedTo = $askedTo->orderBy($orderBy, 'desc');
+      $askedBy = $askedBy->orderBy($orderBy, 'desc');
     }
     $askedTo = $askedTo->limit($limit);
     $askedBy = $askedBy->limit($limit);
     if ($toArray)
-    { 
+    {
       $askedTo = $askedTo->get()->toArray();
-      $askedBy = $askedBy->get()->toArray(); 
+      $askedBy = $askedBy->get()->toArray();
     }
 
 
@@ -141,8 +141,8 @@ class User extends Model implements AuthenticatableContract,
     foreach ($seed_ids as $seed_id)
     {
       if ( ! SeedsExchange::where([
-        'asked_by'=> $data['asked_by'], 
-        'asked_to'=> $data['asked_to'], 
+        'asked_by'=> $data['asked_by'],
+        'asked_to'=> $data['asked_to'],
         'seed_id' => $seed_id])
         ->where('completed', '<', 2)->count() ) {
         $data['seed_id'] = $seed_id;
@@ -157,7 +157,7 @@ class User extends Model implements AuthenticatableContract,
 
   /**
    * Accept transaction.
-   * 
+   *
    * @return void
    */
   public function acceptTransaction($id)
@@ -183,7 +183,7 @@ class User extends Model implements AuthenticatableContract,
 
   /**
    * Reject transaction.
-   * 
+   *
    * @return void
    */
   public function rejectTransaction($id)
@@ -202,7 +202,7 @@ class User extends Model implements AuthenticatableContract,
         $transaction->update(['accepted' => 1]);
       }
       return $transaction->updateParent();
-    } 
+    }
     if ( $transaction->asked_by == $this->id)
     {
       if ( ! $transaction->parent_id )
@@ -286,7 +286,14 @@ class User extends Model implements AuthenticatableContract,
         $messages[] = $message;
       }
     }
-
+    if (count($messages) < $limit) {
+      foreach (
+        $this->messages()->orderBy('updated_at', 'desc')->limit($limit)->get() as $message) {
+          if ( ! in_array($message, $messages)) {
+            $messages[] = $message;
+          }
+        }
+    }
     $colmessages = collect($messages)->sortByDesc('updated_at')->take($limit);
     foreach ($colmessages as $m)
     {
@@ -295,9 +302,41 @@ class User extends Model implements AuthenticatableContract,
 
     return $colmessages;
   }
+
+  /**
+   * Complete transaction.
+   *
+   * @return void
+   */
+  public function getEvents($start=Null, $end=Null)
+  {
+    $faker = \Faker\Factory::create();
+
+    $events = [];
+    //$date = \Carbon\Carbon::now()->addDays($n)->hour(random_int(10,21))->minute(0)->second(0);
+    $now = \Carbon\Carbon::createFromFormat('Y-m-d', $start);
+    foreach(range(1,5) as $n) {
+      $date = $now->addDays(random_int(1,5))->hour(random_int(10,21))->minute(0)->second(0);
+      $events[$n - 1] = [
+          'id' => $n,
+          'user_id' => $this->id,
+          'start' => $date->toDateTimeString(),
+          'end' => $date->addHours(random_int(1,5))->toDateTimeString(),
+          'title' => "[FAKE] " . $faker->name(),
+          'description' => $faker->text(200),
+          'category' => 'Evento',
+          'color' => 'red',
+          'location' => $faker->city(),
+          'postal' => $faker->postcode(),
+          'address' => $faker->streetAddress()
+        ];
+    };
+    return $events;
+  }
+
 }
 
-/*class Contact extends Model 
+/*class Contact extends Model
 {
   /**
    * The database table used by the model.
