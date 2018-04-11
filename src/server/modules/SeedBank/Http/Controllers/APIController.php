@@ -176,16 +176,21 @@ class APIController extends Controller {
 		 * @return Collection
 		 */
 		public function postSementecas (Request $request) {
-
 				if ($request->input('_save', Null)) {
 					$this->validate($request, [
 						'name' => 'required',
 						'lat' => 'required',
 						'lon' => 'required',
 					], \Lang::get('seedbank::validation'));
-					return \Caravel\Sementeca::create($request->input());
+					if ($request->input('id')) {
+            // TODO: Updating check permissions
+						$sementeca = \Caravel\Sementeca::find($request->input('id'));
+						$sementeca->update($request->input());
+					} else {
+						$sementeca = \Caravel\Sementeca::create($request->input());
+					}
+					return $sementeca;
 				}
-
 		}
 
 

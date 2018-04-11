@@ -193,6 +193,16 @@ var clearform = function() {
  });
 };
 
+var clearForm = function (element) {
+  if (! element) {
+    element = $('form');
+  }
+  element.find('input').not(':button, :checkbox, :submit, :reset, [name=_token]').val('');
+  element.find('input[name=_save]').val('1');
+  element.find('textarea').text('');
+  $('.row.validationErrors').empty();
+}
+
 var populateform = function(parameters, data) {
   //if (data.common_name){
   //  $("#modal").find('.modal-header').show().find('.modal-title').text(Lang.get("seedbank::messages.change") + " - " + data.common_name);

@@ -48,7 +48,12 @@ $('form').on('submit', function (){
 });
 
 $( function () {
-
+  $('button.new-encicl').css({'margin-right': '32px','margin-top': '16px'}).on('click', function (e) {
+    $('#modal form').show();
+    clearForm();
+    $('#encicl-preview').hide();
+    $('#modal').modal('show');
+  });
 
 
   $('.seeds tbody tr').on('click', function () {

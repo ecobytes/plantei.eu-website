@@ -5,6 +5,7 @@ var clearForm = function (element) {
   element.find('input').not(':button, :checkbox, :submit, :reset, [name=_token]').val('');
   element.find('input[name=_save]').val('1');
   element.find('textarea').text('');
+  $('.row.validationErrors').empty();
 }
 
 var layerSementecas;
