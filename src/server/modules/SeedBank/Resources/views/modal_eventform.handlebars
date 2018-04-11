@@ -54,10 +54,9 @@
       </div>
       <div class="col-md-6">
         <select name="event-type" value="0" class="form-control">
-          <option value="0">TIPO de EVENTO</option>
-          <option value="1">Workshop</option>
-          <option value="2">Agricultura</option>
-          <option value="3">Encontro</option>
+          {{#each ../event_type}}
+          <option value="{{@index}}">{{this}}</option>
+          {{/each}}
         </select>
         <div class="row" style="border: none;">
           <div class="col-md-2">

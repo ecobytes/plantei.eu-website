@@ -1,4 +1,4 @@
-<?php 
+<?php
 return [
     'menutitle' => 'Seedbank Menu',
     'myseeds' => 'My Seedbank',
@@ -130,5 +130,14 @@ return [
     'contact' => 'Contact',
     'createSementeca' => 'Register seed share point',
     'newevent' => 'New Event',
-
+    'eventtypeothers' => "Outros",
+    'eventtypeexchange' => "Troca de sementes",
+    'eventtypefair' => "Feira/ festival de variedades",
+    'eventtypeworkshops' => "Oficinas/Palestras",
+    'eventtypeaction' => "Campanha/acção/petição",
+    'eventtypefieldtrip' => "Saídas de campo",
+    'eventtypehelpingout' => "Ajudada/Mutirão",
+    'eventtypefilm' => "Encontro/Filme/Exposição",
+    'eventtypemarket' => "Mercado/ Entrega de cabaz",
+    'eventtypeservices' => "Voluntariado/ Troca de serviços"
 ];

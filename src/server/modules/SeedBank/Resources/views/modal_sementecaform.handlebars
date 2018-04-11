@@ -33,6 +33,46 @@
         <input type="text" class="form-control" placeholder="{{ messages.address }}" name="address" value="{{ sementeca.address }}" autocomplete="off">
       </div>
     </div>
+      <div class="horario">
+        <h1>Horário</h1>
+        <div class="form-group">
+          <span class="cell btn-group"  data-toggle="buttons" >
+            <label class="btn btn-default {{#if ../monthstable.0}}active{{/if}}">
+              <input type="checkbox" name="days[]" {{#if ../monthstable.0}}checked{{/if}} value="1" /> {{../messages.mo}}Seg
+            </label>
+            <label class="btn btn-default {{#if ../monthstable.1}}active{{/if}}">
+              <input type="checkbox" name="days[]" {{#if ../monthstable.1}}checked{{/if}} value="2" /> {{../messages.mo}}Ter
+            </label>
+            <label class="btn btn-default {{#if ../monthstable.2}}active{{/if}}">
+              <input type="checkbox" name="days[]" {{#if ../monthstable.2}}checked{{/if}} value="3" /> {{../messages.mo}}Qua
+            </label>
+            <label class="btn btn-default {{#if ../monthstable.3}}active{{/if}}">
+              <input type="checkbox" name="days[]" {{#if ../monthstable.3}}checked{{/if}} value="4" /> {{../messages.mo}}Qui
+            </label>
+            <label class="btn btn-default {{#if ../monthstable.4}}active{{/if}}">
+              <input type="checkbox" name="days[]" {{#if ../monthstable.4}}checked{{/if}} value="5" /> {{../messages.mo}}Sex
+            </label>
+            <label class="btn btn-default {{#if ../monthstable.5}}active{{/if}}">
+              <input type="checkbox" name="days[]" {{#if ../monthstable.5}}checked{{/if}} value="6" /> {{../messages.mo}}Sáb
+            </label>
+            <label class="btn btn-default {{#if ../monthstable.6}}active{{/if}}">
+              <input type="checkbox" name="days[]" {{#if ../monthstable.5}}checked{{/if}} value="7" /> {{../messages.mo}}Dom
+            </label>
+          </span>
+        </div>
+        <div class="form-group">
+          <span class="cell">
+            <div class="col-md-6">
+              <input type="text" class="form-control date" aria-describedby="helpBlock" placeholder="de" name="start-time" value="10:00" autocomplete="off">
+            </div>
+            <div class="col-md-6">
+              <input type="text" class="form-control time" aria-describedby="helpBlock" placeholder="até" name="end-time" value="18:00" autocomplete="off">
+            </div>
+            <span class="help-block"></span>
+          </span>
+        </div>
+
+    </div>
     <div class="form-group" rel="tooltip" data-placement="bottom" title="{{ messages.sementecaDescriptionHelp }}">
       <span class="cell">
         <textarea style="resize:none; overflow:hidden;" class="form-control" rows="5" autocomplete="off" placeholder="{{messages.description}}" name="description">{{ sementeca.description }}</textarea>

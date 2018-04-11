@@ -151,19 +151,7 @@ class APIController extends Controller {
 	 */
 	public function getSementecas (Request $request) {
 
-      //$response = \Caravel\Sementeca::get();
-      //return $response;
-      //
-      //TODO: sort by date; request->interval
-			if ($request->input('_save', Null)) {
-				$this->validate($request, [
-		      'name' => 'required',
-		      'lat' => 'required',
-		      'lon' => 'required',
-		    ], \Lang::get('seedbank::validation'));
-			}
       return \Caravel\Sementeca::paginate(5);
-
 	}
 
 		/**
@@ -179,6 +167,24 @@ class APIController extends Controller {
 	      //
 	      //TODO: sort by date; request->interval
 	      return \Caravel\Sementeca::all();
+
+		}
+
+		/**
+		 * POST: Validate and save Sementecas form.
+		 *
+		 * @return Collection
+		 */
+		public function postSementecas (Request $request) {
+
+				if ($request->input('_save', Null)) {
+					$this->validate($request, [
+						'name' => 'required',
+						'lat' => 'required',
+						'lon' => 'required',
+					], \Lang::get('seedbank::validation'));
+					return \Caravel\Sementeca::create($request->input());
+				}
 
 		}
 

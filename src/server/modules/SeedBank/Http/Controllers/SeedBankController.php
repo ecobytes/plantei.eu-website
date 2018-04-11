@@ -691,11 +691,15 @@ class SeedBankController extends Controller {
   private function getEventForm ( $event = Null, $formErrors = Null) {
     $event = $event ?: "";
     $formErrors = $formErrors ?: "";
+    
+    $event_type = \Caravel\Calendar::getEventTypes();
+
     return view('seedbank::modal_eventform')
       ->with('formErrors', $formErrors)
       ->with('update', true)
       ->with('preview', $event)
       ->with('oldInput', $event )
+      ->with('event_type', $event_type )
       ->with('csrfToken', csrf_token())->render();
     }
 
@@ -736,6 +740,7 @@ class SeedBankController extends Controller {
       $formErrors = $formErrors
     );
 
+
     return view('seedbank::events')
       ->with('modal', true)
       ->with('update', true)
@@ -752,6 +757,7 @@ class SeedBankController extends Controller {
     return view('seedbank::sementecas', compact('lat', 'lon'))
       ->with('active', [ 'sementecas' => true ])
       ->with('modal_content', view('seedbank::modal_sementecaform')
+        ->with('csrfToken', csrf_token())
         ->with('sementeca', \Caravel\Sementeca::first())
         ->with('preview', true)->render())
       ->with('bodyId', 'mainapp');

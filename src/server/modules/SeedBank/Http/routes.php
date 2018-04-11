@@ -194,19 +194,7 @@ Route::group(['prefix' => 'enciclopedia', 'namespace' => 'Modules\SeedBank\Http\
 Route::group(['prefix' => 'sementecas', 'namespace' => 'Modules\SeedBank\Http\Controllers'], function()
 {
   Route::group(['middleware' => 'auth'], function(){
-    Route::get('/', function () {
-      $user = \Auth::user();
-      $lat = sprintf("%.5F", $user->lat);
-      $lon = sprintf("%.5F", $user->lon);
-      //dd(compact('lat', 'lon'));
-      return view('seedbank::sementecas', compact('lat', 'lon'))
-      //return view('seedbank::sementecas')
-        ->with('active', [ 'sementecas' => true ])
-        ->with('modal_content', view('seedbank::modal_sementecaform')
-          ->with('sementeca', \Caravel\Sementeca::first())
-          ->with('preview', true)->render())
-        ->with('bodyId', 'mainapp');
-    });
+    Route::get('/', 'SeedBankController@getSementecas');
     Route::get('new', function () {
       $user = \Auth::user();
 
@@ -313,11 +301,11 @@ Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controlle
 
     Route::get('/seeds', 'APIController@getSeeds');
     Route::get('/sementecasgeo', 'APIController@getSementecasGeo');
-    Route::post('/sementecas', 'APIController@getSementecas');
     Route::get('/calendar', 'APIController@getEvents');
-    Route::post('/calendar', 'APIController@getEvents');
     Route::group(['middleware' => 'csrf'], function(){
       Route::post('/preferences', 'APIController@postPreferences');
+      Route::post('/calendar', 'APIController@getEvents');
+      Route::post('/sementecas', 'APIController@postSementecas');
     });
 
 

@@ -1,16 +1,36 @@
+var clearForm = function (element) {
+  if (! element) {
+    element = $('form');
+  }
+  element.find('input').not(':button, :checkbox, :submit, :reset, [name=_token]').val('');
+  element.find('input[name=_save]').val('1');
+  element.find('textarea').text('');
+}
+
 var layerSementecas;
 
 var map, markers;
 var ajaxRequest;
 var plotlist;
 var plotlayers=[];
+$('button.new-sementeca').css({'margin-right': '32px','margin-top': '16px'}).on('click', function (e) {
+  $('#modal form').show();
+  clearForm();
+  $('#sementeca-preview').hide();
+  $('#modal').modal('show');
+});
+
 var onMapClick = function (e) {
   console.log("You clicked the map at " + e.latlng);
+  $('#sementeca-preview').hide();
+  // clear form
+  clearForm();
+  $('form').show();
+  $('#modal').modal('show');
+
   $("form input[name='lat']").val(e.latlng.lat);
   $("form input[name='lon']").val(e.latlng.lng);
-  $('#modal').modal('show');
-  $('#sementeca-preview').hide();
-  $('form').show();
+
   $('form').submit(function(e){
     e.preventDefault();
     $.ajax({
@@ -23,19 +43,16 @@ var onMapClick = function (e) {
           $('#sementeca-preview').show();
           $('form').hide();
           getSementecas();
-
         },
         error:function(data) {
           if ( data.status == 422 ) {
             console.log(data.responseJSON);
             formErrors(data.responseJSON, $('form'))
-
-
           }
           return false;
-
         }
     });
+    return false;
   });
 }
 
