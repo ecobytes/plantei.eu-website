@@ -340,8 +340,8 @@ $(function () {
     },
     eventSources: [
     {
-      url: '/api/calendar',
-      type: 'POST',
+      url: '/api/events',
+      type: 'GET',
       //color: 'yellow',
       textColor: 'black'
     }

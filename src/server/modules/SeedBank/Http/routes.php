@@ -302,6 +302,7 @@ Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controlle
     Route::get('/seeds', 'APIController@getSeeds');
     Route::get('/sementecasgeo', 'APIController@getSementecasGeo');
     Route::get('/calendar', 'APIController@getEvents');
+    Route::get('/events', 'APIController@getEvents');
     Route::group(['middleware' => 'csrf'], function(){
       Route::post('/preferences', 'APIController@postPreferences');
       Route::post('/calendar', 'APIController@getEvents');
