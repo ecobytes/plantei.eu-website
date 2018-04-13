@@ -100,12 +100,18 @@ class SeedBankController extends Controller {
     $formErrors = $formErrors ?: "";
     $item = $item ?: "";
 
+    $use_categories = [
+      "alimentar", "medicinal", "artesanal", "auxiliar, horta ou casa",
+      "tóxico ou nocivo", "social, simbólico, ritual", "outros usos especiais"
+    ];
+
     return view('seedbank::modal_enciclform')
       ->with('formErrors', $formErrors)
       ->with('update', true)
       ->with('preview', true)
       ->with('oldInput', $item )
       ->with('item', $item )
+      ->with('categories', $use_categories )
       ->with('csrfToken', csrf_token())->render();
   }
 
@@ -127,9 +133,9 @@ class SeedBankController extends Controller {
       $seed->load('pictures');
     }
 
+    $active = session()->pull('letter', '');
 
     $alphabet = [];
-    $active = 'b';
     foreach(str_split('abcdefghijklmnopqrstuvwxyz') as $l){
       $letter = ['letter' => $l];
       if ($active == $l) {
@@ -140,11 +146,13 @@ class SeedBankController extends Controller {
 
     $modal_content = self::getEnciclopediaForm();
 
+    $use_categories = \Lang::get('seedbank::forms.category_types');
 
     return view('seedbank::enciclopedia')
       ->with('modal_content', $modal_content)
       ->with('alphabet', $alphabet)
       ->with('item', $item)
+      ->with('categories', $use_categories )
       ->with('paginated', $paginated)
       ->with('active', ['enciclopedia' => true]);
   }
@@ -691,7 +699,7 @@ class SeedBankController extends Controller {
   private function getEventForm ( $event = Null, $formErrors = Null) {
     $event = $event ?: "";
     $formErrors = $formErrors ?: "";
-    
+
     $event_type = \Caravel\Calendar::getEventTypes();
 
     return view('seedbank::modal_eventform')

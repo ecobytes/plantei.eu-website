@@ -1,7 +1,7 @@
 {{> mainapp_start}}
     <div class="row header">
       <h1 style="float: left">{{lang 'seedbank::menu.encyclopedia'}}</h1>
-      <button type="button" class="btn btn-lg btn-success new-encicl" style="float: right; margin-right: 32px; margin-top: 16px;">{{ messages.newencicl }}!NOVA ENTRADA!</button>
+      <button type="button" class="btn btn-lg btn-success new-encicl" style="float: right; margin-right: 32px; margin-top: 16px;">{{ lang 'seedbank::buttons.newencicl' }}</button>
     </div>
     <div class="row enciclopedia">
       <table>
@@ -41,5 +41,8 @@
 {{#if modal }}
 $("#modal").modal('show');
 {{/if}}
+let use_categories = [
+  {{#each categories}}"{{{this}}}",{{/each}}
+];
 </script>
 {{>footer}}

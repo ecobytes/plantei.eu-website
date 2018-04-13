@@ -193,6 +193,27 @@ class APIController extends Controller {
 				}
 		}
 
+		/**
+		 * POST: Validate and save Enciclopedia form.
+		 *
+		 * @return Collection
+		 */
+		public function postEnciclopedia (Request $request) {
+   			dd($request->input());
+				if ($request->input('_save', Null)) {
+					$this->validate($request, [
+						'name' => 'required',
+					], \Lang::get('seedbank::validation'));
+					if ($request->input('id')) {
+						// TODO: Updating check permissions
+						$sementeca = \Caravel\Sementeca::find($request->input('id'));
+						$sementeca->update($request->input());
+					} else {
+						$sementeca = \Caravel\Sementeca::create($request->input());
+					}
+					return $sementeca;
+				}
+		}
 
 		private function prefValidationRules($data) {
 

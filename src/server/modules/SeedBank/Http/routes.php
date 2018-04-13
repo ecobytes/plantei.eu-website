@@ -187,6 +187,10 @@ Route::group(['prefix' => 'enciclopedia', 'namespace' => 'Modules\SeedBank\Http\
 {
   Route::group(['middleware' => 'auth'], function(){
     //Route::get('/get/{id}', 'SeedBankController@getEventById');
+    Route::get('/letter/{letter}', function ($letter) {
+      return redirect('/enciclopedia')->with('letter', $letter);
+    });
+
     Route::get('/', 'SeedBankController@getEnciclopedia');
     //Route::post('/', 'SeedBankController@postEvents');
   });
@@ -303,10 +307,12 @@ Route::group(['prefix' => 'api', 'namespace' => 'Modules\SeedBank\Http\Controlle
     Route::get('/sementecasgeo', 'APIController@getSementecasGeo');
     Route::get('/calendar', 'APIController@getEvents');
     Route::get('/events', 'APIController@getEvents');
+    Route::post('/enciclopedia', 'APIController@postEnciclopedia');
     Route::group(['middleware' => 'csrf'], function(){
       Route::post('/preferences', 'APIController@postPreferences');
       Route::post('/calendar', 'APIController@getEvents');
       Route::post('/sementecas', 'APIController@postSementecas');
+
     });
 
 

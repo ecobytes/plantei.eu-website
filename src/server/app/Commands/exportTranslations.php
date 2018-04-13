@@ -39,6 +39,8 @@ class exportTranslations extends Command implements SelfHandling {
 			"seedbank::messages",
 			"seedbank::menu",
 			"seedbank::validation",
+			"seedbank::buttons",
+			"seedbank::forms",
 			"authentication::confirmationemail",
 			"authentication::messages",
 			"authentication::validation",

@@ -11,7 +11,7 @@
         <div class="panel-heading" role="tab" id="headingIdentification">
           <h4 class="panel-title">
             <a style="color: black;" role="button" data-toggle="collapse" href="#identification" aria-expanded="true" aria-controls="collapseIdentification">
-              {{messages.identification}}
+              {{lang 'seedbank::messages.identification' }}
             </a>
           </h4>
         </div>
@@ -19,28 +19,28 @@
           <div class="panel-body">
             {{#with oldInput }}
             <div class="form-group">
-              <label class="control-label">{{../messages.common_name}}*</label>
+              <label class="control-label">{{lang 'seedbank::messages.common_name'}}*</label>
               <span class="cell">
-                <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="common_name" value="{{common_name }}" autocomplete="off">
+                <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="common_name" value="{{lang 'seedbank::messages.common_name'}}" autocomplete="off">
                 <span class="help-block"></span>
               </span>
             </div>
             <div class="row">
               <div class="col-md-5">
                 <div class="form-group">
-                  <label class="control-label">{{../messages.sitecollected}}</label>
+                  <label class="control-label">{{lang 'seedbank::messages.sitecollected'}}</label>
                   <span class="cell"><input type="text" class="form-control" name="local" value="{{ local }}" autocomplete="off"></span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="control-label">{{../messages.yearcollected}}</label>
+                  <label class="control-label">{{lang 'seedbank::messages.yearcollected'}}</label>
                   <span class="cell"><input type="text" class="form-control" name="year" value="{{ year }}" autocomplete="off"></span>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
-                  <label class="control-label">{{../messages.public}}</label>
+                  <label class="control-label">{{lang 'seedbank::messages.public'}}</label>
                   <span class="cell btn-group" data-toggle="buttons">
                     <label class="btn btn-default {{#if public}}active{{/if}}">
                       <input type="radio" name="public" {{#if public}}checked{{/unless}} value="1" /> {{../messages.yes}}
@@ -55,7 +55,7 @@
             <div class="form-group">
               <!-- <label class="control-label">{{../messages.description}}</label> -->
               <span class="cell">
-                <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{../messages.description}}" name="description">{{description}}</textarea>
+                <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{lang 'seedbank::messages.description'}}" name="description">{{description}}</textarea>
               </span>
             </div>
           </div>
@@ -65,7 +65,7 @@
         <div class="panel-heading" role="tab" id="headingPictures">
           <h4 class="panel-title">
             <a style="color: black;" role="button" data-toggle="collapse" href="#pictures" aria-expanded="false" aria-controls="collapsePictures">
-              {{../messages.pictures}}
+              {{lang 'seedbank::messages.pictures'}}
             </a>
           </h4>
         </div>
@@ -101,7 +101,7 @@
         <div class="panel-heading" role="tab" id="headingFarming">
           <h4 class="panel-title">
             <a style="color: black;" role="button" data-toggle="collapse" href="#farming" aria-expanded="false" aria-controls="collapseFarming">
-              {{../messages.farming}}
+              {{lang 'seedbank::messages.farming'}}
             </a>
           </h4>
         </div>
@@ -110,73 +110,73 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="control-label">{{../messages.directseeding}}</label>
+                  <label class="control-label">{{lang 'seedbank::messages.directseeding'}}</label>
                   <span class="cell btn-group" data-toggle="buttons">
                     <label class="btn btn-default {{#if direct.2}}active{{/if}}">
-                      <input type="radio" name="direct" value="2" /> {{../messages.yes}}
+                      <input type="radio" name="direct" value="2" /> {{lang 'seedbank::messages.yes'}}
                     </label>
                     <label class="btn btn-default {{#if direct.1}}active{{/if}}">
-                      <input type="radio" name="direct" value="1" /> {{../messages.no}}
+                      <input type="radio" name="direct" value="1" /> {{lang 'seedbank::messages.no'}}
                     </label>
                   </span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="control-label">{{../messages.polinization}}</label>
+                  <label class="control-label">{{lang 'seedbank::messages.polinization'}}</label>
                   <span class="cell btn-group" data-toggle="buttons">
                     <label class="btn btn-default {{#if polinization.1}}active{{/if}}">
-                      <input type="radio" name="polinization" {{#if polinization.1}}checked{{/if}} value="1" /> {{../messages.polinizationopen}}
+                      <input type="radio" name="polinization" {{#if polinization.1}}checked{{/if}} value="1" /> {{lang 'seedbank::messages.polinizationopen'}}
                     </label>
                     <label class="btn btn-default {{#if polinization.2}}active{{/if}}">
-                      <input type="radio" name="polinization" {{#if polinization.2}}checked{{/if}} value="2" /> {{../messages.polinizationclosed}}
+                      <input type="radio" name="polinization" {{#if polinization.2}}checked{{/if}} value="2" /> {{lang 'seedbank::messages.polinizationclosed'}}
                     </label>
                   </span>
                 </div>
               </div>
             </div>
-            <label class="control-label">{{../messages.farmingmonths}}</label>
+            <label class="control-label">{{lang 'seedbank::messages.farmingmonths'}}</label>
             <div class="form-group">
               <span class="cell btn-group"  data-toggle="buttons" >
                 <label class="btn btn-default {{#if ../monthstable.0}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.0}}checked{{/if}} value="1" /> {{../messages.monthjan}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.0}}checked{{/if}} value="1" /> {{lang 'seedbank::messages.monthjan'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.1}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.1}}checked{{/if}} value="2" /> {{../messages.monthfeb}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.1}}checked{{/if}} value="2" /> {{lang 'seedbank::messages.monthfeb'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.2}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.2}}checked{{/if}} value="3" /> {{../messages.monthmar}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.2}}checked{{/if}} value="3" /> {{lang 'seedbank::messages.monthmar'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.3}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.3}}checked{{/if}} value="4" /> {{../messages.monthapr}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.3}}checked{{/if}} value="4" /> {{lang 'seedbank::messages.monthapr'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.4}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.4}}checked{{/if}} value="5" /> {{../messages.monthmay}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.4}}checked{{/if}} value="5" /> {{lang 'seedbank::messages.monthmay'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.5}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.5}}checked{{/if}} value="6" /> {{../messages.monthjun}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.5}}checked{{/if}} value="6" /> {{lang 'seedbank::messages.monthjun'}}
                 </label>
               </span>
             </div>
             <div class="form-group">
               <span class="cell btn-group"  data-toggle="buttons">
                 <label class="btn btn-default {{#if ../monthstable.6}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.6}}checked{{/if}} value="7" /> {{../messages.monthjul}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.6}}checked{{/if}} value="7" /> {{lang 'seedbank::messages.monthjul'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.7}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.7}}checked{{/if}} value="8" /> {{../messages.monthaug}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.7}}checked{{/if}} value="8" /> {{lang 'seedbank::messages.monthaug'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.8}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.8}}checked{{/if}} value="9" /> {{../messages.monthsep}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.8}}checked{{/if}} value="9" /> {{lang 'seedbank::messages.monthsep'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.9}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.9}}checked{{/if}} value="10" /> {{../messages.monthoct}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.9}}checked{{/if}} value="10" /> {{lang 'seedbank::messages.monthoct'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.10}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.10}}checked{{/if}} value="11" /> {{../messages.monthnov}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.10}}checked{{/if}} value="11" /> {{lang 'seedbank::messages.monthnov'}}
                 </label>
                 <label class="btn btn-default {{#if ../monthstable.11}}active{{/if}}">
-                  <input type="checkbox" name="months[]" {{#if ../monthstable.11}}checked{{/if}} value="12" /> {{../messages.monthdec}}
+                  <input type="checkbox" name="months[]" {{#if ../monthstable.11}}checked{{/if}} value="12" /> {{lang 'seedbank::messages.monthdec'}}
                 </label>
               </span>
             </div>
@@ -187,30 +187,30 @@
         <div class="panel-heading" role="tab" id="headingCharacteristics">
           <h4 class="panel-title">
             <a style="color: black;" role="button" data-toggle="collapse" href="#characteristics" aria-expanded="false" aria-controls="collapseCharacteristics">
-              {{../messages.taxonomy}}
+              {{lang 'seedbank::messages.taxonomy'}}
             </a>
           </h4>
         </div>
         <div id="characteristics" class="panel-collapse collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="headingCharacteristics">
           <div class="panel-body">
             <div class="form-group">
-              <label class="control-label">{{../messages.latin_name}}</label>
+              <label class="control-label">{{lang 'seedbank::messages.latin_name'}}</label>
               <span class="cell">
                 <input type="text" class="form-control" placeholder="" name="latin_name" value="{{ latin_name }}" autocomplete="off">
               </span>
             </div>
             <div class="form-group">
-              <label class="control-label">{{../messages.family}}</label>
+              <label class="control-label">{{lang 'seedbank::messages.family'}}</label>
               <input type="hidden" name="family_id" value="{{ family.id }}">
               <span class="cell"><input type="text" class="form-control" name="family" value="{{ family.name }}" autocomplete="off"></span>
             </div>
             <div class="form-group">
-              <label class="control-label">{{../messages.species}}</label>
+              <label class="control-label">{{lang 'seedbank::messages.species'}}</label>
               <input type="hidden" name="species_id" value="{{ species.id }}">
               <span class="cell"><input type="text" class="form-control" name="species" value="{{ species.name }}" autocomplete="off"></span>
             </div>
             <div class="form-group">
-              <label class="control-label">{{../messages.variety}}</label>
+              <label class="control-label">{{lang 'seedbank::messages.variety'}}</label>
               <input type="hidden" name="variety_id" value="{{ variety.id }}">
               <span class="cell"><input type="text" class="form-control" name="variety" value="{{ variety.name }}" autocomplete="off"></span>
             </div>
@@ -221,7 +221,7 @@
         <div class="panel-heading" role="tab" id="headingConfirmation">
           <h4 class="panel-title">
             <a style="color: black;" role="button" data-toggle="collapse" href="#confirmation" aria-expanded="false" aria-controls="collapseConfirmation">
-              {{messages.confirmationregister}}
+              {{lang 'seedbank::messages.confirmationregister'}}
             </a>
           </h4>
         </div>
@@ -237,7 +237,7 @@
                 <div class="pictures" data-field="pictures[]"></div>
               </div>
               <div class="col-md-6">
-                <h2>{{messages.farming}}</h2>
+                <h2>{{lang 'seedbank::messages.farming'}}</h2>
                 <div class="col-md-6" style="padding-top: 24px">
                   <table class="table table-bordered" style="border-color: black;"  data-field="months">
                     <thead>
@@ -256,18 +256,18 @@
               </div>
               {{#if taxonomy}}
               <div class="col-md-6" style="padding-top: 24px">
-                <h2>{{messages.taxonomy}}</h2>
+                <h2>{{lang 'seedbank::messages.taxonomy'}}</h2>
                 {{#if seed.latin_name}}
-                <p>{{../messages.latin_name}}: <strong> {{seed.latin_name}}</strong></p>
+                <p>{{lang 'seedbank::messages.latin_name'}}: <strong> {{seed.latin_name}}</strong></p>
                 {{/if}}
                 {{#if seed.variety}}
-                <p>{{../messages.variety}}: <strong> {{seed.variety}}</strong></p>
+                <p>{{lang 'seedbank::messages.variety'}}: <strong> {{seed.variety}}</strong></p>
                 {{/if}}
                 {{#if seed.species}}
-                <p>{{../messages.species}}: <strong> {{seed.species}}</strong></p>
+                <p>{{lang 'seedbank::messages.species'}}: <strong> {{seed.species}}</strong></p>
                 {{/if}}
                 {{#if seed.family}}
-                <p>{{../messages.family}}: <strong> {{seed.family}}</strong></p>
+                <p>{{lang 'seedbank::messages.family'}}: <strong> {{seed.family}}</strong></p>
                 {{/if}}
               </div>
               {{/if}}
@@ -275,10 +275,10 @@
             <div class="row" style="padding-top: 24px;">
               <div class="col-md-6 col-md-offset-3">
                 <button type="button" class="btn btn-danger btn-lg">
-                  {{messages.change}}
+                  {{lang 'seedbank::messages.change'}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg">
-                  {{messages.confirm}}
+                  {{lang 'seedbank::messages.confirm'}}
                 </button>
               </div>
             </div>
@@ -320,10 +320,10 @@
     <div class="form-group lmt">
       <div class="col-md-12 text-center">
         <button type="button" class="btn btn-danger btn-lg" id="cancel_seed">
-          {{messages.registercancel}}
+          {{lang 'seedbank::messages.registercancel'}}
         </button>
         <button type="submit" class="btn btn-primary btn-lg">
-          {{#if update}}{{messages.updateseed}}{{ else }}{{messages.registerseed}}{{/if}}
+          {{#if update}}{{lang 'seedbank::messages.updateseed'}}{{ else }}{{lang 'seedbank::messages.registerseed'}}{{/if}}
         </button>
       </div>
     </div>

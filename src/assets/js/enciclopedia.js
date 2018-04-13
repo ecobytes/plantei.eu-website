@@ -20,6 +20,8 @@ let parameters = [
   {"name": "direct", "value": "direct", "type": "checked"}
 ];
 
+let emptyUse = $('.row.uses').children('.row.item');
+
 $('form').on('submit', function (){
   element = $('input[name="common_name"]');
   if (! element.val()) {
@@ -31,7 +33,8 @@ $('form').on('submit', function (){
   }
   tinymce.triggerSave();
   var formdata = $(this).serializeArray();
-  $.post('/seedbank/register', formdata, function(data) {
+  $.post('/api/enciclopedia', formdata, function(data) {
+    return false;
     if (! data.errors ) {
       window.location = location.protocol + "//" + location.host + location.pathname +
         "?seed_id=" + data.id;
@@ -53,6 +56,44 @@ $( function () {
     clearForm();
     $('#encicl-preview').hide();
     $('#modal').modal('show');
+  });
+
+  $('#uses .row.buttons button').on('click', function (e) {
+    let len = $('#uses .row.uses').children().length;
+    console.log("pressed new length: " + len);
+    let row = emptyUse.clone(true);
+    row.find('select').attr('name', 'uses[' + (len - 1) + '][category]');
+    row.find('textarea').attr('name', 'uses[' + (len - 1) + '][description]')
+      .addClass('editor');
+    row.find('input[type=text]').attr('name', 'uses[' + (len - 1) + '][title]');
+    row.find('input[type=hidden]').attr('name', 'uses[' + (len - 1) + '][id]');
+    row.show();
+    /*let categoryDiv = document.createElement('div');
+    categoryDiv.setAttribute('class', 'form-group');
+    let categorySelect = document.createElement('select');
+    categorySelect.setAttribute('name', 'uses[' + len + '][category]');
+    use_categories.forEach(function (category, index) {
+      categorySelect.options.add(new Option(category, index));
+    });
+    categoryDiv.appendChild(categorySelect);
+
+    let useTextDiv = document.createElement('div');
+    useTextDiv.setAttribute('class', 'form-group');
+    let useTextSpan = document.createElement('span');
+    useTextSpan.setAttribute('class', 'cell');
+    let useTextTextarea = document.createElement('textarea');
+    useTextTextarea.setAttribute('class', 'form-control');
+    useTextTextarea.setAttribute('name', 'uses[' + len + '][description]');
+    useTextSpan.appendChild(useTextTextarea);
+    useTextDiv.appendChild(useTextSpan);
+
+    let newUseDiv = document.createElement('div');
+    newUseDiv.setAttribute('class', 'row');
+    newUseDiv.appendChild(categoryDiv);
+    newUseDiv.appendChild(useTextDiv);*/
+
+    $('#uses .row.uses').append(row);
+
   });
 
 
@@ -100,7 +141,7 @@ $( function () {
     $('#modal').modal('hide');
   });
   tinymce.init({
-    selector: 'textarea',
+    selector: 'textarea.editor',
     inline: false,
     menubar: 'tools',
     width: '100%',
