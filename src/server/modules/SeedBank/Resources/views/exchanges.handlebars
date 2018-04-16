@@ -1,0 +1,150 @@
+{{> header}}
+{{> menu}}
+<div class="pageWrap background-primary">
+  <div class="container">
+    <!-- <div class="row lmt"> -->
+      <div class="col-md-12 text-center">
+        <h1>Trocas pendentes</h1>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="color: black;">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingSent">
+              <h4 class="panel-title">
+                <a style="color: black;" role="button" data-toggle="collapse" href="#transactionsSent" aria-expanded="true" aria-controls="collapseSent">
+                  {{messages.sent_requests}}
+                </a>
+              </h4>
+            </div>
+            {{#if transactionsBy}}
+            <div id="transactionsSent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingSent">
+              <div class="panel-body">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>{{../messages.common_name}}</th>
+                          <th>{{../messages.date}}</th>
+                          <th>{{../messages.location}}</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {{#each transactionsBy}}
+                        <tr data-exchange="{{id}}">
+                          <td>{{common_name}}</td>
+                          <td>{{updated_at}}</td>
+                          <td>{{place_name}}</td>
+                          <td>
+                          {{#if accepted.0}}
+                          {{#if completed.1}}
+                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../../messages.cancelled}}</button>
+							{{else}}
+                            <button type="button" class="btn btn-sm btn-warning" data-button="pending">{{../../../messages.pending}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../../messages.cancel}}</button>
+                          {{/if}}
+                          {{/if}}
+                          {{#if accepted.1}}
+                            <button type="button" class="btn btn-sm btn-danger" data-button="cancelled">{{../../messages.refused}}</button>
+                          {{/if}}
+                          {{#if accepted.2}}
+                          {{#if completed.0}}
+                            <button type="button" class="btn btn-sm btn-default" data-button="complete">{{../../../messages.confirm}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../../messages.cancel}}</button>
+							{{!-- button to  cancel --}}
+                          {{/if}}
+                          {{#if completed.1}}
+                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}</button>
+                          {{/if}}
+                          {{#if completed.2}}
+                            <button type="button" class="btn btn-sm btn-success" data-button="confirmed">{{../../messages.finished}}</button>
+                          {{/if}}
+                          {{/if}}
+                          </td>
+                        </tr>
+                      {{/each}}
+                      </tbody>
+                    </table>
+              </div>
+            </div>
+            {{/if}}
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingReceived">
+              <h4 class="panel-title">
+                <a  style="color: black;" class="collapsed" role="button" data-toggle="collapse" href="#transactionsReceived" aria-expanded="false" aria-controls="transactionsReceived">
+                  {{messages.received_requests}}
+                </a>
+              </h4>
+            </div>
+            {{#unless transactionsTo.empty}}
+            <div id="transactionsReceived" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingReceived">
+              <div class="panel-body">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>{{messages.common_name}}</th>
+                          <th>{{messages.date}}</th>
+                          <th>{{messages.location}}</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {{#each transactionsTo}}
+                        <tr data-exchange="{{id}}">
+                          <td>{{common_name}}</td>
+                          <td>{{updated_at}}</td>
+                          <td>{{place_name}}</td>
+                          <td>
+                            {{#if accepted.0}}
+                            <button type="button" class="btn btn-sm btn-danger" data-button="accept">{{../../messages.accept}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.reject}}</button>
+							{{!-- button to  reject --}}
+                            {{/if}}
+                          {{#if accepted.1}}
+                            <button type="button" class="btn btn-sm btn-danger" data-button="cancelled">{{../../messages.cancelled}}</button>
+                          {{/if}}
+                          {{#if accepted.2}}
+                          {{#if completed.0}}
+                            <button type="button" class="btn btn-sm btn-default" data-button="accepted">{{../../../messages.accepted}}</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-button="pending">{{../../../messages.pending}}</button>
+                          {{/if}}
+                            <button type="button" class="btn btn-sm btn-danger" data-button="reject">{{../../messages.cancel}}</button>
+							{{!-- button to  cancel --}}
+                          {{/if}}
+                          {{#if completed.1}}
+                            <button type="button" class="btn btn-sm btn-warning" data-button="cancelled">{{../../messages.cancelled}}</button>
+                          {{/if}}
+                          {{#if completed.2}}
+                            <button type="button" class="btn btn-sm btn-success" data-button="confirmed">{{../../messages.finished}}</button>
+                          {{/if}}
+                            </td>
+                        </tr>
+                      {{/each}}
+                      </tbody>
+                    </table>
+              </div>
+            </div>
+            {{/unless}}
+          </div>
+        </div>
+      </div>
+    <!-- </div> -->
+  </div>
+</div>
+
+{{>scripts}}
+{{!-- <script src="/js/laravel-bootstrap-modal-form.js"></script> --}}
+<script>
+  $('.table').on('click', 'tbody tr button', function () {
+	var action = $(this).data('button'),
+	    exchange_id = $(this).parents('tr').data('exchange');
+	
+    $.get("/seedbank/exchange/" + action + "/" + exchange_id, function (data) {
+	  console.log(data);
+	  if (data == "ok") { window.open('/seedbank/exchanges', '_self'); }
+	});
+}).on('mouseover', 'tbody tr', function () {
+	$(this).addClass('active');
+}).on('mouseout', 'tbody tr', function () {
+    $(this).removeClass('active');
+});
+</script>
+{{>footer}}

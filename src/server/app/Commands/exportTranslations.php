@@ -20,7 +20,7 @@ class exportTranslations extends Command implements SelfHandling {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Output all translations to csv';
+	protected $description = 'Output all translations';
 
 	/**
 	 * Execute the console command.
@@ -29,79 +29,6 @@ class exportTranslations extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		$headers = [
-			"section",
-			"pt",
-			"en"
-		];
-
-		$sections = [
-			"seedbank::messages",
-			"seedbank::menu",
-			"seedbank::validation",
-			"seedbank::buttons",
-			"seedbank::forms",
-			"authentication::confirmationemail",
-			"authentication::messages",
-			"authentication::validation",
-			"projectpresentation::messages",
-			"buttons",
-			"validation",
-			"footer",
-			"pagination",
-			"passwords"
-		];
-
-		$lines = [];
-		$allLangsArray = [];
-
-		foreach (config('app.availableLanguages') as $lang) {
-			\App::setLocale($lang);
-			foreach ($sections as $section) {
-				$t = \Lang::get($section);
-				ksort($t);
-				$allLangsArray[$section][$lang] = $t;
-			}
-		}
-
-    $langCount = 0;
-
-		foreach ($allLangsArray as $section => $langs) {
-			foreach ($langs as $l){
-				if ($lang == 'pt') {
-					$langIndex = 0;
-				} else {
-					$langIndex = 1;
-				}
-				foreach ($l as $key => $value){
-					if (is_array($value)){
-						if ($key == 'custom'){
-							continue;
-						}
-						foreach ($value as $k => $v) {
-							$lines[$section . "." . $key . "." . $k][] = $v;
-						}
-					} else {
-						$lines[$section . "." . $key][] = $value;
-					}
-				}
-			}
-		}
-
-		foreach ($lines as $key => $value) {
-			try {
-				echo '"' . $key . '"|' . '"' . join('"|"', $value) . '"' . "\n";
-			}
-			catch (\Exception $e ) {
-				echo "--------> " . $key . " <----------------\n";
-				echo var_dump($value);
-				echo "\n";
-
-			};
-		}
-
-
-		/* return;
 		$paths = [''];
 		$modules = scandir(base_path().'/modules');
 		foreach ($modules as $key => $module) {
@@ -114,7 +41,7 @@ class exportTranslations extends Command implements SelfHandling {
 			$base = base_path().$path.'/resources/lang';
 			if(is_dir($base)){
 				foreach (scandir($base) as $key => $langDir) {
-					if ($langDir != '.' && $langDir != '..' && $langDir != 'vendor'){
+					if ($langDir != '.' && $langDir != '..'){
 						if (is_dir($base.'/'.$langDir)) {
 							$this->info($langDir);
 							$translationFiles = scandir($base.'/'.$langDir);
@@ -134,7 +61,6 @@ class exportTranslations extends Command implements SelfHandling {
 	}
 
 	private function outputArray($arr, $level){
-    $filecontent = "<?php\nreturn [\n";
 		foreach ($arr as $key => $value) {
 			if(is_array($value)){
 				$this->info($key. ' => ');
@@ -146,10 +72,8 @@ class exportTranslations extends Command implements SelfHandling {
 				}
 				$this->info($spaces.$key .' => '.$value);
 			}
-    }
-    $this->info($filecontent);
-		*/
-
+		}
+		
 	}
 
 }

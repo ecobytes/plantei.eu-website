@@ -1,0 +1,313 @@
+{{> header}}
+{{> menu}}
+<div class="pageWrap background-primary">
+  <div class="container">
+    <div class="row lmt">
+      {{> formErrors}}
+      <div class="col-md-12 text-center">
+        <h1>{{#if update}}{{messages.update}}{{else}}{{messages.registernew}}{{/if}} {{messages.seed}}</h1>
+      </div> 
+      <div id="seed-preview" class="col-md-8 col-md-offset-2" style="border: 5px solid red; background-color: #9ACD32; background-color: rgba(154,205,50,0.5); display:none;" ></div>
+      <form class="form-horizontal" role="form" method="POST" action="/seedbank/register">
+        <input type="hidden" name="_token" value="{{ csrfToken }}">
+        <input type="hidden" name="_id" value="{{ oldInput.id }}">
+        <input type="hidden" name="seed_id" value="{{ oldInput.seed_id }}">
+        <div class="col-md-12">
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="color: black;">
+            <div class="panel panel-default"><!-- Accordion Identification -->
+              <div class="panel-heading" role="tab" id="headingIdentification">
+                <h4 class="panel-title">
+                  <a style="color: black;" role="button" data-toggle="collapse" href="#identification" aria-expanded="true" aria-controls="collapseIdentification">
+                    {{messages.identification}}
+                  </a>
+                </h4>
+              </div>
+              <div id="identification" class="panel-collapse collapse in" data-parent="#accordion" role="tabpanel" aria-labelledby="headingIdentification">
+                <div class="panel-body">
+                  {{#with oldInput }}
+                  <div class="form-group">
+                    <label class="control-label">{{../messages.common_name}}*</label>
+                    <span class="cell">
+                      <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="common_name" value="{{common_name }}">
+                      <span class="help-block"></span>
+                    </span>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="control-label">{{../messages.sitecollected}}</label>
+                        <span class="cell"><input type="text" class="form-control" name="local" value="{{ local }}"></span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label class="control-label">{{../messages.yearcollected}}</label>
+                        <span class="cell"><input type="text" class="form-control" name="year" value="{{ year }}"></span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">{{../messages.public}}</label>
+                      <span class="cell btn-group" data-toggle="buttons">
+                        <label class="btn btn-default {{#if public}}active{{/if}}">
+                          <input type="radio" name="public" {{#if public}}checked{{/unless}} value="1" /> {{../messages.yes}}
+                        </label>
+                        <label class="btn btn-default {{#unless public}}active{{/unless}}">
+                          <input type="radio" name="public" {{#unless public}}checked{{/unless}} value="0" /> {{../messages.no}}
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <!-- <label class="control-label">{{../messages.description}}</label> -->
+                  <span class="cell">
+                    <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{../messages.description}}" name="description">{{description}}</textarea>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div><!-- END Accordion Identification -->
+          <div class="panel panel-default"><!-- Accordion Pictures -->
+            <div class="panel-heading" role="tab" id="headingPictures">
+              <h4 class="panel-title">
+                <a style="color: black;" role="button" data-toggle="collapse" href="#pictures" aria-expanded="true" aria-controls="collapsePictures">
+                  {{../messages.pictures}}
+                </a>
+              </h4>
+            </div>
+            <div id="pictures" class="panel-collapse collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="headingPictures">
+              <div class="panel-body">
+                <span class="btn btn-success fileinput-button">
+                  <i class="glyphicon glyphicon-plus"></i>
+                  <span>Adiciona imagens...</span>
+                  <!-- The file input field used as target for the file upload widget -->
+                  <input id="fileupload" type="file" name="pictures[]" multiple>
+                </span>
+                <br>
+                <br>
+                <!-- The global progress bar -->
+                <div id="progress" class="progress" style="display:none;">
+                  <div class="progress-bar progress-bar-success"></div>
+                </div>
+                <!-- The container for the uploaded files -->
+                <div id="files" class="files">
+                {{#each pictures}}
+                  <div class="col-md-3" style="padding-bottom: 24px;">
+                    <img src="{{url}}" alt="{{label}}" data-file-id="{{id}}" class="img-responsive img-rounded">
+                    <button type="button" class="btn btn-danger delete" data-type="GET" data-md5sum="{{md5sum}}" data-delete-url="/seedbank/pictures/delete/{{id}}">{{../../messages.delete}}</button>
+                  </div>
+                {{/each}}
+                </div>
+              </div>
+            </div>
+          </div><!-- END Accordion Pictures -->
+          <div class="panel panel-default"><!-- Accordion Farming -->
+            <div class="panel-heading" role="tab" id="headingFarming">
+              <h4 class="panel-title">
+                <a style="color: black;" role="button" data-toggle="collapse" href="#farming" aria-expanded="true" aria-controls="collapseFarming">
+                  {{../messages.farming}}
+                </a>
+              </h4>
+            </div>
+            <div id="farming" class="panel-collapse collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="headingFarming">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">{{../messages.directseeding}}</label>
+                      <span class="cell btn-group" data-toggle="buttons">
+                        <label class="btn btn-default {{#if direct.2}}active{{/if}}">
+                          <input type="radio" name="direct" value="2" /> {{../messages.yes}}
+                        </label>
+                        <label class="btn btn-default {{#if direct.1}}active{{/if}}">
+                          <input type="radio" name="direct" value="1" /> {{../messages.no}}
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">{{../messages.polinization}}</label>
+                      <span class="cell btn-group" data-toggle="buttons">
+                        <label class="btn btn-default {{#if polinization.1}}active{{/if}}">
+                          <input type="radio" name="polinization" {{#if polinization.1}}checked{{/if}} value="1" /> {{../messages.polinizationopen}}
+                        </label>
+                        <label class="btn btn-default {{#if polinization.2}}active{{/if}}">
+                          <input type="radio" name="polinization" {{#if polinization.2}}checked{{/if}} value="2" /> {{../messages.polinizationclosed}}
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <label class="control-label">{{../messages.farmingmonths}}</label>
+                <div class="form-group">
+                  <span class="cell btn-group"  data-toggle="buttons" >
+                    <label class="btn btn-default {{#if months.1}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.1}}checked{{/if}} value="1" /> {{../messages.monthjan}}C
+                    </label>
+                    <label class="btn btn-default {{#if months.2}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.2}}checked{{/if}} value="2" /> {{../messages.monthfeb}}
+                    </label>
+                    <label class="btn btn-default {{#if months.3}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.3}}checked{{/if}} value="3" /> {{../messages.monthmar}}
+                    </label>
+                    <label class="btn btn-default {{#if months.4}}active{{/if}}">
+                      <input type="checkbox" name="months[]"  {{#if months.4}}checked{{/if}}value="4" /> {{../messages.monthapr}}
+                    </label>
+                    <label class="btn btn-default {{#if months.5}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.5}}checked{{/if}} value="5" /> {{../messages.monthmay}}
+                    </label>
+                    <label class="btn btn-default {{#if months.6}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.6}}checked{{/if}} value="6" /> {{../messages.monthjun}}
+                    </label>
+                  </span>
+                </div>
+                <div class="form-group">
+                  <span class="cell btn-group"  data-toggle="buttons">
+                    <label class="btn btn-default {{#if months.7}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.7}}checked{{/if}} value="7" /> {{../messages.monthjul}}
+                    </label>
+                    <label class="btn btn-default {{#if months.8}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.8}}checked{{/if}} value="8" /> {{../messages.monthaug}}
+                    </label>
+                    <label class="btn btn-default {{#if months.9}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.9}}checked{{/if}} value="9" /> {{../messages.monthsep}}
+                    </label>
+                    <label class="btn btn-default {{#if months.10}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.10}}checked{{/if}} value="10" /> {{../messages.monthoct}}
+                    </label>
+                    <label class="btn btn-default {{#if months.11}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.11}}checked{{/if}} value="11" /> {{../messages.monthnov}}
+                    </label>
+                    <label class="btn btn-default {{#if months.12}}active{{/if}}">
+                      <input type="checkbox" name="months[]" {{#if months.12}}checked{{/if}} value="12" /> {{../messages.monthdec}}
+                    </label>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div><!-- END Accordion Farming -->
+          <div class="panel panel-default"><!-- Accordion Characteristics -->
+            <div class="panel-heading" role="tab" id="headingCharacteristics">
+              <h4 class="panel-title">
+                <a style="color: black;" role="button" data-toggle="collapse" href="#characteristics" aria-expanded="true" aria-controls="collapseCharacteristics">
+                  {{../messages.taxonomy}}
+                </a>
+              </h4>
+            </div>
+            <div id="characteristics" class="panel-collapse collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="headingCharacteristics">
+              <div class="panel-body">
+                <div class="form-group">
+                  <label class="control-label">{{../messages.latin_name}}</label>
+                  <span class="cell">
+                    <input type="text" class="form-control" placeholder="" name="latin_name" value="{{ latin_name }}">
+                  </span>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">{{../messages.family}}</label>
+                  <input type="hidden" name="family_id" value="{{ family.id }}">
+                  <span class="cell"><input type="text" class="form-control" name="family" value="{{ family.name }}"></span>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">{{../messages.species}}</label>
+                  <input type="hidden" name="species_id" value="{{ species.id }}">
+                  <span class="cell"><input type="text" class="form-control" name="species" value="{{ species.name }}"></span>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">{{../messages.variety}}</label>
+                  <input type="hidden" name="variety_id" value="{{ variety.id }}">
+                  <span class="cell"><input type="text" class="form-control" name="variety" value="{{ variety.name }}"></span>
+                </div>
+              </div>
+            </div>
+          </div><!-- END Accordion Characteristics -->
+          {{!--<div class="panel panel-default"><!-- Accordion Cooking -->
+            <div class="panel-heading" role="tab" id="headingCooking">
+              <h4 class="panel-title">
+                <a style="color: black;" role="button" data-toggle="collapse" href="#cooking" aria-expanded="true" aria-controls="collapseCooking">
+                  {{../messages.cooking}}
+                </a>
+              </h4>
+            </div>
+            <div id="cooking" class="panel-collapse collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="headingCooking">
+              <div class="panel-body">
+              </div>
+            </div>
+            </div><!-- END Accordion Cooking -->
+            <div class="panel panel-default"><!-- Accordion Medicine -->
+              <div class="panel-heading" role="tab" id="headingMedicine">
+                <h4 class="panel-title">
+                  <a style="color: black;" role="button" data-toggle="collapse" href="#medicine" aria-expanded="true" aria-controls="collapseMedicine">
+                    {{../messages.medicine}}
+                  </a>
+                </h4>
+              </div>
+              <div id="medicine" class="panel-collapse collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="headingMedicine">
+                <div class="panel-body">
+                </div>
+              </div>
+            </div><!-- END Accordion Medicine -->--}}
+          </div>
+        </div>
+        {{/with}}
+        <div class="row">
+          <div class="form-group lmt">
+            <div class="col-md-12 text-center">
+              <button type="button" class="btn btn-danger btn-lg" id="cancel_seed">
+                {{messages.registercancel}}
+              </button>
+              <button type="submit" class="btn btn-primary btn-lg">
+                {{#if update}}{{messages.updateseed}}{{ else }}{{messages.registerseed}}{{/if}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{{>scripts}}
+<script src="/js/tinymce/tinymce.min.js"></script>
+<script>
+$('#cancel_seed').on('click', function () {
+  window.open('/seedbank/myseeds', '_self');
+  return false;
+});
+$('form').on('submit', function (){
+  element = $('input[name="common_name"]');
+  if (! element.val()) {
+    $('#identification').collapse('show');
+    element.closest('.form-group').addClass('has-error');
+    element.next('.help-block').text('This field is the only field required');
+    element.focus();
+    return false;
+  }
+});
+tinymce.init({
+  selector: 'textarea',
+  inline: false,
+  menubar: 'tools',
+  width: '100%',
+  plugins: [ "placeholder" ],
+  setup : function(ed)
+  {
+    ed.on('init', function() 
+      {
+        this.getDoc().body.style.fontSize = '18px';
+        $('.mce-toolbar-grp').hide();
+        $('.mce-statusbar').hide();
+        $(this.getBody()).on('blur', function() {
+            $('.mce-toolbar-grp').hide();
+            $('.mce-statusbar').hide();
+        });
+        $(this.getBody()).on('focus', function() {
+            $('.mce-toolbar-grp').show();
+            $('.mce-statusbar').show();
+        });
+    });
+  }
+});
+</script>
+{{>pictureUploader}}
+{{>footer}}

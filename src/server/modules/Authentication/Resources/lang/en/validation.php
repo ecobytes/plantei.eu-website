@@ -6,6 +6,5 @@ return [
 'email.required' => 'You must supply an email',
 'email.email' => 'You must supply a valid email address',
 'email.unique' => 'This email address is already on the list',
-'email.max' => 'The email address is too long',
-'login.error' => 'These credentials do not match our records or account not active.'
+'email.max' => 'The email address is too long'
 ];

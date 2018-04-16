@@ -28,11 +28,6 @@ return [
 	'cancel' => 'Cancel',
 	'registertitle' => 'Register a new account',
 	'login' => 'Login',
-  'updateTo' => 'Update to',
-  'unknowncity' => 'Place with no name',
-  'emailHelp' => 'Not obligatory, can be used to reset password',
-  'saveLocationLatLonHelp' => 'Can be useful when checking nearby locations for events or seed shares.',
-  'usernameHelp' => 'A user name that can be used to login to site',
-  'language' => 'Language',
-
+    'updateTo' => 'Update to',
+    'unknowncity' => 'Place with no name'
 ];

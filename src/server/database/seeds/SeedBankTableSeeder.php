@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Carbon\Carbon;
 
 class SeedBankTableSeeder extends Seeder
 {
@@ -72,22 +71,22 @@ class SeedBankTableSeeder extends Seeder
     {
         $faker = Faker\Factory::create();
         DB::table('family')->insert([
-            ['name' => 'family' . str_random(5), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['name' => 'family' . str_random(5), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['name' => 'family' . str_random(5), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+            ['name' => 'family' . str_random(5)],
+            ['name' => 'family' . str_random(5)],
+            ['name' => 'family' . str_random(5)]
         ]);
         foreach (DB::table('family')->get() as $family){
             DB::table('species')->insert([
-                ['name' => 'species' . str_random(5), 'family_id' => $family->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-                ['name' => 'species' . str_random(5), 'family_id' => $family->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-                ['name' => 'species' . str_random(5), 'family_id' => $family->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+                ['name' => 'species' . str_random(5), 'family_id' => $family->id],
+                ['name' => 'species' . str_random(5), 'family_id' => $family->id],
+                ['name' => 'species' . str_random(5), 'family_id' => $family->id]
             ]);
         };
         foreach (DB::table('species')->get() as $specie){
             DB::table('variety')->insert([
-                ['name' => 'variety' . str_random(5), 'species_id' => $specie->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-                ['name' => 'variety' . str_random(5), 'species_id' => $specie->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-                ['name' => 'variety' . str_random(5), 'species_id' => $specie->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+                ['name' => 'variety' . str_random(5), 'species_id' => $specie->id],
+                ['name' => 'variety' . str_random(5), 'species_id' => $specie->id],
+                ['name' => 'variety' . str_random(5), 'species_id' => $specie->id]
             ]);
         };
         foreach (DB::table('family')->get() as $family) {
