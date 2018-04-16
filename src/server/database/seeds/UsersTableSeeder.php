@@ -55,21 +55,8 @@ class UsersTableSeeder extends Seeder {
     $user->roles()->attach($adminId);
     $user->confirmed = 1;
     $user->save();
+
     $faker = Faker\Factory::create();
-
-    $user = $this->create([
-      'name' => 'User',
-      'email' => 'develuser@dev.com',
-      'password' => 'develuser',
-      'lat' => strval($faker->randomFloat($nbMaxDecimals = 3, $min = -179, $max = 179)),
-      'lon' => strval($faker->randomFloat($nbMaxDecimals = 3, $min = -179, $max = 179)),
-      'place_name' => $faker->city,
-    ]);
-    $user->roles()->attach($userId);
-    $user->confirmationString = substr(sha1(rand()), 0, 32);
-    $user->confirmed = 1;
-    $user->save();
-
 
     for($i = 0; $i < 10; $i++){
     	$user = $this->create([

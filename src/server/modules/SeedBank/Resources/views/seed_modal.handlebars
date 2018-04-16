@@ -1,0 +1,47 @@
+{{!--<div class="modal fade" id="seed_info">
+  <div class="modal-dialog">
+    <div class="modal-content">--}}
+	{{#with seed}}
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" data-seed_id="{{id}}">
+		[{{id}}] {{common_name}}
+		</h4>
+		    {{#if ../picture}}
+			<div class="row col-md-3">
+			<img class="img-responsive" src="{{../../picture.url}}" />
+			</div>
+			{{/if}}
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 body-read">
+		    {{#if latin_name}}<p><em>{{latin_name}}</em></p>{{/if}}
+			{{#if description}}{{{description}}}{{/if}}
+		  </div>
+        </div>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1 body-form" style="border: solid; display: none;">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-4 footer-left">
+		{{#if ../update_seed}}
+            <button class="btn btn-sm btn-default col-sm-12">
+			  {{../messages.update}}Alterar sementes
+			  </button>
+			{{/if}}
+
+        </div>
+        <div class="col-md-8 footer-right">
+		{{#if latin_name}}<p><em>{{latin_name}}</em></p>{{/if}}
+		{{#if family}}<p><b>Família:</b> {{family.name}}</p>{{/if}}
+		{{#if species}}<p><b>Espécie:</b> {{species.name}}</p>{{/if}}
+		{{#if variety}}<p><b>Variedade:</b> {{variety.name}}</p>{{/if}}
+        </div>
+      </div>
+	  {{/with}}
+    {{!--</div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->--}}

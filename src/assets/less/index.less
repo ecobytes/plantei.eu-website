@@ -2,197 +2,73 @@
 @import "variables.less";
 
 #index{
-  .intro-box {
-    background: @body-bg;
-    margin-top: 26px;
-    width: 100%;
-    border-top: solid;
-    border-bottom: solid;
-    img {
-      margin: 0 auto;
-    }
-    .description {
-      font-family: @font-family-serif;
-      font-size: 25px;
-      font-weight: bold;
-    }
-    .description a {
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .mainActions {
-      margin-left: 15px;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-    }
-    #emailInput, #nameInput {
-      text-align: center
-    }
-    #emailInput::-webkit-input-placeholder {
-     text-align: center;
-    }
+	.jumbotron.intro {
+		.lang {
+			position: absolute;
+			right: 28px;
+			top: 16px;		
+		}
+		h1{
+			text-align: center;
+			font-weight: 100;
+		}
+	background: @brand-primary url('/introImages/logo plantei.svg') no-repeat;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  background-position: left;
+	position: relative;
+	padding: 50px;
+	min-height: 60vh;
+  .inscriptionDescription {
+		letter-spacing: 0.01em;
+	}
+	.mainActions {
+		margin-left: 15px;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		}
+	}
+	padding-top: 0;
 
-    #emailInput:-moz-placeholder { /* Firefox 18- */
-     text-align: center;
-    }
+	#emailInput, #nameInput {
+		text-align: center
+	}
+	#emailInput::-webkit-input-placeholder {
+	 text-align: center;
+	}
 
-    #emailInput::-moz-placeholder {  /* Firefox 19+ */
-     text-align: center;
-    }
+	#emailInput:-moz-placeholder { /* Firefox 18- */
+	 text-align: center;
+	}
 
-    #emailInput:-ms-input-placeholder {
-     text-align: center;
-    }
+	#emailInput::-moz-placeholder {  /* Firefox 19+ */
+	 text-align: center;
+	}
 
-    .btn-lg {
-      font-size: 18px;
-      width: 200px;
-      height: 60px;
-      line-height: 40px;
-      font-weight: bold;
-      background-color: #ADC77F;
-      border-color: #ADC77F;
-      }
-
-      .btn-lg:hover {
-        background-color: #C1D6A1;
-        border-color: #C1D6A1;
-      }
-
-  }
-  .info-box {
-    background: white;
-    margin: auto;
-    min-height: 300px;
-    img {
-      width: 50%;
-      margin-bottom: 24px;
-    }
-    p {
-      font-family: @font-family-sans-serif;
-      font-weight: bold;
-      font-size: 20px;
-      text-transform: uppercase;
-      max-width: 320px;
-      margin: auto;
-    }
-  }
-}
-#mainapp {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 16px;
-  .row.main {
-    .col-md-10 .col-sm-4  > div {
-      border-top: solid thin;
-      padding: 6px;
-    }
-  }
-}
-@media only screen and (min-width: 904px) {
-  .row.main {
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0px;
-    .row {
-      padding-left: 15px;
-      padding-right: 15px;
-      h1 {
-        margin-left: 15px;
-        margin-top: 25px;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        font-size: 26px;
-        color: #ADC77F;
-        font-weight: bold;
-      }
-      h2{
-        text-transform: uppercase;
-        font-size: 20px;
-        color: #ADC77F;
-        font-weight: bold;
-        padding: 10px 0 5px 5px;
-        border-top: 2px solid #808080;
-        border-bottom: 2px solid #808080;
-      }
-      h4 {
-        text-transform: uppercase;
-        font-size: 16px;
-        padding-left: 5px;
-      }
-    }
-  }
-  .row.main .col-md-10 {
-    min-height: 450px;
-    background: white;
-    padding-right: 16px;
-    padding-bottom: 16px;
-    float:none;
-    width: auto;
-    border: solid thin;
-    overflow: hidden;
-    table {
-      td, th {
-        padding-left: 16px;
-        padding-right: 16px;
-        font-size: 12px;
-      }
-      img {
-        margin: 12px;
-      }
-    }
-    .seeds table  {
-      td, th {
-        padding-left: 16px;
-        padding-right: 16px;
-        border-bottom: solid 1px #80808;
-        border-top: 1px solid #808080;
-        font-size: 12px;
-        padding: 5px 0 5px 0;
-      }
-      th{
-        color: #ADC77F;
-      }
-      img {
-        margin: 12px;
-      }
-    }
-  }
+	#emailInput:-ms-input-placeholder {
+	 text-align: center;
+	}
 }
 
-@media only screen and (min-width: 480px) and (max-width: 904px) {
-  #mainapp {
-    .row.main {
-      margin-left: auto;
-      margin-right: auto;
-      padding: 0px;
-      .row {
-        padding-left: 15px;
-        padding-right: 15px;
-      }
-      .col-md-10 {
-        /*width: 100%;
-        margin: 0px;
-        padding-top: 100px;*/
-        min-height: 450px;
-        background: white;
-        padding-right: 16px;
-        padding-bottom: 16px;
-        float:none;
-        width: auto;
-        border: solid thin;
-        table {
-          td, th {
-            padding-left: 16px;
-            padding-right: 16px;
-            border-bottom: solid thin;
-          }
-          img {
-            margin: 12px;
-          }
-        }
-      }
-    }
-  }
+
+@media (max-width: @screen-sm) {
+	#index {
+		.jumbotron.intro .mainActions {
+			position: relative;
+			margin-left: 0;
+			margin-right: 0;
+			margin-top: @lm;
+			text-align: center;
+			.btn, .btn-group {
+				margin-left: 0;
+				margin-right: 0;
+			}
+			.moreinfo {
+				margin-bottom: @mm;
+			}
+		}
+	}
 }

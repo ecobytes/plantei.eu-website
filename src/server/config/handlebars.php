@@ -54,13 +54,7 @@ return [
     |
     */
 
-    'helpers' => [
-      'formatDate' => function ($arg) {
-        $date = \Carbon\Carbon::parse($arg[0]);
-        \Carbon\Carbon::setLocale($arg[1]);
-        return $date->diffForHumans();
-      },
-    ],
+    'helpers' => [],
 
     /*
     |--------------------------------------------------------------------------

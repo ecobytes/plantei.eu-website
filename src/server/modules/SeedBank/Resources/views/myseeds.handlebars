@@ -1,152 +1,103 @@
-{{> mainapp_start}}
-    <div class="row">
-      <div class="col-md-6">
-        <h1>{{messages.myseeds}}</h1>
+{{> header}}
+{{> menu}}
+<div class="pageWrap background-primary">
+  <div class="container">
+      <div class="col-md-12 text-center">
+        <h1>
+		  As minhas sementes
+          <span class="cell btn-group">
+            <button type="button" class="btn btn-primary btn-md" id="new_seed">
+              {{messages.add_new_seed}}
+            </button>
+          </span>
+        </h1>
+        <div class="row">
+            <div class="col-md-12">
+            <table class="table" id="mySeeds">
+              <thead>
+                <tr>
+                  <th>{{messages.common_name}}</th>
+                  <th>{{messages.latin_name}}</th>
+                  <th>{{messages.available}}</th>
+                  <th>{{messages.public}}</th>
+                </tr>
+              </thead>
+              <tbody>
+              {{#each seeds.data}}
+                <tr data-seed_id="{{id}}">
+                  <td>{{common_name}}</td>
+                  <td>{{latin_name}}</td>
+                  <td style="text-align: center;">{{#if available}}X{{/if}}</td>
+                  <td style="text-align: center;">{{#if public}}X{{/if}}</td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+			<div class="row">
+            <nav>
+              <ul class="pager">
+			    {{#if seeds.next_page_url}}
+                <li class="next">
+                  <a type="button" data-url="{{seeds.next_page_url}}" class="btn btn-primary btn-md" id="next_seeds">
+                     {{messages.next_seeds}}CHANGME_NEXT_SEEDS
+                  </a>
+                </li>
+				{{/if}}
+              </ul>
+            </nav>
+			</div>
       </div>
-      <div class="col-md-6">
-        <ul class="buttons">
-          <li><a class="iconified exchanges pt" href="#"></a></li>
-          <li><a class="iconified searchseed pt" href="#"></a></li>
-          <li><a class="iconified delseed pt" href="#"></a></li>
-          <li><a id="newseed" class="iconified newseed pt" href="#"></a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="row search">
-      <input type="text" name="searchseed" value="">
-    </div>
-    <div class="row content seeds">
-      <table class="table" style="width: 100%">
-        <thead>
-          <tr>
-            <th width="100px"></th>
-            <th>{{messages.name}},<br>{{messages.family}}</th>
-            <th>ONDE E <br>QUANDO</th>
-            <th>MÉTODO E <br> RECOLHA</th>
-            <th>DISPONÍVEL <br> PARA TROCA</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each paginated.data}}
-          <tr data-seed_id={{id}}>
-            <td><img style="width: 100px" src="{{#if pictures}}{{pictures.0.url}}{{else}}/images/planteieulogocinza.png{{/if}}" alt=""></td>
-            <td>
-              <p style="font-weight: bold; font-size:14px;">{{common_name}}</p>
-              <p style="font-style: oblique;">{{latin_name}}</p>
-              <p style="font-style: oblique;">{{../messages.family}}: {{family.name}}</p>
-            </td>
-            <td><p>{{local}}</p>{{year}}<p></p></td>
-            <td>ḿetodo</td>
-            <td>{{#if available}}{{lang 'seedbank::messages.yes'}}{{else}}{{lang 'seedbank::messages.no'}}{{/if}}</td>
-          </tr>
-          {{else}}
-          <tr>
-            No Content
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
-      {{> paginator}}
-    </div>
+  </div>
+</div>
 
-    {{> mainapp_end}}
-    <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-    <script src="/js/load-image.all.min.js"></script>
-    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-    <script src="/js/jquery.iframe-transport.js"></script>
-    <!-- The basic File Upload plugin -->
-    <script src="/js/jquery.fileupload.js"></script>
-    <!-- The File Upload processing plugin -->
-    <script src="/js/jquery.fileupload-process.js"></script>
-    <!-- The File Upload image preview & resize plugin -->
-    <script src="/js/jquery.fileupload-image.js"></script>
-    <!-- The File Upload audio preview plugin -->
-    <script src="/js/jquery.fileupload-audio.js"></script>
-    <!-- The File Upload video preview plugin -->
-    <script src="/js/jquery.fileupload-video.js"></script>
-    <!-- The File Upload validation plugin -->
-    <script src="/js/jquery.fileupload-validate.js"></script>
-    <script src="/js/tinymce/tinymce.min.js"></script>
-    <script src="/js/utils.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
-    <!-- script type="text/javascript" src="/js/registerseed.js"></script -->
-    <script type="text/javascript" src="/js/myseeds.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
+{{>scripts}}
 <script>
-{{#if modal }}
-$("#modal").modal('show');
-{{/if}}
-
-$('#files').on('click', 'button.delete', function(){
-  var file = $(this).data(),
-  that = this;
-  $.getJSON(file.deleteUrl, function (data){
-    if (data.files[0][file.md5sum]){
-      that.closest('.col-md-4').remove();
-    }
-  });
-  $.each($('#files').children('.col-md-4').not('.processing'), function (index, elem){
-    if (! $(elem).find('img').length) {
-      $(elem).closest('.col-md-4').remove();
-    }
-  });
-});
-
-/*$('#seeds tr').on('click', function () {
-  //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
-  var seed_id = $(this).data('seed_id');
-  $.get("/seedbank/seedm/" + seed_id, function (data) {
-    if (data.length == 0){
-      return false;
-    }
-    $('#modal .modal-content').empty();
-    $('#modal .modal-content').append(data);
-
-    $('#modal').modal('show');
-  });
-}).mouseover(function () {
-  $(this).addClass('active');
-}).mouseout(function () {
-  $(this).removeClass('active');
-});*/
-
-/*$('#modal').on('click', '.modal-footer .footer-left button', function(){
-  var seed_id = $('#modal .modal-title').data("seed_id");
-  window.open('/seedbank/register/' + seed_id, '_self');
-});
-
-$('.listEvents').on('click', 'li', function (e) {
-  $.get('/events/get/' + $(this).data('id'), function (data) {
-    if (! data ) { return false;}
-    $(".modal-content").html(data);
-    $('#modal').modal('show');
-  });
-});
-
-$('#messages tr').on('click', function () {
-    $('#modal .modal-content').html(
-      '<img src="/js/tinymce/skins/lightgray/img/loader.gif"/>'
-    );
-    $('#modal').modal('show');
-    var threadId = $(this).data('thread_id');
-    $.get('/messages/' + threadId, function (data) {
-      $('#modal .modal-content').html(data);
-    });
-  }).mouseover(function () {
+  $('#mySeeds tbody').on('click', 'tr', function () {
+  window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
+    return false;
+    }).on('mouseover', 'tr', function () {
     $(this).addClass('active');
-  }).mouseout( function () {
+    }).on('mouseout', 'tr', function () {
     $(this).removeClass('active');
   });
-
-/*$('#newseed').on('click', function () {
-  $.get('/seedbank/register', function (data) {
-    $('#modal .modal-content').html(data);
-    $('#modal').modal('show');
-    $('#modal').on('click', '#cancel_seed', function(e){
-      $('#modal .modal-content').empty();
-      $('#modal').modal('hide');
-    })
-    initRegisterSeed();
-  });
+  $('#new_seed').on('click', function () {
+    window.open('/seedbank/register', '_self');
   return false;
-});*/
+  });
+  $('.pageWrap nav').on('click', 'a', function () {
+    console.log($(this).data('url'));
+    var url = $(this).data('url');
+    $.get(url, function(data){
+       console.log(data);
+       $('tbody').empty();
+       $.each(data.data, function(i, item){
+         var public = ''; var available = '';
+         if (item.public) { public = 'X' };
+         if (item.available) { available = 'X' };
+         $('tbody').append('<tr data-seed_id="' + item.id +'">\
+             <td>' + item.common_name + '</td>\
+             <td>' + item.latin_name + '</td>\
+             <td style="text-align: center;">' + available + '</td>\
+             <td style="text-align: center;">' + public + '</td>\
+           </tr>');
+       });
+	   var buttons = '';
+	   if (data.prev_page_url) {
+	     buttons += '<li class="previous"><a data-url="' + data.prev_page_url + '" class="btn btn-primary btn-md">\
+		    {{messages.prev_seeds}}CHANGME_PREV_SEEDS\
+                  </a></li>';
+	   }
+	   if (data.next_page_url) {
+	     buttons += '<li class="next"><a data-url="' + data.next_page_url + '" class="btn btn-primary btn-md">\
+		    {{messages.next_seeds}}CHANGME_NEXT_SEEDS\
+                  </a></li>';
+	   }
+       if (buttons != '') {
+	     $('.pageWrap nav ul').html(buttons);
+		 }
+    });
+  });
 </script>
 {{>footer}}

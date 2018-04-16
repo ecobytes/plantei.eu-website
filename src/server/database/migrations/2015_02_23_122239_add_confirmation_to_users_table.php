@@ -14,7 +14,7 @@ class AddConfirmationToUsersTable extends Migration {
 	{
 		Schema::table('users', function(Blueprint $table)
 		{
-			$table->string('confirmationString',32)->after('remember_token')->nullable();
+			$table->string('confirmationString',32)->after('remember_token');
 			$table->boolean('confirmed')->default(false)->after('confirmationString');
 		});
 	}
