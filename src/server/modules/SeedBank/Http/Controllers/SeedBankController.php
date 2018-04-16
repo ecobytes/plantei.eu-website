@@ -11,56 +11,11 @@ use GeoIp2\Database\Reader;
 
 class SeedBankController extends Controller {
 
-  private function save_image($uploadedimage) {
-    $file_md5 = md5_file($uploadedimage);
-    $file_name = $file_md5;
-    $picture = \Caravel\Picture::where('md5sum', $file_md5)->first();
-    if (!$picture){
-      $picture_path = storage_path('pictures');
-      $uploadedimage->move($picture_path, $file_name);
-      $converted_image = new \Imagick($picture_path . '/' . $file_md5);
-      $converted_image->setImageFormat('jpg');
-      $converted_image->scaleimage(800, 800, true);
-      if (filesize($picture_path . '/' . $file_name) > 200000) {
-        $converted_image->setOption('jpeg:extent', '100kb');
-      }
-      $status = $converted_image->writeimage();
-      if ($status) {
-        $picture = \Caravel\Picture::create([
-          'path' => $picture_path . '/' . $file_name,
-          'url' => '/seedbank/pictures/' . $file_md5,
-          //TODO: eliminate following line
-          'label' => '',
-          'md5sum' => $file_md5
-        ]);
-      } else {
-        return [ "error" => "File not saved"];
-      }
-    }
-    return [ "picture" => $picture];
-  }
-
-
-  public function prefValidator(array $data)
-  {
-    $user = \Auth::user();
-    $rules = [
-      'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
-      'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
-      'place_name' => 'max:255|required_with:lon,lat',
-    ];
-    if (! $user->name == $data['name']){
-      $rules['name'] = 'required|max:255|unique:users';
-    }
-    if (( $user->email !== $data['email']) && ($data['email'])) {
-      $rules['email'] = 'sometimes|required|email|max:255|unique:users';
-    }
-    if ($data['password']){
-      $rules['password'] = 'required|confirmed|min:6';
-    }
-    return Validator::make($data, $rules);
-  }
-
+  /**
+   * Index view
+   * @param void
+   * @return View
+   */
   public function index()
   {
     $user = \Auth::user();
@@ -354,9 +309,12 @@ class SeedBankController extends Controller {
       //'origin' => 'required',
     ]);
 
-    $seed_keys = ['quantity','year', 'local', 'description', 'public', 'available', 'description',
-      'latin_name','common_name','polinization','direct',
+    $seed_keys = [
+      'quantity','year', 'local', 'description', 'public', 'available', 'description',
+      'latin_name','common_name','polinization','direct', 'untilharvest', 'origin',
+      'available', 'units', 'quantity', 'risk', 'traditional'
     ];
+
     $seed_taxonomy = ['species', 'variety','family'];
     $taxonomy_model = [
       'species' => '\Caravel\Species',
@@ -516,16 +474,6 @@ class SeedBankController extends Controller {
 
     $this->validate($request, $this->prefValidationRules($request->all()));
 
-    /*
-    $validator = $this->prefValidator($request->all(), [],\Lang::get('auth::validation'));
-    if($validator->fails())
-    {
-      $this->throwValidationException(
-        $request, $validator
-      );
-    }
-    */
-
     if (!$request->input('password')){
       unset($request['password']);
     } else {
@@ -670,9 +618,14 @@ class SeedBankController extends Controller {
       $seed = false;
     }
     if ($request->hasFile('pictures')) {
-      $picture = $request->file('pictures')[0];
-      //$status = SeedBankController::save_image($picture);
-      $status = self::save_image($picture);
+      $uploadedimage = $request->file('pictures')[0];
+
+      $picture = \Caravel\Picture::fromUploadedFile($uploadedimage);
+      $status = [ "error" => 'Not saved!'];
+      if ($picture) {
+        $status = [ "picture" => $picture];
+      }
+
       if (isset($status['error'])) {
         return [ 'files' => [ ['error' => $status['error']]]];
       } else {

@@ -40,23 +40,74 @@
               </div>
               <div class="col-md-3">
                 <div class="form-group">
-                  <label class="control-label">{{lang 'seedbank::messages.public'}}</label>
+                  <label class="control-label">{{lang 'seedbank::forms.availableforswap'}}</label>
                   <span class="cell btn-group" data-toggle="buttons">
                     <label class="btn btn-default {{#if public}}active{{/if}}">
-                      <input type="radio" name="public" {{#if public}}checked{{/unless}} value="1" /> {{../messages.yes}}
+                      <input type="radio" name="available" {{#if public}}checked{{/unless}} value="1" /> {{lang 'seedbank::messages.yes'}}
                     </label>
                     <label class="btn btn-default {{#unless public}}active{{/unless}}">
-                      <input type="radio" name="public" {{#unless public}}checked{{/unless}} value="0" /> {{../messages.no}}
+                      <input type="radio" name="available" {{#unless public}}checked{{/unless}} value="0" /> {{lang 'seedbank::messages.no'}}
                     </label>
                   </span>
                 </div>
               </div>
-            </div>
-            <div class="form-group">
-              <!-- <label class="control-label">{{../messages.description}}</label> -->
-              <span class="cell">
-                <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{lang 'seedbank::messages.description'}}" name="description">{{description}}</textarea>
-              </span>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">{{lang 'seedbank::forms.traditional'}}</label>
+                  <span class="cell btn-group" data-toggle="buttons">
+                    <label class="btn btn-default {{#if traditional}}active{{/if}}">
+                      <input type="radio" name="traditional" {{#if traditional}}checked{{/unless}} value="1" /> {{lang 'seedbank::messages.yes'}}
+                    </label>
+                    <label class="btn btn-default {{#unless traditional}}active{{/unless}}">
+                      <input type="radio" name="traditional" {{#unless traditional}}checked{{/unless}} value="0" /> {{lang 'seedbank::messages.no'}}
+                    </label>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">{{lang 'seedbank::forms.risk'}}</label>
+                  <span class="cell btn-group" data-toggle="buttons">
+                    <label class="btn btn-default {{#if traditional}}active{{/if}}">
+                      <input type="radio" name="risk" {{#if traditional}}checked{{/unless}} value="1" /> {{lang 'seedbank::forms.risklow'}}
+                    </label>
+                    <label class="btn btn-default {{#unless traditional}}active{{/unless}}">
+                      <input type="radio" name="risk" {{#unless traditional}}checked{{/unless}} value="0" /> {{lang 'seedbank::forms.riskmedium'}}
+                    </label>
+                    <label class="btn btn-default {{#unless traditional}}active{{/unless}}">
+                      <input type="radio" name="risk" {{#unless traditional}}checked{{/unless}} value="0" /> {{lang 'seedbank::forms.riskhigh'}}
+                    </label>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group" style="width:50%; float: left;">
+                  <label class="control-label">{{lang 'seedbank::forms.quantity'}}</label>
+                  <input type="number" value="{{quantity}}" class="form-control" name="quantity">
+                </div>
+                <div class="form-group" style="width:30%; padding-left: 16px;">
+                  <select value="gr" class="form-control" name="units">
+                    <option value="gr">gr</option>
+                    <option value="unit">unidade</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="control-label">{{lang 'seedbank::forms.origin'}}</label>
+                  <span class="cell btn-group" data-toggle="buttons">
+                    <label class="btn btn-default {{#if public}}active{{/if}}">
+                      <input type="radio" name="origin" {{#if public}}checked{{/unless}} value="2" /> {{lang 'seedbank::forms.barter'}}
+                    </label>
+                    <label class="btn btn-default {{#unless public}}active{{/unless}}">
+                      <input type="radio" name="origin" {{#unless public}}checked{{/unless}} value="3" /> {{lang 'seedbank::forms.bought'}}
+                    </label>
+                    <label class="btn btn-default {{#unless public}}active{{/unless}}">
+                      <input type="radio" name="origin" {{#unless public}}checked{{/unless}} value="3" /> {{lang 'seedbank::forms.ownproduction'}}
+                    </label>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -135,6 +186,14 @@
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label">{{choice 'seedbank::forms.untilharvest' 2 months=empty}}</label>
+                  <input type="number" value="{{untilharvest}}" class="form-control" name="untilharvest">
+                </div>
+              </div>
+            </div>
             <label class="control-label">{{lang 'seedbank::messages.farmingmonths'}}</label>
             <div class="form-group">
               <span class="cell btn-group"  data-toggle="buttons" >
@@ -180,6 +239,12 @@
                 </label>
               </span>
             </div>
+          </div>
+          <div class="form-group">
+            <!-- <label class="control-label">{{../messages.description}}</label> -->
+            <span class="cell">
+              <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{lang 'seedbank::messages.description'}}" name="description">{{description}}</textarea>
+            </span>
           </div>
         </div>
       </div><!-- END Accordion Farming -->

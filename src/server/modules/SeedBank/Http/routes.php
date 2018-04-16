@@ -144,8 +144,10 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
     Route::get('/pictures/delete/{id}', function ($id) {
       $user = \Auth::user();
       $picture = \Caravel\Picture::findOrFail($id);
-      if ($picture->seed){
-        if (!$picture->seed->user_id == $user->id) { return [ "files" => [[ $picture->md5sum => false]] ]; }
+      if ( $picture->seed ){
+        if ( !$picture->seed->user_id == $user->id ) {
+          return [ "files" => [[ $picture->md5sum => false]] ]; 
+        }
       }
       $deleted = \File::delete($picture->path);
       // TODO: Might not be able to delete for some reason (permissions?)
@@ -155,9 +157,9 @@ Route::group(['prefix' => 'seedbank', 'namespace' => 'Modules\SeedBank\Http\Cont
     Route::get('/pictures/{md5sum}', function ($md5sum) {
       // TODO: Pass this work to nginx?
       $user = \Auth::user();
-      $picture = \Caravel\Picture::where('md5sum', $md5sum)->firstOrFail();
+      $picture = \Caravel\Picture::where('url', '/seedbank/pictures/' . $md5sum)->firstOrFail();
       $file = \File::get($picture->path);
-      $response = \Response::make($file,200);
+      $response = \Response::make($file, 200);
       $response->header('Content-Type', 'image/jpg');
       return $response;
     });

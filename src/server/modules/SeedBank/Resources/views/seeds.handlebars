@@ -1,6 +1,6 @@
 {{> mainapp_start}}
     <div class="row">
-      <h1>{{lang 'seedbank::messages.seed'}}s</h1>
+      <h1>{{choice 'seedbank::messages.seed' 2}}</h1>
     </div>
     <div class="row content seeds">
       {{# each paginated.data }}

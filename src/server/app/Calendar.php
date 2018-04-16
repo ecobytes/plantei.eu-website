@@ -61,27 +61,13 @@ class Calendar extends Model
     /**
      * Get list of types of events
      *
-     * @return Collection
+     * @return Array
      */
     public static function getEventTypes()
     {
-      // TODO: \Lang::get('seedbank::calendar.others')
 
+      return \Lang::get('seedbank::forms.event_types');
 
-      $event_type = [
-        \Lang::get('seedbank::messages.eventtypeothers'),
-        \Lang::get('seedbank::messages.eventtypeexchange'),
-        \Lang::get('seedbank::messages.eventtypefair'),
-        \Lang::get('seedbank::messages.eventtypeworkshops'),
-        \Lang::get('seedbank::messages.eventtypeaction'),
-        \Lang::get('seedbank::messages.eventtypefieldtrip'),
-        \Lang::get('seedbank::messages.eventtypehelpingout'),
-        \Lang::get('seedbank::messages.eventtypefilm'),
-        \Lang::get('seedbank::messages.eventtypemarket'),
-        \Lang::get('seedbank::messages.eventtypeservices')
-      ];
-
-      return $event_type;
     }
 
 }

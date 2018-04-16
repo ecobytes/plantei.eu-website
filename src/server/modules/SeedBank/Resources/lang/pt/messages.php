@@ -120,14 +120,4 @@ return [
     'contact' => 'Contacto',
     'createSementeca' => 'Regista sementeca',
     'newevent' => 'Evento Novo',
-    'eventtypeothers' => "Outros",
-    'eventtypeexchange' => "Troca de sementes",
-    'eventtypefair' => "Feira/ festival de variedades",
-    'eventtypeworkshops' => "Oficinas/Palestras",
-    'eventtypeaction' => "Campanha/acção/petição",
-    'eventtypefieldtrip' => "Saídas de campo",
-    'eventtypehelpingout' => "Ajudada/Mutirão",
-    'eventtypefilm' => "Encontro/Filme/Exposição",
-    'eventtypemarket' => "Mercado/ Entrega de cabaz",
-    'eventtypeservices' => "Voluntariado/ Troca de serviços"
 ];

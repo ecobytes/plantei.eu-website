@@ -37,7 +37,7 @@
             </td>
             <td><p>{{local}}</p>{{year}}<p></p></td>
             <td>ḿetodo</td>
-            <td>Não</td>
+            <td>{{#if available}}{{lang 'seedbank::messages.yes'}}{{else}}{{lang 'seedbank::messages.no'}}{{/if}}</td>
           </tr>
           {{else}}
           <tr>
@@ -67,7 +67,7 @@
     <!-- The File Upload validation plugin -->
     <script src="/js/jquery.fileupload-validate.js"></script>
     <script src="/js/tinymce/tinymce.min.js"></script>
-    <script src="/js/utils.js"></script>
+    <script src="/js/utils.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
     <!-- script type="text/javascript" src="/js/registerseed.js"></script -->
     <script type="text/javascript" src="/js/myseeds.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
 <script>

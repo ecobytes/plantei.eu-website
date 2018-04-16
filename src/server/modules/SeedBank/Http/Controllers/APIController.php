@@ -65,6 +65,13 @@ class APIController extends Controller {
 	{
 
 		$user = \Auth::user();
+		// $visibleFields = [
+		// 	"common_name", "family", "latin_name",
+		// 	"year", "local", "available",
+		// ];
+		// if ($request->ajax()){
+		// 	\Caravel\Seed::setStaticVisible($visibleFields);
+		// }
 		$seeds = \Caravel\Seed::where('user_id', '<>', $user->id)->where('public', true)->orderBy('updated_at', 'desc');
 		$paginated = $seeds->paginate(15)->setPath('/seedbank/allseeds');
 

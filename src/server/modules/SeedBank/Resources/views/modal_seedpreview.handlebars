@@ -10,9 +10,9 @@
       <!-- div data-name="info" -->
         <div class="col-md-8">
           <p data-name="latin_name">{{seed.latin_name}}</p>
-          <p data-name="quantity">!!200 gr. semente!!</p>
-          <p data-name="availability">!!Disponível para troca!!</p>
-          <p data-name="location">!!Pavia, Mora, Évora!!</p>
+          <p data-name="quantity">{{seed.quantity}} {{seed.units}}</p>
+          <p data-name="availability">{{#if seed.available}}{{lang 'seedbank::forms.available'}}{{else}}{{lang 'seedbank::forms.notavailable'}}{{/if}}</p>
+          <p data-name="location">{{seed.local}}</p>
         </div>
       <!-- /div -->
     </div>
@@ -40,7 +40,7 @@
           </tbody>
         </table>
       </div>
-      <p>!!Sementeira directa, 2 meses até à colheita!!</p>
+      <p>{{#if seed.untilharvest}}{{choice 'seedbank::forms.untilharvest' seed.untilharvest months=seed.untilharvest}}{{/if}}</p>
     </div>
   </div>
   <div class="row">
