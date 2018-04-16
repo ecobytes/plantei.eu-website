@@ -1,0 +1,132 @@
+{{> formErrors}}
+{{> modal_eventpreview }}
+<div id="event-form" style="display: none;">
+  <form class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="/api/calendar">
+    <input type="hidden" name="_token" value="{{ csrfToken }}">
+    <input type="hidden" name="_save" value="1">
+    <input type="hidden" name="id" value="{{ oldInput.id }}">
+    <input type="hidden" name="event_id" value="{{ oldInput.id }}">
+    <input type="hidden" name="start" value="{{ oldInput.start }}">
+    <input type="hidden" name="end" value="{{ oldInput.end }}">
+    {{#with oldInput }}
+    <div class="row" style="border: none; border-top:2px solid black; border-bottom: 2px solid black;">
+      <div class="col-md-12">
+        <div class="col-md-2" style="width: 8%;">
+          <div class="form-group">
+            <label class="control-label">{{../messages.title}}*</label>
+          </div>
+        </div>
+        <div class="col-md-10" style="width: 92%;">
+          <div class="form-group">
+            <span class="cell">
+              <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="" name="title" value="{{title}}" autocomplete="off">
+              <span class="help-block"></span>
+            </span>
+         </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="control-label">{{../messages.location}}</label>
+          </div>
+        </div>
+        <div class="col-md-10">
+          <div class="form-group">
+            <span class="cell">
+              <input type="text" class="form-control district" aria-describedby="helpBlock" placeholder="{{ district }}!districto!" name="district" value="{{ district }}" autocomplete="off">
+              <span class="help-block"></span>
+            </span>
+          </div>
+          <div class="form-group">
+            <span class="cell">
+              <input type="text" class="form-control council" aria-describedby="helpBlock" placeholder="{{ council }}!Concelho!" name="council" value="{{ council }}" autocomplete="off">
+              <span class="help-block"></span>
+            </span>
+          </div>
+          <div class="form-group">
+            <span class="cell">
+              <input type="text" class="form-control" aria-describedby="helpBlock" placeholder="{{ place }}!sitio!" name="place" value="{{ place }}" autocomplete="off">
+              <span class="help-block"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <select name="event-type" value="0" class="form-control">
+          {{#each ../event_type}}
+          <option value="{{@index}}">{{this}}</option>
+          {{/each}}
+        </select>
+        <div class="row" style="border: none;">
+          <div class="col-md-2">
+            <div class="form-group">
+              <span class="cell">
+              <label class="control-label">{{../messages.start}}</label>
+            </span>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <div class="form-group">
+              <span class="cell">
+                <div class="col-md-6">
+                  <input type="text" class="form-control date" aria-describedby="helpBlock" placeholder="" name="start-date" value="{{location}}" autocomplete="off">
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control time" aria-describedby="helpBlock" placeholder="" name="start-time" value="{{location}}" autocomplete="off">
+                </div>
+                <span class="help-block"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="border: none;">
+          <div class="col-md-2">
+            <div class="form-group">
+              <span class="cell">
+                <label class="control-label">{{../messages.end}}</label>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <div class="form-group">
+              <span class="cell">
+                <div class="col-md-6">
+                  <input type="text" class="form-control date" aria-describedby="helpBlock" placeholder="" name="end-date" value="{{location}}" autocomplete="off">
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control time" aria-describedby="helpBlock" placeholder="" name="end-time" value="{{location}}" autocomplete="off">
+                </div>
+                <span class="help-block"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <span class="cell">
+          <label class="control-label">{{../messages.description}}</label>
+        </span>
+        <div class="form-group">
+          <span class="cell">
+            <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{../messages.adddetailstoevent}}!Adiciona detalhes ao evento!" name="description">{{description}}</textarea>
+            <span class="help-block"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+    {{/with}}
+    <div class="row" style="border:none;">
+      <div class="form-group lmt">
+        <div class="col-md-12 text-center">
+          <button type="button" class="btn btn-danger btn-lg">
+            {{messages.cancel}}
+          </button>
+          <button type="submit" class="btn btn-primary btn-lg">
+            {{#if update}}{{messages.update}}{{ else }}{{messages.send}}{{/if}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

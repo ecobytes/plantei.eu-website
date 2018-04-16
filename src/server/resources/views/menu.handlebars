@@ -1,0 +1,34 @@
+<header class="nav navbar-static-top" role="banner">
+  <div class="container">
+    <nav class="collapse navbar-collapse">
+      <ul class="nav nav-pills navbar-nav">
+        <li role="presentation" {{#if active.events}}class="active"{{/if}}><a href="/{{#if admin}}admin/{{/if}}events">{{menu.events}}</a></li>
+        <li role="presentation" {{#if active.forum}}class="active"{{/if}}><a href="/forum">{{menu.forum}}</a></li>
+        <!-- <li role="presentation"{{#if active.sementecas}} class="active"{{/if}}><a href="/{{#if admin}}admin/{{/if}}sementecas">{{menu.seedshare}}</a></li> -->
+        <li role="presentation" {{#if active.sementecas}}class="active"{{/if}}><a href="/sementecas">{{menu.seedshare}}</a></li>
+      </ul>
+      <ul class="nav nav-pills navbar-nav navbar-right">
+        <li role="presentation" {{#if active.home}}class="active"{{/if}}><a href="/seedbank"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span>{{!--menu.home--}}</a></li>
+        <li role="presentation" {{#if active.myseeds}}class="active"{{/if}}><a href="/seedbank/myseeds"><span class="icon" aria-hidden="true"><img height="16px" src="/images/trigos.svg"/></span></a></li>
+        {{#if admin}}
+        <li class="dropdown{{#if active.admin}} active{{/if}}" role="presentation">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>{{!--menu.admin--}}<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li role="presentation"><a href="/admin/events">{{menu.events}}</a></li>
+            <li role="presentation" class="disabled"><a class="disabled" href="/admin/sementecas">{{menu.seedshare}}</a></li>
+          </ul>
+        </li>
+        {{/if}}
+        <li class="dropdown{{#if active.profile}} active{{/if}}" role="presentation">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li style="padding-left: 20px">{{ username }}</li>
+            <li><a href="/seedbank/preferences">{{menu.profile}}</a></li>
+            <li role="separator" class="divider"></li>
+            <li role="presentation"><a href="/en/auth/logout">{{menu.logout}}</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

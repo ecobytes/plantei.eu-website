@@ -1,4 +1,4 @@
-<?php 
+<?php
 return [
   'profile' => 'Preferences',
   'home' => 'Home',
@@ -6,5 +6,11 @@ return [
   'search' => 'Search',
   'messages' => 'Messages',
   'exchanges' => 'Exchanges',
-  'logout' => 'Logout'
+  'logout' => 'Logout',
+  'events' => 'Calendar',
+  'encyclopedia' => 'Encyclopedia',
+  'seedshare' => 'Seedshare',
+  'seeds' => 'Seeds',
+  'admin' => 'Manage',
+  'forum' => 'Forum'
 ];

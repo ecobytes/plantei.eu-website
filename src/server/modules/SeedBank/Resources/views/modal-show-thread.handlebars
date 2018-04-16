@@ -1,0 +1,60 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">
+      &times;
+    </span>
+  </button>
+  <h1 class="modal-title">{{ thread.subject }}</h1>
+</div>
+<form class="form-horizontal" role="form" method="POST" action="/messages/{{ thread.id }}">
+  <div class="modal-body">
+    <input type="hidden" name="_token" value="{{ csrfToken }}">
+    <div class="row">
+      <div class="col-md-12">
+        <p>{{ messages.messageParticipating }}:
+        {{#each users}}
+        <span class="badge">{{name}}</span>
+        {{/each}}
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      {{#each tmessages}}
+      {{!-- <div class="row"> --}}
+        <div class="col-md-12">
+          <p>{{ attributes.username }}</p>
+          <pre style="white-space: pre-wrap;">{{ attributes.body }}</pre>
+        </div>
+        {{!-- </div> --}}
+      {{/each}}
+    </div>
+
+
+    <div class="form-group" rel="tooltip" data-placement="bottom" title="{{ messages.messageBodyHelp }}">
+      <span class="cell">
+        <textarea style="resize:none; overflow:hidden;" class="form-control" rows="5" autocomplete="off" placeholder="{{messages.messageBody}}" name="body">{{{ message.body }}}</textarea>
+      </span>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="form-group lmt">
+      <div class="col-md-12 text-center">
+        <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">
+          <span aria-hidden="true">
+            {{ messages.cancel }}
+          </span>
+        </button>
+        <button type="submit" class="btn btn-primary btn-lg">
+          {{ messages.messageSend }}
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+{{!-- <script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="/js/event_scripts.js"></script> --}}
+<script>
+$("p.badge").on('click', function (e){
+  $(this).append('<strong>YOYOYO</strong>');
+});
+</script>

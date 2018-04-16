@@ -1,0 +1,18 @@
+{{> mainapp_start}}
+<div class="row">
+  <h1>Calendário</h1>
+</div>
+<div class="row content">
+  <div id='mycalendar'></div>
+</div>
+{{> mainapp_end}}
+<script type="text/javascript" src="/js/fullcalendar/moment.min.js"></script>
+<script type="text/javascript" src="/js/fullcalendar/fullcalendar.min.js"></script>
+<script type="text/javascript" src="/js/fullcalendar/lang/{{langString}}.js"></script>
+<script type="text/javascript" src="/js/utils.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
+<script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="/js/event_scripts.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
+<script>
+{{#if user}}const user_id = {{ user.id }}{{ else }}var user_id{{/if}};
+</script>
+{{>footer}}

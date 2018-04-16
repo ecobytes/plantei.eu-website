@@ -1,76 +1,71 @@
 {{> header}}
-<div class="pageWrap">
-  <div class="jumbotron intro background-primary">
-  <div class="row lang">
-  <div class="pull-right">
-    <ul class="list-unstyled list-inline inline-block">
-      <li>
-      {{#if lang.pt}}
-      <span class="text-muted">pt</span>
-      {{else}}
-      <a href="/pt">pt</a>
-      {{/if}}
-      </li>
-      <li>
-      {{#if lang.en}}
-        <span class="text-muted">en</span>
-      {{else}}
-        <a href="/en">en</a>
-      {{/if}}
-      </li>
-    </ul>
-  </div>
-  </div>
-    <!-- <h1>
-      {{siteName}}
-    </h1> -->
-      {{#if showAuthentication}}
-      <div class="row lmt mmb">
-        <div class="col-md-6 col-md-offset-6 text-center">
-          <a class="btn btn-default btn-lg" href="/{{ langString }}/auth/register">{{messages.register}}</a>
-          <!-- <a class="btn btn-default btn-lg" href="/{{ langString }}/auth/login">{{messages.login}}</a> -->
-          <a class="btn btn-default btn-lg" href="{{ langString}}/auth/login">{{messages.login}}</a> 
-        </div>
-      </div>
-    {{/if}}
-    <div class="description">
-    {{subtitle}}
-    </div>
-    <div class="row lmt">
-      <div class="inscriptionDescription mmb col-md-6 col-md-offset-6 text-center"> {{{messages.intro}}}
-      {{#if showSubscription}}
-      <br/>{{{messages.mailingListSubscriptionTease}}}
-      {{/if}}
+<!-- div class="pageWrap" -->
+  <div class="intro-box container-fluid">
+    <div class="lang">
+      <p class="langbtn">
+          {{ langs.0 }}<span class="caret"></span>
+      </p>
+      <div class="lang-choices">
+        {{#each langs}}
+          {{#unless @first}}
+        <a href="/{{ this }}">{{ this }}</a>
+        {{/unless}}
+      {{/each}}
       </div>
     </div>
-    {{#if showSubscription}}
-    <div class="row mmt mmb">
-      <form class="newsletterSubscription col-md-6 col-md-offset-3 text-center form-horizontal" method="POST" novalidate action='/{{ langString }}/newsletter'><div class="row">
-          <input type="hidden" name="_token" value="{{ csrfToken }}">
-          <div class="col-md-6 mmb">
-            <input type="name" placeholder="{{messages.yourName}}" class="form-control" name="name" id="nameInput" />
-          </div>
-          <div class="col-md-6 mmb">
-            <input type="email" placeholder="{{messages.yourEmail}}" class="form-control" name="email" id="emailInput" />
+    <div class="row align-middle">
+      <div class="col-md-4 mmb lml">
+        <img class="img-responsive" src="images/planteieulogo.png">
+      </div>
+      <div class="col-md-6 col-md-offset-1 description lmt">
+        {{subtitle}}
+        <div class="row">
+          <div class="inscriptionDescription text-center"> {{{messages.intro}}}
+          {{#if showSubscription}}
+          <br/>{{{messages.mailingListSubscriptionTease}}}
+          {{/if}}
           </div>
         </div>
-          {{> formErrors}}
-          </div>
-          <div class="text-muted mmb"><i>{{{messages.notManyEmails}}}</i></div>
+        {{#if showAuthentication}}
+        <div class="row lmt mmb">
           <div class="col-md-12 text-center">
-            <input type="submit" class="btn btn-success btn-lg" value="{{{messages.subscribe}}}"/>
+            <a class="btn btn-success btn-lg" id="register" href="/{{ langString }}/auth/register">{{messages.register}}</a>
+            {{!-- }}<a class="btn btn-success btn-lg" href="/{{ langString }}/auth/register">{{messages.register}}</a>
+            {{!-- <a class="btn btn-success btn-lg" href="{{ langString}}/auth/login">{{messages.login}}</a>  --}}
+            <a class="btn btn-success btn-lg" id="login" href="/{{ langString}}/auth/login">{{messages.login}}</a>
           </div>
-      </form>
-    </div>
-    {{/if}}
+        </div>
+        {{/if}}
+        {{#if showSubscription}}
+        <div class="row mmt mmb">
+          <form class="newsletterSubscription col-md-6 col-md-offset-3 text-center form-horizontal" method="POST" novalidate action='/{{ langString }}/newsletter'><div class="row">
+            <input type="hidden" name="_token" value="{{ csrfToken }}">
+            <div class="col-md-6 mmb">
+              <input type="name" placeholder="{{messages.yourName}}" class="form-control" name="name" id="nameInput" />
+            </div>
+            <div class="col-md-6 mmb">
+              <input type="email" placeholder="{{messages.yourEmail}}" class="form-control" name="email" id="emailInput" />
+            </div>
+            <div>
+            {{> formErrors}}
+            </div>
+            <div class="text-muted mmb"><i>{{{messages.notManyEmails}}}</i></div>
+            <div class="col-md-12 text-center">
+              <input type="submit" class="btn btn-success btn-lg" value="{{{messages.subscribe}}}"/>
+            </div>
+          </form>
+        </div>
+        {{/if}}
 
-    <!--div class="mainActions lmb lmr">
-      <a href="#moreinfo" class="moreinfo btn btn-default btn-lg smb">Mais informação</a>
-      <div class="btn-group lml" role="group" aria-label="...">
-        <a href="/register.html" class="login btn btn-default btn-lg smb">Registo</a>
-        <a href="/login" class="login btn btn-default btn-lg smb">Login</a>
+        <!--div class="mainActions lmb lmr">
+          <a href="#moreinfo" class="moreinfo btn btn-default btn-lg smb">Mais informação</a>
+          <div class="btn-group lml" role="group" aria-label="...">
+            <a href="/register.html" class="login btn btn-default btn-lg smb">Registo</a>
+            <a href="/login" class="login btn btn-default btn-lg smb">Login</a>
+          </div>
+        </div-->
       </div>
-    </div-->
+    </div>
   </div>
   <div class="container-fluid lmb">
     <div class="row nml nmr">
@@ -78,20 +73,37 @@
         <img id="moreinfo" class="img-responsive" src="http://placehold.it/1500x450">
       </div-->
       <div class="col-md-4 mmt">
-        <h2>{{{messages.descriptionTitle1}}}</h2>
-        <p>{{{messages.descriptionContent1}}}</p>
+        <div class="row text-center info-box">
+          <img src="images/organiza.svg">
+          <!--h2>{{{messages.descriptionTitle1}}}</h2-->
+          <p>{{{messages.descriptionContent1}}}</p>
+        </div>
       </div>
       <div class="col-md-4 mmt">
-        <h2>{{{messages.descriptionTitle2}}}</h2>
-        <p>        {{{messages.descriptionContent2}}}</p>
+        <div class="row text-center info-box">
+          <img src="images/troca.svg">
+          <!--h2>{{{messages.descriptionTitle3}}}</h2-->
+          <p>{{{messages.descriptionContent3}}}</p>
+        </div>
       </div>
       <div class="col-md-4 mmt">
-        <h2>{{{messages.descriptionTitle3}}}</h2>
-        <p>        {{{messages.descriptionContent3}}}</p>
-</p>
+        <div class="row text-center info-box">
+          <img src="images/consulta.svg">
+          <!--h2>{{{messages.descriptionTitle2}}}</h2-->
+          <p>{{{messages.descriptionContent2}}}</p>
+        </div>
       </div>
     </div>
   </div>
-  </div>
+<!-- /div -->
 {{> scripts}}
+<script type="text/javascript" src="/js/index.js"></script>
+{{#if errors}}
+<script type="text/javascript">
+  $('#modal').modal('show');
+</script>
+{{#if errors.login}}
+<h2>ERRORS LOGIN</h2>
+{{/if}}
+{{/if}}
 {{> footer}}

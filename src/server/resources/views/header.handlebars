@@ -5,17 +5,56 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{title}}</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/jquery-ui.min.css">
+  <!-- link href='/fonts?family=Merriweather' rel='stylesheet' type='text/css' -->
+  <link rel="stylesheet" href="/css/style.css{{#if uniqid}}?{{uniqid}}{{/if}}">
+  <link rel="stylesheet" href="/css/jquery-ui.theme.min.css">
   <link rel="stylesheet" href="/css/jquery.fileupload.css">
+  <link rel="stylesheet" href="/css/fullcalendar/fullcalendar.min.css">
+  <link rel="stylesheet" href="/js/leaflet/leaflet.css">
+  {{!-- <link rel="stylesheet" href="/css/jquery.ui.timepicker.css"> --}}
+  <link rel="stylesheet" href="/css/jquery.timepicker.css">
+  {{!-- <link rel="stylesheet" href="/css/fullcalendar/fullcalendar.print.css" media="print"> --}}
+  <link rel="stylesheet" href="/css/bootstrap-tokenfield.min.css" media="screen">
+
+  <style>
+    .fc-scroller.fc-day-grid-container {
+      overflow-y: hidden !important;
+    }
+  </style>
 </head>
 <body id="{{bodyId}}">
-<div class="container-fluid">
- {{#unless isProduction}}
+  {{#if modal_content}}
+  <div class="modal fade" id="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              &times;
+            </span>
+          </button>
+          <h4 class="modal-title">{{title}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row validationErrors">
+            {{#each formErrors}}
+              <div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert">{{this}}</div>
+            {{/each}}
+          </div>
+          {{{ modal_content }}}
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  {{/if}}
+  <!--
+  <div class="container-fluid">
+    {{#unless isProduction}}
     <div class="row">
       <div class="col-md-12 envWarning text-center text-danger smt smb">
-     Site running in test mode. Inserted data will be destroyed regularly.
+       Site running in test mode. Inserted data will be destroyed regularly.
       </div>
     </div>
-  {{/unless}}
-</div>
+    {{/unless}}
+  </div>
+  -->

@@ -3,7 +3,12 @@
 .env
 modules/TestModule
 public/css
+public/fonts
+public/js
+public/images
 tmp
 .phpcomplete_extended
 dotdeb.gpg
 index_cache
+geoip.mmdb
+storage/*

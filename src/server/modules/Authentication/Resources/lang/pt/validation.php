@@ -6,5 +6,6 @@ return [
 'email.required' => 'É necessário preencher o campo de email',
 'email.email' => 'É necessário fornecer um endereço de email válido',
 'email.unique' => 'O endereço já se encontra inscrito na lista',
-'email.max' => 'O endereço de email é demasiado longo'
+'email.max' => 'O endereço de email é demasiado longo',
+'login.error' => 'As credenciais não correspondem a nenhuma conta activa.'
 ];

@@ -1,298 +1,61 @@
-{{> header}}
-{{> menu}}
-<div class="modal fade" id="seed_info">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      {{!--<div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title"></h4>
+{{> mainapp_start}}
+<div class="row">
+  <h1>Pesquisa</h1>
+</div>
+<div class="row content">
+  <div class="col-md-12 text-center">
+    <!-- <h1>Pesquisa</h1> -->
+    <form class="form-horizontal" role="form" method="POST" action="/seedbank/search">
+      <input type="hidden" name="_token" value="{{ csrfToken }}">
+      <div class="form-group">
+        <span class="cell">
+          <input type="text" class="form-control search_autocomplete" placeholder="{{messages.common_name}}" name="common_name" value="" autocomplete="off">
+        </span>
       </div>
-      <div class="modal-body">
-      <div class="row">
-      <div class="col-md-12 body-read"></div>
+      <div class="form-group">
+        <span class="cell">
+          <input type="text" class="form-control search_autocomplete" placeholder="{{messages.latin_name}}" name="latin_name" value="" autocomplete="off">
+        </span>
+      </div>
+      <div class="form-group lmt">
+        <button id="search" type="submit" class="btn btn-primary btn-lg">
+          {{messages.search}}
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-12 text-center" id="results" style="display: none;">
+    <div class="col-md-4 results_general">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{messages.common_name}}</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
     </div>
-      <div class="row">
-      <div class="col-md-10 col-md-offset-1 body-form" style="border: solid; display: none;">
-      </div>
-    </div>
-      </div>
-      <div class="modal-footer">
-      <div class="col-md-4 footer-left">
-    </div>
-      <div class="col-md-8 footer-right">
-    </div>
-      </div>--}}
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<div class="pageWrap background-primary">
-  <div class="container">
-    <div class="row lmt">
-      {{> formErrors}}
-      <div class="col-md-12 text-center">
-        <!-- <h1>Pesquisa</h1> -->
-        <form class="form-horizontal" role="form" method="POST" action="/seedbank/search">
-          <input type="hidden" name="_token" value="{{ csrfToken }}">
-          <div class="form-group">
-            <span class="cell">
-            <input type="text" class="form-control search_autocomplete" placeholder="{{messages.common_name}}" name="common_name" value="" autocomplete="off">
-            </span>
-          </div>
-          <div class="form-group">
-            <span class="cell">
-            <input type="text" class="form-control search_autocomplete" placeholder="{{messages.latin_name}}" name="latin_name" value="" autocomplete="off">
-            </span>
-          </div>
-          <div class="form-group lmt">
-              <button id="search" type="submit" class="btn btn-primary btn-lg">
-                {{messages.search}}
-              </button>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-12 text-center" id="results" style="display: none;">
-        <div class="col-md-4 results_general">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{messages.common_name}}</th>
-              <th>{{messages.latin_name}}</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-        </div>
-        <div class="col-md-8 results_detail">
-        <h3>{{messages.chooseseedfrom}} <span class="label label-default"></span></h3>
-        <button type="button" id="newsearch" class="btn btn-warning">{{messages.newsearch}}</button>
-        <button type="button" id="startexchange" class="btn btn-success">{{messages.starttransaction}}</button>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{messages.mark}}</th>
-              <th>{{messages.common_name}}</th>
-              <th>{{messages.state}}</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-        </div>
-      </div>
+    <div class="col-md-8 results_detail">
+      <h3>{{messages.chooseseedfrom}} <span class="label label-default"></span></h3>
+      <button type="button" id="newsearch" class="btn btn-warning">{{messages.newsearch}}</button>
+      <button type="button" id="startexchange" class="btn btn-success">{{messages.starttransaction}}</button>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{messages.mark}}</th>
+            <th>{{messages.common_name}}</th>
+            <th>{{messages.state}}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
+{{> mainapp_end}}
 {{>scripts}}
-<script src="/js/jquery-ui.min.js"></script>
-<script src="/js/laravel-bootstrap-modal-form.js"></script>
-<script>
-/*$('.search_autocomplete').autocomplete({
-  delay: 300, minLength: 2, 
-  source: function (request, response) {
-    var formdata = [
-      {name: "_token", value: "{{ csrfToken }}"},
-      {name: 'query' , value: request.term},
-    {name: 'query_name', value: this.element.attr('name')},
-    ];
-    $.post("/seedbank/autocomplete", formdata, 
-           function (data) {  response(data);}, 'json')
-    },
-  select: function( event, ui ) {
-    //console.log(ui.item.id);
-    $('#hidden_section_id').val(ui.item.id)
-  }
-});
-*/
-
-var show_user_seeds = function(container, user_id) {
-    $('.results_general').find('tbody tr').removeClass('active');
-    $.get("/seedbank/user_seeds/" + user_id, function (data) {
-    if (! data.seeds){
-      return false;
-    }
-    $('.results_detail tbody').empty();
-    $('.results_detail h3 span').text(data.user.name).data('user_id', data.user.id);
-    $.each(data.seeds, function (i, info){
-        //console.log(info);
-      $('.results_detail tbody').append('<tr>\
-           <td><input name="seed_id" value="' + info.id + '" type="checkbox"/></td>\
-         <td>' + info.common_name + '</td></tr>');
-      if ( info.parent_id) {
-          $('.results_detail tbody tr:last input').attr('disabled', '');
-        if (( info.accepted == 2) && (info.completed == 0)) {
-            $('.results_detail tbody tr:last').append('<td>À espera de confirmação</td>');
-        } else if (( info.accepted == 0) && (info.completed == 0)){
-            $('.results_detail tbody tr:last').append('<td>À espera de resposta</td>');
-        } else if ( info.accepted == 1){
-            $('.results_detail tbody tr:last').append('<td>Recusada</td>');
-        } else if ( info.completed == 1) {
-            $('.results_detail tbody tr:last').append('<td>Cancelada</td>');
-        }
-      } else {
-        $('.results_detail tbody tr:last').append('<td></td>');
-      }
-      $('.results_detail tbody tr:last').append('<td>\
-        <button type="button" data-seed_id="' + info.id + '" class="btn btn-primary btn-sm">\
-          {{messages.moreinfo}}\
-        </button></td>');
-        });
-  },
-  'json');
-  $(container).addClass('active');
-};
-
-$(".container form").on('submit', function(){
-  $('#results tbody').empty();
-  if ( $('#results').is(':visible')) {
-    $('#results').hide();
-    $('#results').hide();
-    $('.container form').show();
-    return false;
-  };
-    var formdata = $('form').serialize();
-  $.post("/seedbank/search", formdata, function (data) {
-      //console.log(data);
-    if (! data){
-      return false;
-    }
-    $.each( data, function(i,info){
-      $('.results_general tbody').append('<tr data-user_id="' + info.user_id + '" data-seed_id="' + info.id + '">\
-        <td>' + info.common_name + '</td>\
-        <td>' + info.latin_name + '</td</tr>');
-      if ( i == 0 ){
-         show_user_seeds($('.results_general tbody tr'), info.user_id);
-         }
-      $('#results').show();
-      $('.container form').hide();
-    });
-  },
-  'json');
-  return false;
-});
-
-$('.results_general').on('click', 'tbody tr', function () {
-  show_user_seeds(this, $(this).data('user_id'));
-});
-
-$('.results_detail').on('click', 'tbody tr button', function () {
-  var seed_id = $(this).data('seed_id');
-
-    $.get("/seedbank/seedm/" + seed_id, function (data) {
-    if (data.length == 0){
-      return false;
-    }
-    $('#seed_info .modal-content').empty();
-    $('#seed_info .modal-content').append(data);
-
-    $('#seed_info').modal('show');
-    var element = $('.results_detail table input[value=' + seed_id + ']');
-  if (!! element.first().attr('disabled')) { 
-    $('#seed_info .modal-footer .footer-left')
-        .html('<div class="label label-warning col-md-12">\
-        {{messages.alreadyrequested}}Já está pendente</div>');
-  } else { 
-    $('#seed_info .modal-footer .footer-left')
-      .html('<button class="btn btn-sm btn-default col-sm-12">\
-        {{messages.sendmessage}}Escolhe esta semente</button>');
-  }
-  });
-    /*$.get("/seedbank/seed/" + seed_id, function (data) {
-    if (! data){
-      return false;
-    }
-    $('#seed_info .modal-title').text('[' + data.id + '] ' + data.common_name).data("seed_id", data.id);
-    $('#seed_info .modal-body .body-read').html('<p><em>' + data.latin_name + '</em></p>\n' + data.description);
-    var footer = $('#seed_info .modal-footer .footer-right');
-    footer.empty();
-    if (data.latin_name) {footer.append('<p><em>' + data.latin_name + '</em></p>\n')}
-    if (data.family) {footer.append('<p><b>Família:</b> ' + data.family.name + '</p>\n')}
-    if (data.species) {footer.append('<p><b>Espécie:</b> ' + data.species.name + '</p>\n')}
-    if (data.variety) {footer.append('<p><b>Variedade:</b> ' + data.variety.name + '</p>\n')}
-    var element = $('.results_detail table input[value=' + seed_id + ']');
-  if (!! element.first().attr('disabled')) { 
-    $('#seed_info .modal-footer .footer-left')
-        .html('<div class="label label-warning col-md-12">\
-        {{messages.alreadyrequested}}Já está pendente</div>');
-  } else { 
-    $('#seed_info .modal-footer .footer-left')
-      .html('<button class="btn btn-sm btn-default col-sm-12">\
-        {{messages.sendmessage}}Escolhe esta semente</button>');
-  }
-
-    $('#seed_info').modal('show');
-    },
-    'json');*/
-});
-/*.on('mouseover', 'tbody tr', function () {
-  $(this).addClass('active');
-}).on('mouseout', 'tbody tr', function () {
-    $(this).removeClass('active');
-});*/
-
-$('#seed_info').on('click', '.modal-footer .footer-left button', function(){
-
-  var seed_id = $('#seed_info .modal-title').data("seed_id");
-  
-    $('.results_detail table input[value=' + seed_id + ']').prop("checked", true);
-  $('#seed_info').modal('hide');
-
-/*  $('#seed_info .modal-body .body-form').html('\
-    <form class="form-horizontal bootstrap-modal-form" method="POST" action="/seedbank/message/send">\
-    <input type="hidden" name="seed_id" value="' + $(".modal-title").data('seed_id') + '"/>\
-    <div class="form-group">\
-      <span class="cell">\
-      <input class="form-control" placeholder="{{messages.subject}}Assunto" type="text" name="subject"/>\
-    </span>\
-    </div>\
-    <div class="form-group">\
-      <span class="cell">\
-        <textarea style="resize:none; overflow:hidden;" class="form-control" rows="8" autocomplete="off" placeholder="{{messages.writemessage}}"Escreve uma mensagem" name="body"></textarea>\
-    </span>\
-    </div>\
-      <div class="form-group lmt">\
-        <div class="col-md-12 text-center">\
-            <button type="button" class="btn btn-danger btn-md" id="cancel">\
-              Cancelar\
-            </button>\
-            <button type="submit" class="btn btn-primary btn-md">\
-              Enviar\
-            </button>\
-        </div>\
-      </div>\
-  </form>');
-  $('.body-form').show();*/
-
-  });
-$('.body-form').on('click', '#cancel', function(){
-  $('.body-form').empty().hide();
-  });
-$('.results_detail').on('click', '#newsearch', function(){
-  $(".container form").trigger('submit');
-});
-$('.results_detail').on('click', '#startexchange', function(){
-  var chosen = [];
-  var user_id = $('.results_detail h3 span').data('user_id');
-  $.each($(this).next('table').find('input:checked'), function(i, choice){
-    chosen.push($(choice).val());
-  });
-
-  console.log(chosen);
-  console.log(user_id);
-  $.post("/seedbank/startexchange", {"seed_ids": chosen, "user_id":user_id},  function (data) {
-    console.log(data.length);
-    if (! data.length){
-      //alert('Empty Response');
-      return false;
-    }
-    //console.log(data);
-    //alert(data);
-
-    window.open('/seedbank/exchanges', '_self');
-  });
-  
-  
-});
-</script>
-{{>footer}}
+<script type="text/javascript" src="/js/search.js"></script>
+{{> footer}}

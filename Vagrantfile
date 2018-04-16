@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "fimdomeio/caravel"
+  config.vm.box = "debian/contrib-jessie64"
   config.vm.provision :shell, path: "provision/bootstrap.sh"
 
   # Disable automatic box update checking. If you disable this, then
@@ -24,6 +24,7 @@ Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox" do |vb|
   vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+
   end
 
 
@@ -33,6 +34,9 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 80, host: 8000, auto_correct: true
   config.vm.network "forwarded_port", guest: 3306, host: 3306, auto_correct: true
   config.vm.network "forwarded_port", guest: 9000, host: 9000, auto_correct: true
+  config.vm.network "forwarded_port", guest: 3000, host: 3000, auto_correct: true
+  #config.vm.network "forwarded_port", guest: 5432, host: 5432, auto_correct: true
+
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -52,11 +56,11 @@ Vagrant.configure(2) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-  if RUBY_PLATFORM.include? "darwin"
-    config.vm.synced_folder "./", "/var/www", create: true, type: "nfs"
-  else
-    config.vm.synced_folder "./", "/var/www", create: true, group: "www-data", owner: "www-data"
-  end
+  # if RUBY_PLATFORM.include? "darwin"
+  #   config.vm.synced_folder "./", "/var/www", create: true, type: "nfs"
+  # else
+  #   config.vm.synced_folder "./", "/var/www", create: true, group: "www-data", owner: "www-data"
+  # end
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -67,7 +71,7 @@ Vagrant.configure(2) do |config|
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-     vb.memory = "1024"
+     vb.memory = "2048"
    end
   #
   # View the documentation for the provider you are using for more
@@ -89,5 +93,7 @@ Vagrant.configure(2) do |config|
   # config.vm.provision "shell", inline <<-SHELL
   #   sudo apt-get install apache2
   # SHELL
+  config.vm.post_up_message = "Connect to development server with autoreload:\n----------------\nhttp://localhost:3000\n----------------"
+
 
 end

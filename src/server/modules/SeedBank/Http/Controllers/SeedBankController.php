@@ -10,115 +10,234 @@ use GeoIp2\Database\Reader;
 
 
 class SeedBankController extends Controller {
-  public static function save_image($uploadedimage) {
-    $file_md5 = md5_file($uploadedimage);
-    $file_name = $file_md5;
-    $picture = \Caravel\Picture::where('md5sum', $file_md5)->first();
-    if (!$picture){
-      $picture_path = storage_path('pictures');
-      $uploadedimage->move($picture_path, $file_name);
-      $converted_image = new \Imagick($picture_path . '/' . $file_md5);
-      $converted_image->setImageFormat('jpg');
-      $converted_image->scaleimage(800, 800, true);
-      if (filesize($picture_path . '/' . $file_name) > 200000) {
-        $converted_image->setOption('jpeg:extent', '100kb');
-      }
-      $status = $converted_image->writeimage();
-      if ($status) {
-      $picture = \Caravel\Picture::create([
-        'path' => $picture_path . '/' . $file_name,
-        'url' => '/seedbank/pictures/' . $file_md5,
-        'md5sum' => $file_md5
-      ]);
-    } else {
-      return [ "error" => "File not saved"];
-      }
-    }
-    return [ "picture" => $picture];
-  }
 
-
-  public function prefValidator(array $data)
-  {
-    $user = \Auth::user();
-    if (!$data['email']){unset($data['email']);};
-        $rules = [
-      'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
-      'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
-      'place_name' => 'max:255|required_with:lon,lat',
-          ];
-      if (! $user->name == $data['name']){
-        $rules['name'] = 'required|max:255|unique:users';
-      }
-      if (! $user->email == $data['email']){
-        $rules['email'] = 'sometimes|required|email|max:255|unique:users';
-      }
-      if ($data['password']){
-        $rules['password'] = 'required|confirmed|min:6';
-      }
-    return Validator::make($data, $rules);
-  }
-
+  /**
+   * Index view
+   * @param void
+   * @return View
+   */
   public function index()
   {
     $user = \Auth::user();
 
-    $seeds = \Caravel\Seed::join('users', 'users.id', '=', 'user_id' )->where('public', true)
-      ->orWhere('user_id', $user->id)->orderBy('seeds.updated_at', 'desc')
-      ->select('seeds.id', 'seeds.latin_name', 'seeds.common_name',
+    $seeds = \Caravel\Seed::where('public', true)
+      ->where('user_id', '<>', $user->id)
+      ->orderBy('seeds.updated_at', 'desc')
+      ->limit(3)->join('users', 'users.id', '=', 'user_id')
+      ->select('seeds.id', 'seeds.common_name',
         'users.name', 'users.email', 'user_id')
-      ->get()
-      ->chunk(20)[0]
-      ->toArray();
+        ->get();
 
-    $userMessages = $user->messages()->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
-    $unreadmessages = 0;
-    foreach($userMessages as &$m) {
-      $t = array();
-      if ($m['pivot']['read']){
-        $t[1] = true;
-        $m['pivot']['read'] = $t;
-      } else {
-        $unreadmessages++;
-      }
+    $myseeds = \Caravel\Seed::where('user_id', $user->id)
+      ->orderBy('seeds.updated_at', 'desc')
+      ->limit(3)
+      ->select('seeds.id', 'seeds.common_name', 'seeds.updated_at')
+      ->get();
+
+    //$newMessagesCount = $user->newThreadsCount();
+    $posts = \Riari\Forum\Models\Post::orderBy('updated_at', 'DESC')->limit(4)->get();
+    foreach ($posts as $post)
+    {
+      $post->load('thread', 'author');
     }
-    return view('seedbank::home')
+    $messenger = $user->lastMessages();
+    $calendarNow = \Caravel\Calendar::now()->get();
+    $calendarNext = \Caravel\Calendar::nextDays()->get();
+
+    return view('seedbank::home', compact('posts', 'messenger', 'calendarNow', 'calendarNext'))
       ->with('seeds', $seeds)
-      ->with('usermessages', $userMessages)
-      ->with('unreadmessages', $unreadmessages)
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
+      ->with('myseeds', $myseeds)
       ->with('active', ['home' => true]);
+  }
+
+  private function getEnciclopediaForm ( $item = Null, $formErrors = Null)
+  {
+    $formErrors = $formErrors ?: "";
+    $item = $item ?: "";
+
+    $use_categories = [
+      "alimentar", "medicinal", "artesanal", "auxiliar, horta ou casa",
+      "tóxico ou nocivo", "social, simbólico, ritual", "outros usos especiais"
+    ];
+
+    return view('seedbank::modal_enciclform')
+      ->with('formErrors', $formErrors)
+      ->with('update', true)
+      ->with('preview', true)
+      ->with('oldInput', $item )
+      ->with('item', $item )
+      ->with('categories', $use_categories )
+      ->with('csrfToken', csrf_token())->render();
+  }
+
+  public function getEnciclopedia()
+  {
+    $user = \Auth::user();
+
+    $formErrors = "";
+    $item = "";
+
+    $items = \Caravel\Seed::where('user_id', '<>', $user->id)->where('public', true)->orderBy('updated_at', 'desc');
+    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
+    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
+    $paginated = $items->paginate(15)->setPath('/enciclopedia');
+    //return view('seedbank::myseeds')
+    foreach ($paginated->getCollection() as $seed)
+    {
+      $seed->load('family');
+      $seed->load('pictures');
+    }
+
+    $active = session()->pull('letter', '');
+
+    $alphabet = [];
+    foreach(str_split('abcdefghijklmnopqrstuvwxyz') as $l){
+      $letter = ['letter' => $l];
+      if ($active == $l) {
+        $letter['active'] = true;
+      };
+      $alphabet[] = $letter;
+    }
+
+    $modal_content = self::getEnciclopediaForm();
+
+    $use_categories = \Lang::get('seedbank::forms.category_types');
+
+    return view('seedbank::enciclopedia')
+      ->with('modal_content', $modal_content)
+      ->with('alphabet', $alphabet)
+      ->with('item', $item)
+      ->with('categories', $use_categories )
+      ->with('paginated', $paginated)
+      ->with('active', ['enciclopedia' => true]);
+  }
+
+  public function getHorta()
+  {
+    $user = \Auth::user();
+
+    return view('seedbank::horta')
+      ->with('active', ['horta' => true]);
+  }
+
+  private function getMySeedForm ( $myseed = Null, $formErrors = Null) {
+    $monthsTable = [];
+    foreach (range(0, 11) as $number) {
+      $monthsTable[$number] = false;
+    }
+    $myseed = $myseed ?: "";
+    if ($myseed){
+      $myseed->load(['months', 'species', 'variety', 'family', 'pictures']);
+      foreach ( $myseed->months as $month) {
+        $monthsTable[$month->month - 1] = true;
+      }
+    };
+
+    $formErrors = $formErrors ?: "";
+    return view('seedbank::modal_seedform')
+      ->with('formErrors', $formErrors)
+      ->with('update', true)
+      ->with('preview', true)
+      ->with('oldInput', $myseed )
+      ->with('seed', $myseed )
+      ->with('monthstable', $monthsTable)
+      ->with('csrfToken', csrf_token())->render();
+    }
+
+  public function getMySeeds(Request $request)
+  {
+
+    $user = \Auth::user();
+    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
+    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
+    $paginated = $user->seeds()->orderBy('updated_at', 'desc')->paginate(5)->setPath('/seedbank/myseeds');
+    //return view('seedbank::myseeds')
+    foreach ($paginated->getCollection() as $seed)
+    {
+      // 'cookings', 'medicines',
+      $seed->load(
+        ['variety', 'species', 'family', 'months',
+        'pictures']
+      );
+    }
+
+    $myseed_id = $request->input('seed_id', null);
+    $myseed = $user->seeds->find($myseed_id);
+
+    // Just to create the div for the submition errors
+    $formErrors = true;
+
+    $modal_content = self::getMySeedForm(
+      $myseed = $myseed,
+      $formErrors = $formErrors
+    );
+
+
+    $part = [ 'myseeds' => true ];
+
+    $view = view('seedbank::myseeds', compact('part'))
+      ->with('pagination', \Lang::get('pagination'))
+      ->with('paginated', $paginated)
+      ->with('links', $paginated->render())
+      ->with('modal_content', $modal_content)
+      ->with('active', ['myseeds' => true])
+      ->with('preview', true);
+
+    if ($myseed) {
+      $view = $view->with('modal', true)->with('title', $myseed->common_name);
+    }
+//dd($paginated);
+    return $view;
+  }
+
+  public function getAllSeeds(Request $request)
+  {
+    // View for seeds
+    $user = \Auth::user();
+    $seeds = \Caravel\Seed::where('user_id', '<>', $user->id)->where('public', true)->orderBy('updated_at', 'desc');
+    //$seeds = $user->seeds()->orderBy('updated_at', 'desc');
+    //$pages = $seeds->paginate(5)->setPath('/seedbank/myseeds');
+    $paginated = $seeds->paginate(15)->setPath('/seedbank/allseeds');
+    //return view('seedbank::myseeds')
+    foreach ($paginated->getCollection() as $seed)
+    {
+      $seed->load('family');
+      $seed->load('pictures');
+    }
+    $part = [ 'myseeds' => true ];
+
+    $seed_id = $request->input('seed_id', null);
+    $seed = \Caravel\Seed::find($seed_id);
+
+    $monthsTable = [];
+    foreach (range(0, 11) as $number) {
+      $monthsTable[$number] = false;
+    }
+    if ($seed) {
+      $seed->load(['months', 'species', 'variety', 'family', 'pictures']);
+      foreach ( $seed->months as $month) {
+        $monthsTable[$month->month - 1] = true;
+      }
+    };
+
+    $modal_content = view('seedbank::modal_seedpreview')
+      ->with('preview', true)
+      ->with('seed', $seed )
+      ->with('monthstable', $monthsTable)
+      ->with('viewonly', true)
+      ->with('csrfToken', csrf_token())->render();
+
+    return view('seedbank::seeds', compact('part', 'modal_content'))
+      ->with('pagination', \Lang::get('pagination'))
+      ->with('paginated', $paginated)
+      ->with('links', $paginated->render())
+      //->with('myseeds', $seeds->get())
+      ->with('modal', ($seed) )
+      ->with('active', ['seeds' => true]);
   }
 
   public function mySeeds()
   {
-    // View for my seeds
-    $user = \Auth::user();
-    $seeds = $user->seeds()->orderBy('updated_at', 'desc')->paginate(5)->setPath('/seedbank/seeds');
-    $t = $seeds;
-    $transactions = $user->transactionsPending();
-    foreach(['asked_by', 'asked_to'] as $asked){
-      foreach($transactions[$asked] as &$tr) {
-        $ta=[];
-        $tc=[];
-        foreach (["0","1","2"] as $i){
-          $ta[$i]= ($tr['accepted'] == $i);
-          $tc[$i]= ($tr['accepted'] == $i);
-        }
-        $tr['accepted'] = $ta;
-        $tr['accepted'] = $tc;
-      }
-    }
-    return view('seedbank::myseeds')
-      ->with('seeds', $t)
-      ->with('transactionsBy', $transactions['asked_by']) 
-      ->with('transactionsTo', $transactions['asked_to']) 
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
-      ->with('active', ['myseeds' => true]);
   }
 
   public function getMessages()
@@ -126,8 +245,7 @@ class SeedBankController extends Controller {
     $user = \Auth::user();
 
     $userMessages = $user->lastMessages(10)->toArray();
-      //->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
-      //dd($userMessages);
+    //->get()->sortByDesc('created_at')->chunk(4)[0]->toArray();
     $unreadmessages = 0;
     foreach($userMessages as &$m) {
       if (($m['sender_id'] != $user->id) && ($m['read'])){
@@ -141,9 +259,6 @@ class SeedBankController extends Controller {
     return view('seedbank::messages')
       ->with('usermessages', $userMessages)
       ->with('unreadmessages', $unreadmessages)
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
       ->with('active', ['messages' => true]);
   }
 
@@ -177,164 +292,74 @@ class SeedBankController extends Controller {
         }
       }
     }
-    return view('seedbank::exchanges')
-      ->with('transactionsBy', $transactions['asked_by']) 
-      ->with('transactionsTo', $transactions['asked_to']) 
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
-      ->with('active', ['exchanges' => true]);
+    //return view('seedbank::exchanges')
+    $part = [ 'exchanges' => true ];
+    return view('seedbank::userarea', compact('part'))
+      ->with('bodyId', 'myseeds')
+      ->with('transactionsBy', $transactions['asked_by'])
+      ->with('transactionsTo', $transactions['asked_to'])
+      ->with('active', ['myseeds' => true]);
   }
 
-
-  public function getRegister($id = null)
-  {
-    $user = \Auth::user();
-    $update = false;
-    // Authorization
-    if($id){
-      $seed = \Caravel\Seed::findOrFail($id);
-      if (Gate::denies('update-seed', $seed)){
-        abort(403);
-      }
-    }
-    //$errors = \Session::get('errors');
-    if(\Session::hasOldInput()){
-      $oldInput =  \Session::getOldInput();
-      if(!empty($errors)){
-        \View::share('errors', $errors->default->toArray());
-      }
-      foreach(['variety', 'family', 'species'] as $field)
-      {
-        if (isset($oldInput[$field]))
-        {
-          $field_a = (array)\DB::table($field)
-            ->select('name', 'id')
-            ->where('name', $oldInput[$field])
-            ->first();
-          if ($field_a) {
-            $oldInput[$field] = $field_a;
-          } else {
-            $oldInput[$field] = ['id'=>'', 'name'=>$oldInput[$field] ];
-          }
-        }
-      };
-    } 
-    if ($id){
-      if (! isset($oldInput)) {
-       $seed->variety;
-       $seed->family;
-       $seed->species;
-       $seed->pictures;
-       $oldInput = $seed->toArray();
-       $oldInput['months'] = $seed->months()->lists('month')->toArray();
-      } else {
-
-      }
-      $oldInput['id'] = $id;
-      $update = true;
-    }
-    //$t = [];
-    foreach(['origin', 'polinization', 'direct'] as $key){
-      if(isset($oldInput[$key])){
-        $oldInput[$key] = [$oldInput[$key] => true];
-      }
-    }
-
-    if(isset($oldInput['months'])){
-      $o = array();
-      foreach($oldInput['months'] as $i){
-        $o[$i] = true;
-      }
-      $oldInput['months'] = $o;
-    }
-    if (! isset($oldInput)){
-      $oldInput = [];
-    }
-    return view('seedbank::registerseed', ['update' => $update])
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
-      ->with('active', ['myseeds' => true])
-      ->with('oldInput', $oldInput); 
-  }
 
   public function postRegister(Request $request)
   {
-    // if error with form
-    //dd($request->input());
     $this->validate($request, [
       'common_name' => 'required',
       //'origin' => 'required',
     ]);
 
-    if (!($request->input('confirmed') == "1")){
-      $farming = false;
-      $pictures = true;
-      $taxonomy = false;
-      $formInput = $request->input();
-      if (isset($formInput['months'])) {
-        $farming = true;
-        $months = array();
-        foreach (range(1, 12) as $i) {
-          if (in_array($i, $formInput['months'])) { 
-            $months[$i] = ['month' => true];
-          } else { 
-            $months[$i] = ['month' => false];
-          }
-        }
-      } else { $months = false; }
-
-      if (($formInput['variety']) || ($formInput['species']) || ($formInput['family']) || ($formInput['latin_name'])){
-        $taxonomy = true;
-      }
-      return view('seedbank::snippet')
-        ->with('title', 'some nice title')
-        ->with('months', $months)
-        ->with('seed', $formInput)
-        ->with('pictures', $pictures)
-        ->with('farming', $farming)
-        ->with('taxonomy', $taxonomy)
-        ->with('messages', \Lang::get('seedbank::messages'))
-        ->with('deletebutton', \Lang::get('seedbank::messages')['delete']);
-    }
-    $seed_keys = ['quantity','year', 'local', 'description', 'public', 'available', 'description',
-      'latin_name','common_name','polinization','direct',
+    $seed_keys = [
+      'quantity','year', 'local', 'description', 'public', 'available', 'description',
+      'latin_name','common_name','polinization','direct', 'untilharvest', 'origin',
+      'available', 'units', 'quantity', 'risk', 'traditional'
     ];
+
     $seed_taxonomy = ['species', 'variety','family'];
+    $taxonomy_model = [
+      'species' => '\Caravel\Species',
+      'variety' => '\Caravel\Variety',
+      'family' => '\Caravel\Family'
+    ];
     $seed_new = [];
     $months_new = [];
     foreach ( $request->input() as $key =>  $value ){
       if (in_array($key, $seed_keys)){
-        $seed_new[$key] = $value;
+        if ( $value ) {
+          $seed_new[$key] = $value;
+        } else {
+          if ($key == 'description') {
+            $seed_new[$key] = "";
+          }
+        }
+
       }
       if (in_array($key, $seed_taxonomy)){
         // TODO: Should do a special function to work this out
-        if ($value) { 
-          $t = (array)\DB::table($key)->where('name', $value)->first();
-          if (! $t) {
-            $t['id'] = \DB::table($key)->insertGetId(['name' => $value]);
+        if ($value) {
+          $t = $taxonomy_model[$key]::firstOrCreate(['name' => $value]);
+          $seed_new[$key . '_id'] = $t->id;
+        } else {
+          if ($request->input('seed_id')) {
+            $seedt = \Caravel\Seed::findOrFail($request->input('seed_id'));
+            $seedt->update([$key . '_id' => Null]);
           }
-
-          $seed_new[$key . '_id'] = $t['id'];
-          //$seed_new[$key] = $t;
-          //unset($seed_new[$key]);
         }
       }
       if ($key == 'months'){
-        ///dd($value);
         $months_new = $value;
       }
     }
 
-    if ($request->input('_id')){
-      $seed_id = $request->input('_id');
+    if ($request->input('seed_id')){
+      $seed_id = $request->input('seed_id');
       $seed = \Caravel\Seed::findOrFail($seed_id);
       if (Gate::denies('update-seed', $seed)){
         abort(403);
       }
-      $seed->update($seed_new);
       $seed->syncMonths($months_new);
+
+      $seed->update($seed_new);
     } else {
       $seed_new['user_id'] = $request->user()->id;
       $seed = \Caravel\Seed::create($seed_new);
@@ -347,18 +372,39 @@ class SeedBankController extends Controller {
           $seed->pictures()->save($picture);
         }
       }
-      // maybe flash an 'Added new seed' message
+      //FIXME: maybe flash an 'Added new seed' message
     }
 
-    return redirect('/seedbank/myseeds');
+    //return redirect('/seedbank/myseeds');
+    $seed->load(
+      ['variety', 'species', 'family', 'months',
+      'pictures']
+    );
+    return $seed;
   }
 
   public function getPreferences()
   {
     $user = \Auth::user();
+    if(\Session::hasOldInput()){
+      $oldInput =  \Session::getOldInput();
+      foreach($oldInput as $key => $val) {
+        if (( $user[$key] == $oldInput[$key] ) || (! $oldInput[$key])) {
+          unset($oldInput[$key]);
+        }
+      }
+    } else {
+      $oldInput = [];
+    }
+    if ( isset($oldInput['locale']) )
+    {
+      $locale = $oldInput['locale'];
+    } else {
+      $locale = $user->locale ?: config('app.locale');
+    }
+
     $updatelocation = false;
-    $location = false; 
-    $locale = $user->locale ?: config('app.locale');
+    $location = false;
     if ($locale == 'pt'){
       $preflocale = array('pt', 'pt-BR', 'en');
     } else {
@@ -370,7 +416,7 @@ class SeedBankController extends Controller {
       $updatelocation = [ 'lat' => $geoipdata->location->latitude,
         'lon' => $geoipdata->location->longitude,
         'place_name' => $geoipdata->city->name ?: \Lang::get("auth::messages.unknowncity")];
-          $location = true;
+      $location = true;
     }
     catch(\GeoIp2\Exception\AddressNotFoundException $e){
       // for testing
@@ -381,52 +427,73 @@ class SeedBankController extends Controller {
       //    $location = true;
 
       if ($user->place_name){
-         $location = true;
-      } 
-  /*  $updatelocation = [ 'lat' => 12.2,
-      'lon' => 121.1,
-        'place_name' => 'Porto' ];*/
+        $location = true;
+      }
+      /*  $updatelocation = [ 'lat' => 12.2,
+                              'lon' => 121.1,
+                              'place_name' => 'Porto' ];*/
     }
-    return view('seedbank::preferences')
+    $availableLangs = [];
+    foreach(config('app.availableLanguagesFull') as $key => $value ) {
+        array_push($availableLangs, ["value" => $key, "label" => $value, "selected" => ($key == $locale)]);
+    }
+
+    return view('seedbank::preferences', compact('oldInput', 'availableLangs'))
       ->with('messages', \Lang::get('authentication::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
+      ->with('csrfToken', csrf_token())
       ->with('user', $user)
-      ->with('username', $user->name)
       ->with('updatelocation', $updatelocation)
       ->with('location', $location)
-      ->with('active', ['profile' => true]);
+      ->with('active', ['settings' => true]);
+  }
+
+  private function prefValidationRules($data) {
+
+    $user = \Auth::user();
+    $rules = [
+      'lon' => 'required_with:lat|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+      'lat' => 'required_with:lon|regex:/^-?\d+([\,]\d+)*([\.]\d+)?$/|between:-180,180',
+      'place_name' => 'max:255|required_with:lon,lat',
+    ];
+    if (! $user->name == $data['name']){
+      $rules['name'] = 'required|max:255|unique:users';
+    }
+    if (( $user->email !== $data['email']) && ($data['email'])) {
+      $rules['email'] = 'sometimes|required|email|max:255|unique:users';
+    }
+    if ($data['password']){
+      $rules['password'] = 'required|confirmed|min:6';
+    }
+    return $rules;
+
   }
 
   public function postPreferences(Request  $request)
   {
     $user = \Auth::user();
-    $validator = $this->prefValidator($request->all(), [],\Lang::get('auth::validation'));
-    if($validator->fails())
-    {
-      $this->throwValidationException(
-        $request, $validator
-      );
-    }
+
+    $this->validate($request, $this->prefValidationRules($request->all()));
+
     if (!$request->input('password')){
       unset($request['password']);
     } else {
       $request['password'] = bcrypt($request->password);
     };
-
+    foreach(['email', 'lat', 'lon', 'place_name'] as $field)
+    {
+      if (!$request->input($field))
+      {
+        unset($request[$field]);
+      }
+    }
     $user = $user->update($request->all());
-    //dd($user);
     return redirect('/seedbank');
   }
 
   public function getSearch()
   {
-    $user = \Auth::user();
     return view('seedbank::search')
-      ->with('messages', \Lang::get('seedbank::messages'))
-      ->with('menu', \Lang::get('seedbank::menu'))
-      ->with('username', $user->name)
       ->with('active', ['search' => true]);
-
   }
 
   public function postSearch(Request $request)
@@ -440,7 +507,6 @@ class SeedBankController extends Controller {
       }
     }
     if (! $q){ return [];}
-    //dd($q);
     $query = \Caravel\Seed::query()
       ->where('public', true)
       ->where('available', true)
@@ -531,10 +597,10 @@ class SeedBankController extends Controller {
     $message = \Caravel\Message::create(
       [
         'user_id' => $request->user()->id,
-          'subject' => $subject,
-          'body' => $body,
-        ]
-      );
+        'subject' => $subject,
+        'body' => $body,
+      ]
+    );
     $message->save();
     $message->root_message_id = $message->id;
     $request->user()->transactionStart(['asked_to'=>$user_id, 'seed_id'=>$seed_id]);
@@ -542,6 +608,7 @@ class SeedBankController extends Controller {
     // maybe flash an 'Added new seed' message
     return redirect('/seedbank/search');
   }
+
   public function postAddPicture (Request $request) {
     // TODO: Limit number of picture by seed?
     $user = \Auth::user();
@@ -551,8 +618,14 @@ class SeedBankController extends Controller {
       $seed = false;
     }
     if ($request->hasFile('pictures')) {
-      $picture = $request->file('pictures')[0];
-      $status = SeedBankController::save_image($picture);
+      $uploadedimage = $request->file('pictures')[0];
+
+      $picture = \Caravel\Picture::fromUploadedFile($uploadedimage);
+      $status = [ "error" => 'Not saved!'];
+      if ($picture) {
+        $status = [ "picture" => $picture];
+      }
+
       if (isset($status['error'])) {
         return [ 'files' => [ ['error' => $status['error']]]];
       } else {
@@ -563,16 +636,112 @@ class SeedBankController extends Controller {
             $seed->pictures()->save($status['picture']);
           }
         }
-        return [ 'files' => [ 
-          ['md5sum' => $status['picture']->md5sum, 
-           'id' => $status['picture']->id,
-           'url' => $status['picture']->url,
-           'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
-           'deleteType' => 'GET'
-          ]]
-        ];
+        return [ 'files' => [
+          ['md5sum' => $status['picture']->md5sum,
+          'id' => $status['picture']->id,
+          'url' => $status['picture']->url,
+          'deleteUrl' => '/seedbank/pictures/delete/' . $status['picture']->id,
+          'deleteType' => 'GET'
+        ]]
+      ];
       }
     }
     return [ 'files' => [['error' => 'No files sent']]];
+  }
+
+  private function getEventForm ( $event = Null, $formErrors = Null) {
+    $event = $event ?: "";
+    $formErrors = $formErrors ?: "";
+
+    $event_type = \Caravel\Calendar::getEventTypes();
+
+    return view('seedbank::modal_eventform')
+      ->with('formErrors', $formErrors)
+      ->with('update', true)
+      ->with('preview', $event)
+      ->with('oldInput', $event )
+      ->with('event_type', $event_type )
+      ->with('csrfToken', csrf_token())->render();
+    }
+
+  public function getEvents (Request $request) {
+
+    $user = \Auth::user();
+
+    $event_id = $request->input('id', null);
+
+    //FIXME TEST TODO
+    //$event = $user->seeds->find($event_id);
+    if ($request->input('events', null)) {
+      $events = $user->getEvents();
+      return $events;
+    }
+
+    if ( $event_id ) {
+      $event = \Caravel\Calendar::find($event_id);
+      /*  )[
+        'id' => 1,
+        'title' => 'Um título',
+        'location' => 'Lisboa',
+        'postal' => '1900-177 Lisboa',
+        'description' => 'Uma descrição do evento',
+        'type' => 'AllTypes'
+      ];*/
+      $title = $event->title;
+    } else {
+      $title = Null;
+      $event = Null;
+    }
+
+    // Just to create the div for the submition errors
+    $formErrors = true;
+
+    $modal_content = self::getEventForm(
+      $event = $event,
+      $formErrors = $formErrors
+    );
+
+
+    return view('seedbank::events')
+      ->with('modal', true)
+      ->with('update', true)
+      ->with('modal_content', $modal_content)
+      ->with('user', $user)
+      ->with('active', ['events' => true]);
+  }
+
+  public function getSementecas (Request $request) {
+    $user = \Auth::user();
+    $lat = sprintf("%.5F", $user->lat);
+    $lon = sprintf("%.5F", $user->lon);
+
+    return view('seedbank::sementecas', compact('lat', 'lon'))
+      ->with('active', [ 'sementecas' => true ])
+      ->with('modal_content', view('seedbank::modal_sementecaform')
+        ->with('csrfToken', csrf_token())
+        ->with('sementeca', \Caravel\Sementeca::first())
+        ->with('preview', true)->render())
+      ->with('bodyId', 'mainapp');
+    $user = \Auth::user();
+
+  }
+
+
+  public function setLocale($locale = null)
+  {
+    $availableLanguages = config('app.availableLanguages');
+    $request = app('request');
+
+    if (in_array($locale, $availableLanguages )){
+      $user = \Auth::user();
+      if (isset($user->locale)){
+        if ($locale != $user->locale) {
+          $user->locale = $locale;
+          $user->save();
+        };
+      }
+    };
+
+    return redirect($request->header('referer'));
   }
 }

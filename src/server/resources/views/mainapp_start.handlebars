@@ -1,0 +1,94 @@
+{{> header}}
+<!-- Horizontal Menu -->
+<div class="container-fluid">
+  <nav class="navbar navbar-default">
+    <!-- div class="navbar-header" style="height:100px;">
+      <a class="navbar-brand" href="/seedbank">
+      </a>
+    </div -->
+    <div class="collapse navbar-collapse">
+      <!-- a class="navbar-brand navbar-left" href="/seedbank">
+        <img style="height:70px; margin:auto" src="/images/planteieulogobranco.png">
+      </a -->
+      <ul class="nav navbar-nav navbar-left logo">
+        <li>
+          <a href="/seedbank">
+            <img src="/images/planteieulogobranco.png">
+          </a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right menu">
+        <li{{#if active.seeds}} class="active"{{/if}}>
+          <a href="/seedbank/allseeds" class="iconified sem">
+            <span>{{menu.seeds}}</span>
+          </a>
+        </li>
+        <li{{#if active.forum}} class="active"{{/if}}>
+          <a href="/forum" class="iconified forum">
+            <span>{{menu.forum}}</span>
+          </a>
+        </li>
+        <li{{#if active.events}} class="active"{{/if}}>
+          <a href="/events" class="iconified cal">
+            <span>{{menu.events}}</span>
+          </a>
+        </li>
+        <li{{#if active.sementecas}} class="active"{{/if}}>
+          <a href="/sementecas" class="iconified seedbank">
+            <span>{{menu.seedbank}}Sementecas</span>
+          </a>
+        </li>
+        <li{{#if active.enciclopedia}} class="active"{{/if}}>
+          <a href="/enciclopedia" class="iconified enc">
+            <span>{{menu.encyclopedia}}</span>
+          </a>
+        </li>
+        <li{{#if active.search}} class="active"{{/if}}>
+          <a href="/seedbank/search" class="iconified search">
+          </a>
+        </li>
+        <li>
+          <div style="text-align: center;">
+            <div class="lang text-center">
+              <p class="langbtn">
+                {{langs.0}}<span class="caret"></span></p>
+              <div class="lang-choices">
+                {{#each langs}}
+                  {{#unless @first}}
+                <a href="/seedbank/setlocale/{{ this }}">{{ this }}</a>
+                  {{/unless}}
+                {{/each}}
+              </div>
+            </div>
+            <a href="{{ urls.logout}}"><img class="img-responsive" src="/images/logout.svg" width=100px>
+            </a>
+          </div>
+        </li>
+        <!--li>
+          <a href="/search"><img class="img-responsive size iconified" src="/images/pesquisa.svg" width=100px>
+            <span>MENU ICON</span>
+          </a>
+        </li -->
+      </ul>
+
+    </div>
+  </nav>
+</div>
+<!-- End Horizontal Menu -->
+<div class="container-fluid" style="padding-bottom: 15px">
+  <div class="row main">
+    <!-- Vertical Left Menu -->
+    <nav class="side-nav">
+      <div class="col-md-12" style="backround: black;">
+        <ul class="nav nav-pills nav-stacked" style="margin: 0 !important;">
+          <li{{#if active.home}} class="active"{{/if}}><a class="iconified home" href="/seedbank"></a></li>
+          <li{{#if active.myseeds}} class="active"{{/if}}><a class="iconified seed" href="/seedbank/myseeds"></a></li>
+          <li{{#if active.messages}} class="active"{{/if}}><a class="iconified mess" href="/messages"></a></li>
+          <li{{#if active.horta}} class="active"{{/if}}><a class="iconified hort" href="/seedbank/horta"></a></li>
+          <li{{#if active.settings}} class="active"{{/if}}><a class="iconified sett" href="/seedbank/preferences"></a></li>
+        </ul>
+      </div>
+    </nav>
+    <!-- End  Vertical Left Menu -->
+    <!-- Main Content -->
+    <div class="col-md-10">

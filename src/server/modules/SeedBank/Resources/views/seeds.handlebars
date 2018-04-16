@@ -1,0 +1,104 @@
+{{> mainapp_start}}
+    <div class="row">
+      <h1>{{choice 'seedbank::messages.seed' 2}}</h1>
+    </div>
+    <div class="row content seeds">
+      {{# each paginated.data }}
+      <div class="col-sm-4">
+        <div data-seed_id="{{id}}">
+          <img class="responsive" style="width: 100px; float:left; display:block;margin-right:12px;" src="{{#if pictures}}{{pictures.0.url}}{{else}}/images/planteieulogocinza.png{{/if}}" alt="">
+          <p style="font-weight: bold; font-size:14px;">{{common_name}}</p>
+          <p style="font-style: oblique;">{{latin_name}}</p>
+          <p style="font-style: oblique;">{{../messages.family}}: {{family.name}}</p>
+        </div>
+      </div>
+      {{ else }}
+      <h1>No Content</h1>
+      {{/each}}
+    </div>
+    {{> paginator}}
+    {{> mainapp_end}}
+    <script src="/js/utils.js{{#if uniqid}}?{{uniqid}}{{/if}}"></script>
+
+<script>
+{{#if modal }}
+$("#modal").modal('show');
+{{/if}}
+let parameters = [
+  {"name": "seed_id", "value": "id"},
+  {"name": "_id", "value": "id"},
+  {"name": "common_name", "value": "common_name"},
+  {"name": "local", "value": "local"},
+  {"name": "year", "value": "year"},
+  {"name": "public", "value": "public", "type": "checked"},
+  {"name": "description", "value": "description", "type": "textarea"},
+  {"name": "pictures[]", "value": "pictures[]", "type": "file" },
+  {"name": "latin_name", "value": "latin_name"},
+  {"name": "species", "value": "species.name"},
+  {"name": "species_id", "value": "species.id"},
+  {"name": "family", "value": "family.name"},
+  {"name": "family_id", "value": "family.id"},
+  {"name": "variety", "value": "variety.name"},
+  {"name": "variety_id", "value": "variety.id"},
+  {"name": "months[]", "value": "months[].month", "type": "checked"},
+  {"name": "available", "value": "available", "type": "checked"},
+  {"name": "polinization", "value": "polinization", "type": "checked"},
+  {"name": "direct", "value": "direct", "type": "checked"}
+];
+$('.seeds div.col-sm-4 div').on('click', function () {
+  //window.open('/seedbank/register/' + $(this).data('seed_id'), '_self');
+  var seed_id = $(this).data('seed_id');
+  $.get("/seedbank/seed/" + seed_id, function (data) {
+    //console.log(data)
+    if (data.length == 0){
+      return false;
+    }
+    previewseed(parameters, data);
+    $('#seed-preview').show();
+    $('#modal').modal('show');
+  });
+}).mouseover(function () {
+  $(this).addClass('active');
+}).mouseout(function () {
+  $(this).removeClass('active');
+});
+
+$('#modal').on('click', '#seed-preview button', function(){
+  $('#modal').modal('hide');
+
+});
+
+
+/*$('#info_modal').on('click', '.modal-footer .footer-left button', function(){
+  var seed_id = $('#info_modal .modal-title').data("seed_id");
+  window.open('/seedbank/register/' + seed_id, '_self');
+});
+
+$('.listEvents').on('click', 'li', function (e) {
+  $.get('/events/get/' + $(this).data('id'), function (data) {
+    if (! data ) { return false;}
+    $(".modal-content").html(data);
+    $('#info_modal').modal('show');
+  });
+});
+
+$('#messages tr').on('click', function () {
+    $('#info_modal .modal-content').html('<img src="/js/tinymce/skins/lightgray/img/loader.gif"/>');
+    $('#info_modal').modal('show');
+    var threadId = $(this).data('thread_id');
+    $.get('/messages/' + threadId, function (data) {
+      $('#info_modal .modal-content').html(data);
+    });
+  }).mouseover(function () {
+    $(this).addClass('active');
+  }).mouseout( function () {
+    $(this).removeClass('active');
+  });
+
+/*$('#new_seed').on('click', function () {
+  window.open('/seedbank/register', '_self');
+  return false;
+  });
+ */
+</script>
+{{>footer}}

@@ -1,0 +1,16 @@
+<h2>{{messages.news}}</h2>
+  <table class="table" id="news">
+    <tbody>
+      {{#each news}}
+      <tr data-message_id="{{id}}">
+        <td>{{thread.subject}}</td>
+        <td>{{user.name}}</td>
+        <td>{{updated_at}}</td>
+      </tr>
+      {{else}}
+      <tr>
+        <h4>No content</h4>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
